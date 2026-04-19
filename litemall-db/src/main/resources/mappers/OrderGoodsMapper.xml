@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.ysling.litemall.db.mapper.OrderGoodsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.ysling.litemall.db.domain.LitemallOrderGoods">
+        <id column="id" property="id" />
+        <result column="order_id" property="orderId" />
+        <result column="goods_id" property="goodsId" />
+        <result column="goods_name" property="goodsName" />
+        <result column="goods_sn" property="goodsSn" />
+        <result column="product_id" property="productId" />
+        <result column="number" property="number" />
+        <result column="price" property="price" />
+        <result column="address" property="address" />
+        <result column="is_take_their" property="isTakeTheir" />
+        <result column="specifications" property="specifications" typeHandler="org.ysling.litemall.db.handler.JsonStringArrayTypeHandler"/>
+        <result column="pic_url" property="picUrl" />
+        <result column="comment" property="comment" />
+        <result column="add_time" property="addTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="version" property="version" />
+    </resultMap>
+
+
+    <!-- 真实删除 -->
+    <delete id="actualDeleteById">
+        DELETE FROM litemall_order_goods WHERE id = #{id}
+    </delete>
+
+    <!-- 批量真实删除 -->
+    <delete id="actualDeleteByIds">
+        DELETE FROM litemall_order_goods WHERE id IN (
+            SELECT id FROM (
+                SELECT DISTINCT id
+                FROM litemall_order_goods
+                WHERE id IN
+                <foreach item="id" collection="idList" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            ) AS tmp
+        )
+    </delete>
+
+
+</mapper>

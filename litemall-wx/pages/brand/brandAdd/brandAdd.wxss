@@ -1,0 +1,10 @@
+/* pages/myBrand/myBrand.wxss */
+page{
+  width: 100%;
+  height: 750rpx;
+}
+
+.container {
+  width: 100%;
+  height: 750rpx;
+}

@@ -1,0 +1,108 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/goods/newGoods/newGoods",
+    "pages/goods/hotGoods/hotGoods",
+    "pages/goodsDetail/goodsDetail",
+    "pages/ucenter/index/index",
+    "pages/ucenter/address/address",
+    "pages/ucenter/shareMe/shareMe",
+    "pages/ucenter/withdraw/withdraw",
+    "pages/ucenter/addressAdd/addressAdd",
+    "pages/ucenter/feedback/feedback",
+    "pages/ucenter/footprint/footprint",
+    "pages/ucenter/about/about",
+    "pages/ucenter/order/order",
+    "pages/ucenter/help/help",
+    "pages/ucenter/orderDetail/orderDetail",
+    "pages/ucenter/couponList/couponList",
+    "pages/ucenter/couponSelect/couponSelect",
+    "pages/ucenter/collect/collect",
+    "pages/ucenter/aftersale/aftersale",
+    "pages/ucenter/aftersaleList/aftersaleList",
+    "pages/ucenter/aftersaleDetail/aftersaleDetail",
+    "pages/shopping/checkout/checkout",
+    "pages/shopping/payResult/payResult",
+    "pages/auth/login/login",
+    "pages/auth/accountLogin/accountLogin",
+    "pages/auth/register/register",
+    "pages/auth/reset/reset",
+    "pages/comment/commentList/commentList",
+    "pages/comment/commentPost/commentPost",
+    "pages/topic/topicList/topicList",
+    "pages/topic/topicDetail/topicDetail",
+    "pages/brand/brandList/brandList",
+    "pages/brand/brandDetail/brandDetail",
+    "pages/brand/brandAdd/brandAdd",
+    "pages/brand/brandOrder/brandOrder",
+    "pages/search/search",
+    "pages/catalog/catalog",
+    "pages/category/category",
+    "pages/cart/cart",
+    "pages/grouponList/grouponList",
+    "pages/dynamic/dynamic",
+    "pages/ucenter/admin/admin",
+    "pages/issue/issueDaily/issueDaily",
+    "pages/issue/issueGoods/issueGoods",
+    "pages/issue/issueReward/issueReward",
+    "pages/rewards/rewards",
+    "pages/chat/chat",
+    "pages/messageList/messageList",
+    "pages/auth/qrauth/qrauth",
+    "pages/ucenter/profile/profile"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "navigationBarTitleText": "order-meal",
+    "enablePullDownRefresh": true,
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#39b54a",
+    "selectedColor": "#39b54a",
+    "borderStyle": "white",
+    "backgroundColor": "#fff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/dynamic/dynamic",
+        "text": "动态"
+      },
+      {
+        "pagePath": "pages/messageList/messageList",
+        "text": "消息"
+      },
+      {
+        "pagePath": "pages/cart/cart",
+        "text": "购物车"
+      },
+      {
+        "pagePath": "pages/ucenter/index/index",
+        "text": "个人"
+      }
+    ]
+  },
+  "networkTimeout": {
+    "request": 10000,
+    "connectSocket": 10000,
+    "uploadFile": 10000,
+    "downloadFile": 10000
+  },
+  "functionalPages": {
+    "independent": true
+  },
+  "usingComponents": {
+    "uploadImg": "/lib/components/uploadImg/uploadImg",
+    "goodList": "/lib/components/goodList/goodList",
+    "cu-custom": "./lib/colorui/components/cu-custom/cu-custom",
+    "goodsItem": "/lib/components/goodsItem/goodsItem"
+  },
+  "debug": true,
+  "sitemapLocation": "sitemap.json"
+}

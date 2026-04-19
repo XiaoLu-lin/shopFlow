@@ -1,0 +1,130 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">专题详情</view>
+</cu-custom>
+
+<view class="container">
+
+  <scroll-view>
+    <view class="cu-card dynamic">
+      <view class="cu-item shadow" style="margin: 10rpx;">
+        <view class="text-content text-bold cu-bar btn-group" style="margin-bottom: 0rpx;">{{ topic.title }}</view>
+        <view class="cu-list padding">
+            <view class="cu-item">
+              <view class="text-gray text-sm">作者：{{ topic.author ? topic.author : '匿名作者' }}</view>
+              <view class="text-gray text-sm flex justify-between">
+                日期：{{ topic.addTime }}
+              </view>
+            </view>
+        </view>
+
+        <scroll-view class="content" style="width: 730rpx;">
+          <import src="/lib/wxParse/wxParse.wxml" />
+          <template is="wxParse" data="{{wxParseData:topicDetail.nodes}}"/>
+        </scroll-view>
+
+        <view class="cu-list menu card-menu  margin-xs shadow-lg">
+          <view class="cu-item" style="padding: 0rpx">
+            <view class="text-gray text-lg">            
+              <view class="fr" bindtap="showCommentModal">
+                <text class="cuIcon-messagefill margin-left-sm"></text> {{topic.commentCount}}
+              </view>
+              <view class="fr text-{{topicLike ? 'red': 'grey'}}" bindtap="likeSubmit">
+                <text class="cuIcon-appreciatefill margin-left-sm"></text> {{topic.likeCount}}
+              </view>
+              <view class="fr">
+                <text class="cuIcon-attentionfill"></text> {{topic.readCount}}
+              </view>
+            </view>
+            
+            <view class="fr" bindtap="addCollectOrNot">
+              <text class="cuIcon-favorfill text-red" style="font-size: 32rpx;margin-top: 2rpx;" wx:if="{{collect}}"></text>
+              <text class="cuIcon-favor text-red" style="font-size: 32rpx;margin-top: 2rpx;" wx:else></text>
+              <text class="text-bold margin-left-xs">收藏</text>
+            </view>
+            
+            <button class="topic-share" style="margin: 0rpx;" open-type="share" bindtap="showShare">分享</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <scroll-view>
+    <view class="cu-list menu card-menu  margin-xs shadow-lg" style="margin: 10rpx;" wx:if="{{commentList.length > 0}}">
+      <view class="cu-item arrow" bindtap="showCommentModal">
+        <view class="content" style="margin: 0rpx;">
+            <text class="cuIcon-commentfill text-red"></text>
+            <text class="text-bold">全部评论（{{commentCount > 999 ? '999+' : commentCount}}）</text>
+        </view>
+      </view> 
+      
+      <view class="cu-list menu-avatar comment" wx:if="{{commentList.length > 0}}">
+        <view class="cu-item solids-top" wx:for="{{commentList}}" wx:key="id">
+          <image class="cu-avatar round df" src="{{item.avatarUrl}}" wx:if="{{item.avatarUrl}}"></image>
+          <image class="cu-avatar round df" src="/static/images/user-o.png" wx:else></image>
+          <view class="content" style="margin: 0rpx;">
+            <view class="text-grey" style="font-size: 28rpx;" wx:if="{{item.nickName}}">{{item.nickName}}</view>
+            <text class="text-grey" style="font-size: 28rpx;" wx:else>匿名用户</text>
+            <view class="text-content text-df">{{item.content}}</view>
+            <view class="bg-white margin-tb-sm" wx:if="{{item.picList.length > 0}}">
+              <view class="grid col-4 grid-square">
+                <view class="bg-img" style="background-image:url({{picUrl}});" wx:for="{{item.picList}}" 
+                wx:for-item="picUrl" wx:key="index" bindtap="previewImage" data-url="{{picUrl}}">
+                </view>
+              </view>
+            </view>
+            <view class="margin-top-sm flex justify-between">
+              <view class="text-gray text-df">{{item.addTime}}</view>
+              <view>
+                <text class="cuIcon-appreciatefill text-red"></text>
+                <text class="cuIcon-messagefill text-gray margin-left-sm" bindtap="postComment"></text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <scroll-view class="sv-goods" wx:if="{{topicGoods.length>0}}">
+    <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+      <view class="cu-item">
+        <view class="content">
+          <text class="text-bold">专题商品</text>
+        </view>
+      </view>
+    </view>
+    <goodList goods="{{topicGoods}}"></goodList>
+  </scroll-view>
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-bold">专题推荐</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="cu-card article" wx:for="{{topicList}}" wx:key="id">
+    <navigator class="cu-item shadow" style="margin: 10rpx;" url="/pages/topic/topicDetail/topicDetail?id={{item.id}}">
+      <view class="title">
+        <view class="text-cut">{{item.title}}</view>
+      </view>
+      <view class="content">
+        <image src="{{item.picUrl}}" mode="aspectFill"></image>
+        <view class="desc">
+          <view class="text-content">{{item.subtitle}}</view>
+          <view class="text-right text-grey">
+            <view class="cu-tag bg-red light sm radius fl">{{item.price}}元起</view>
+            <text class="cuIcon-attentionfill margin-left-xs padding-top"></text> {{item.readCount}}
+            <text class="cuIcon-appreciatefill margin-left-xs"></text> {{item.likeCount}}
+            <text class="cuIcon-messagefill margin-left-xs"></text> {{item.commentCount}}
+          </view>
+        </view>
+      </view>
+    </navigator>
+  </view>
+</view>
+
+<!-- 评论列表 -->
+<commentModal id="commentModal"></commentModal>

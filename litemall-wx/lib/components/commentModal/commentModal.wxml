@@ -1,0 +1,107 @@
+<!--lib/components/commentModal/commentModal.wxml-->
+<view class="cu-modal bottom-modal show"  hidden="{{!showComment}}" style="text-align: inherit;z-index: 10000;" >
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white">
+      <view class="action text-blue text-bold" style="margin-left: 40%;">共{{commentCount}}条评论回复</view>
+      <view class="action text-green text-bold fr" bindtap="closeCommentModal">取消</view>
+    </view>
+
+    <scroll-view scroll-y="true" style="height: 1000rpx;" enable-passive="true" catchtouchmove="true" bindscrolltolower='scrollToLower' bindtap="clickScrollView" lower-threshold='30' upper-threshold='0' class="bg-white">
+      <view class="cu-list menu-avatar comment">
+        <view class="cu-item" style="padding: 10rpx 30rpx 10rpx 120rpx;" wx:for="{{commentList}}" wx:key="id">
+          <image class="cu-avatar round df" src="{{item.userInfo.avatarUrl}}"></image>
+          <view class="content" style="margin: 0rpx;">
+            <view class="text-grey" style="font-size: 26rpx;">{{item.userInfo.nickName}}</view>
+            <view class="text-content text-df">{{item.content}}</view>
+            <view class="bg-white" wx:if="{{item.picList.length > 0}}">
+              <view class="grid col-4 grid-square">
+                <view class="bg-img" style="background-image:url({{picUrl}});margin-bottom: 0rpx;" wx:for="{{item.picList}}" 
+                wx:for-item="picUrl" wx:key="index" bindtap="previewImage" data-url="{{picUrl}}">
+                </view>
+              </view>
+            </view>
+            <view class="flex justify-between">
+              <view class="text-gray text-sm">{{item.addTime}}</view>
+              <view class="text-df">
+                <text class="cuIcon-appreciatefill text-{{item.commentLike ? 'red' : 'grey'}}" data-index="{{index}}" data-valueId="{{item.commentId}}" bindtap="likeSubmit">{{item.likeCount}}</text>
+                <text class="cuIcon-messagefill text-grey margin-left-sm" bindtap="getTextarea" data-item="{{item}}">回复</text>
+              </view>
+            </view>
+
+            <view bindtap="toggleReply" data-index="{{index}}"  wx:if="{{!item.showReply && item.replyCount > 0}}">
+              <text class="text-grey text-df">——  展开{{item.replyCount}}条回复</text>
+              <text class="cuIcon-unfold text-grey text-df"></text>
+            </view>
+
+            <view class="flex cu-item margin-top-xs" wx:for="{{item.replyList.data.list}}" 
+            wx:for-item="ritem" wx:for-index="rindex" wx:key="id" wx:if="{{item.showReply}}">
+
+              <image class="cu-avatar round sm margin-right-sm" src="{{ritem.userInfo.avatarUrl}}" ></image>
+              <view class="content" style="margin: 0rpx;">
+                <text class="text-grey" style="font-size: 26rpx;" >{{ritem.userInfo.nickName}}</text>
+                <text class="cuIcon-playfill lg text-gray"></text>
+                <text class="text-grey" style="font-size: 26rpx;" >{{ritem.replyUserInfo.nickName}}</text>
+                <view class="text-content text-df text-black">{{ritem.content}}</view>
+                <view class="bg-white" wx:if="{{ritem.picList.length > 0}}">
+                  <view class="grid col-4 grid-square">
+                    <view class="bg-img" style="background-image:url({{picUrl}});margin-bottom: 0rpx;" 
+                    wx:for="{{ritem.picList}}" wx:for-item="picUrl" wx:key="index" bindtap="previewImage" data-url="{{picUrl}}">
+                    </view>
+                  </view>
+                </view>
+
+                <view class="flex justify-between">
+                  <view class="text-gray text-sm">{{ritem.addTime}}</view>
+                  <view class="text-df">
+                    <text class="cuIcon-appreciatefill text-{{ritem.commentLike ? 'red' : 'grey'}}" data-index="{{index}}" data-rindex="{{rindex}}" data-valueId="{{ritem.commentId}}" bindtap="likeSubmit">{{ritem.likeCount}}</text>
+                    <text class="cuIcon-messagefill text-grey margin-left-sm" bindtap="getTextarea" data-item="{{ritem}}">回复</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+
+            <view class="flex justify-between">
+              <view bindtap="getReplyCommentList" data-index="{{index}}" 
+              wx:if="{{item.showReply && item.replyList.data.pages > item.replyList.data.page}}">
+                <text class="text-grey text-df">——  展开更多回复</text>
+                <text class="cuIcon-unfold text-grey text-df"></text>
+              </view>
+              <view bindtap="toggleReply" style="margin-right: 220rpx;" data-index="{{index}}"  wx:if="{{item.showReply}}">
+                <text class="text-grey text-df">收起</text>
+                <text class="cuIcon-fold text-grey text-df"></text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class='cu-tabbar-height'></view>
+    </scroll-view>
+
+
+    <!--底部输入框-->
+    <form bindsubmit='sendMessage'>        
+      <view class="cu-bar foot input {{InputBottom != 0?'cur':''}}" style="bottom:{{InputBottom}}px">
+        <view class="action">
+          <text class="cuIcon-sound text-grey"></text>
+        </view>
+
+        <view class="flex-wrap">
+          <view class="comment-reply text-grey" style="{{commentId == 0 ? 'border: 0px;' : ''}}">
+          {{commentId != 0 ? '回复：'+ nickName : ''}}</view>
+
+          <textarea class="comment-textarea" bindtap="getTextarea" bindfocus="InputFocus" bindblur="InputBlur" bindinput="bindCommentInput" maxlength="500" auto-height="true" focus="{{textarea}}"	fixed="true" 	auto-height="true" cursor-spacing="10" style="min-height: 55rpx; {{commentId == 0 ?'border-radius: 10rpx;' : ''}}" name="content" value="{{content}}" adjust-position="{{false}}" placeholder="留下你精彩的评论吧"></textarea>
+        </view>
+
+        <view class="action margin-right-sm">
+          <text class="cuIcon-roundadd text-grey" bindtap="roundadd"></text>
+        </view>
+        <button class="cu-btn bg-green shadow" form-type='submit'>发送</button>
+      </view>
+      
+      <!--图片选择-->
+      <view class="cart-bottom" id="add-image" wx:if="{{addImage}}">
+        <uploadImg imgSite="3" pics="{{commentImage}}" bind:getImage="getMessageImage"></uploadImg>
+      </view>
+    </form>
+  </view>
+</view>

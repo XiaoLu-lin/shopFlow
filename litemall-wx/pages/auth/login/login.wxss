@@ -1,0 +1,92 @@
+page {
+  height: 750rpx;
+  width: 100%;
+}
+
+.container {
+  height: 750rpx;
+  width: 100%;
+}
+
+.login-box {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  padding: 0 40rpx;
+  margin-top: 200rpx;
+  background: #fff;
+}
+
+.wx-login-btn {
+  margin: 20rpx 0 40rpx 0;
+  height: 96rpx;
+  line-height: 96rpx;
+  font-size: 30rpx;
+  border-radius: 6rpx;
+  width: 90%;
+  color: #fff;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: flex;
+  bottom: 0;
+  left: 0;
+  padding: 0;
+  margin-left: 5%;
+  text-align: center;
+  border-top-left-radius: 50rpx;
+  border-bottom-left-radius: 50rpx;
+  border-top-right-radius: 50rpx;
+  border-bottom-right-radius: 50rpx;
+  letter-spacing: 3rpx;
+}
+
+.account-login-btn {
+  width: 90%;
+  margin: 0 auto;
+  color: #fff;
+  font-size: 30rpx;
+  height: 96rpx;
+  line-height: 96rpx;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: flex;
+  bottom: 0;
+  left: 0;
+  border-radius: 0;
+  padding: 0;
+  margin-left: 5%;
+  text-align: center;
+  border-top-left-radius: 50rpx;
+  border-bottom-left-radius: 50rpx;
+  border-top-right-radius: 50rpx;
+  border-bottom-right-radius: 50rpx;
+  letter-spacing: 3rpx;
+  background-image: linear-gradient(to right, #9a9ba1 0%, #9a9ba1 100%);
+  margin-bottom: 50rpx;
+}
+
+.user_row {
+  height: 86rpx;
+  line-height: 86rpx;
+  border-bottom: 1px solid #fafafa;
+}
+
+.user_row_left {
+  float: left;
+  text-align: center;
+  font-weight: 550;
+  margin-left: 35rpx;
+  letter-spacing: 1rpx;
+}
+
+.cu-list.card-menu {
+	overflow: hidden;
+	margin-right: 30rpx;
+	margin-left: 30rpx;
+  border-radius: 20rpx;
+  margin-top: 46%;
+}

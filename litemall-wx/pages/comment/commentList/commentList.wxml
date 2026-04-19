@@ -1,0 +1,53 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">评价</view>
+</cu-custom>
+
+<scroll-view scroll-x class="bg-white nav comments-switch">
+  <view class="flex text-center">
+    <view class="cu-item flex-sub {{showType == 0?'text-orange cur':''}}" bindtap="switchTab" >
+      <text class="text-bold">全部({{allCount}})</text>
+    </view>
+    <view class="cu-item flex-sub {{showType == 0?'':'text-orange cur'}}" bindtap="switchTab" >
+      <text class="text-bold">有图({{hasPicCount}})</text>
+    </view>
+  </view>
+</scroll-view>
+
+<view class="comments">
+
+  <view class="cu-list menu-avatar no-padding bg-white" style="margin-top: 1rpx;" wx:for="{{comments}}" wx:key="id">
+    <view class="cu-item">
+      <view class="cu-avatar round lg" style="background-image:url({{item.avatarUrl}});"></view>
+      <view class="content" style="width: 350rpx;">
+        <view class="text-lg text-bold text-cut">{{item.nickName}}</view>
+        <view class="text-gray text-sm">{{item.addTime}}</view>
+      </view>
+      <view class="action text-xxl text-black">
+        <view class="cuIcon-appreciate"><text class="text-gray text-lg"> 18</text></view>
+      </view>
+      <view class="action text-xxl text-black">
+        <view class="cuIcon-comment"></view>
+      </view>
+    </view>
+    <view class="text-black margin-bottom" style="margin-left: 145rpx;">
+      <view class="margin-bottom">
+        <text>{{item.content}}</text>
+      </view>
+      <view class="bg-white margin-tb-sm" wx:if="{{item.picUrls.length > 0}}">
+        <view class="grid col-4 grid-square">
+          <view class="bg-img" style="background-image:url({{picUrl}});" wx:for="{{item.picUrls}}" 
+          wx:for-item="picUrl" wx:key="index" bindtap="previewImage" data-url="{{picUrl}}">
+          </view>
+        </view>
+      </view>
+      <view class="margin-right padding-lr bg-gray radius-sm"  wx:if="{{item.adminContent}}">
+        <view class="margin-tb-xs padding-tb-sm bg-gray">
+          <text class="text-blue">商家</text>
+          <text class="text-blue">：</text>
+          <text class="text-black">{{item.adminContent}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>

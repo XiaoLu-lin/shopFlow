@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "人气推荐",
+  "usingComponents": {
+    "goodList": "/lib/components/goodList/goodList"
+  }
+}

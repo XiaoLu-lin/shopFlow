@@ -1,0 +1,33 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">付款结果</view>
+</cu-custom>
+
+<view class="cu-modal {{hideModal?'show':''}}">
+  <view class="cu-dialog shadow">
+    <view class="cu-bar bg-white justify-end text-black text-bold solid">
+      <block wx:if="{{status}}">
+        <text class="content text-green">支付成功</text>
+      </block>
+      <block wx:else>
+        <text class="content text-red">支付失败</text>
+      </block>
+    </view>
+    <view class="padding-xl text-xl text-black text-bold bg-white">
+      <block wx:if="{{!status}}">
+        请在<text class="text-red text-xl">【半小时内】</text>完成付款否则订单将会被系统取消
+      </block>
+      <block wx:else>
+        <text class="text-xl">订单支付成功</text>
+      </block>
+    </view>
+    <view class="cu-bar bg-white solid">
+      <block wx:if="{{status}}">
+        <view class="action padding flex-sub text-xxl solid-right text-bold" bindtap="payResultCancel">继续逛</view>
+      </block>
+      <block wx:else>
+        <view class="action padding flex-sub text-xxl solid-right text-bold" bindtap="payResultPayOrder">重新付款</view>
+      </block>
+      <view class="action padding flex-sub text-xxl solid-left text-bold" bindtap="payResultConfirm">查看订单</view>
+    </view>
+  </view>
+</view>

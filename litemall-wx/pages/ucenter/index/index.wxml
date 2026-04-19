@@ -1,0 +1,288 @@
+
+<scroll-view scroll-y bindtouchstart="touchStart" bindtouchend="touchEnd" 
+class="DrawerPage {{modalName=='viewModal'?'show':''}}">
+  
+  <view class="container">
+    <image src='/static/images/BasicsBg.png' mode='widthFix' class='response'></image>
+    <view class="cu-list menu card-menu margin-top shadow-lg" style="margin-top: -350rpx;">
+      <view class="cu-item" style='min-height: 200rpx;background-color: #f4f4f4;'>
+        <view wx:if="{{!hasLogin}}" class="content grid col-1">
+          <view class="padding-sm text-sm flex justify-center">
+            <text class="text-grey">允许微信授权后，可体验更多功能</text>
+          </view>
+          <view class="padding-sm flex justify-center">
+            <button bindtap="goLogin" class='cu-btn round bg-green shadow'>授权登陆</button>
+          </view>
+        </view>
+        <block wx:else>
+          <view class="content flex justify-center align-center">
+            <view class="flex-sub" bindtap="getProfile">
+              <view class="cu-avatar round xl margin-left" style="background-image:url({{userInfo.avatarUrl}});">
+                <block wx:if="{{userInfo.gender != 0}}">
+                  <view class="cu-tag badge {{userInfo.gender == 2?'cuIcon-female bg-pink':'cuIcon-male bg-blue'}}"></view>
+                </block> 
+              </view>
+            </view>
+            <view class="flex-twice grid col-1 ">
+              <view class="basis-df">
+                <view class="margin-tb-xs">
+                  <view class="text-bold text-cut padding-left-xs" style="width: 220rpx;">{{userInfo.nickName}}</view>
+                </view>
+                <view class="margin-tb-xs">
+                  <view class="cu-tag radius bg-green">{{Administrator ? '管理员' : '上帝'}}</view>
+                </view>
+              </view>
+
+              <view class="basis-sm text-center" bindtap="goWithdraw">
+                <view class="margin-xs margin-tb-xs">
+                  <view class="text-bold" style="font-size: 29rpx;">我的余额</view>
+                </view>
+                <view class="margin-tb-xs">
+                  <text class="text-bold text-red" style="font-size: 35rpx;">{{integralPrice}}￥</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+    
+    <view class="cu-list menu card-menu margin-top no-border">
+      <view class="cu-item no-border" style="background-color: #333;">
+        <image class="card-bg" src="/static/images/vip-card-bg.png" mode='widthFix'></image>
+        <view class="content" >
+          <text class="cuIcon-choicenessfill" style="color:#f7d680;font-size: 32rpx;"></text>
+          <text class="text-lg" style="color:#f7d680;">{{userLevel}}</text>
+        </view>
+      </view>
+      <view style="margin-top: -19rpx;">
+        <image style="height: 36rpx; width: 100%;" src="/static/images/arc.png" ></image>
+      </view>
+
+      <navigator class="cu-item arrow" url="/pages/ucenter/order/order?tab=0" style="margin-top: -10rpx;">
+        <view class="content">
+          <text class="cuIcon-goods"></text>
+          <text class="text-bold">全部订单</text>
+        </view>
+      </navigator>
+
+      <view class="cu-item" style="height: 140rpx;">
+        <view class="content" bindtap='goOrderIndex' data-index='1' data-route='/pages/ucenter/order/order'>
+          <view class="cu-bar bg-white tabbar border shop bottom-btn">
+            <view style="width: 130rpx;">
+              <view class="action">
+                <view class="cuIcon-rechargefill text-red" style="font-size: 55rpx;">
+                  <view class="cu-tag badge" wx:if="{{order.unpaid != 0}}">{{order.unpaid}}</view>
+                </view>
+                <text class="text-sm">待付款</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="content" bindtap='goOrderIndex' data-index='2' data-route='/pages/ucenter/order/order'>
+          <view class="cu-bar bg-white tabbar border shop bottom-btn">
+            <view style="width: 130rpx;">
+              <view class="action">
+                <view class="cuIcon-deliver_fill text-orange" style="font-size: 55rpx;">
+                  <view class="cu-tag badge" wx:if="{{order.unship != 0}}">{{order.unship}}</view>
+                </view> 
+                <text class="text-sm">待发货</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="content" bindtap='goOrderIndex' data-index='3' data-route='/pages/ucenter/order/order'>
+          <view class="cu-bar bg-white tabbar border shop bottom-btn">
+            <view style="width: 130rpx;">
+              <view class="action">
+                <view class="cuIcon-countdownfill text-yellow" style="font-size: 55rpx;">
+                  <view class="cu-tag badge" wx:if="{{order.unrecv != 0}}">{{order.unrecv}}</view>
+                </view> 
+                <text class="text-sm">待收货</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="content" bindtap='goOrderIndex' data-index='4' data-route='/pages/ucenter/order/order'>
+          <view class="cu-bar bg-white tabbar border shop bottom-btn">
+            <view style="width: 130rpx;">
+              <view class="action">
+                <view class="cuIcon-markfill text-olive" style="font-size: 55rpx;">
+                  <view class="cu-tag badge" wx:if="{{order.uncomment != 0}}">{{order.uncomment}}</view>
+                </view> 
+                <text class="text-sm">待评论</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="content" bindtap='goAfterSale'>
+          <view class="cu-bar bg-white tabbar border shop bottom-btn">
+            <view style="width: 130rpx;">
+              <view class="action">
+                <view class="cuIcon-servicefill text-cyan" style="font-size: 55rpx;">
+                </view> 
+                <text class="text-sm">售后</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="cu-list menu card-menu margin-top-sm shadow-lg no-border">
+      <view class="cu-item no-border">
+        <view class="content cu-bar btn-group">
+          <text class="text-grey text-bold">其他服务</text>
+        </view>
+      </view>
+    </view>
+    <view class="cu-list card-menu grid col-4 no-border margin" style="margin-top: -30rpx;">
+      <!-- <view class="cu-item" bindtap='goQrAuth'>
+        <view class="cuIcon-shopfill text-red"></view>
+        <text>二维码授权</text>
+      </view> -->
+      <view class="cu-item" bindtap='goBrand'>
+        <view class="cuIcon-shopfill text-red"></view>
+        <text>我的店铺</text>
+      </view>
+      <view class="cu-item" wx:if="{{brand.id}}" bindtap='goDaily'>
+        <view class="cuIcon-discoverfill text-blue"></view>
+        <text>发布动态</text>
+      </view>
+      <view class="cu-item" bindtap='goCoupon'>
+        <view class="cuIcon-moneybagfill text-cyan"></view>
+        <text>优惠券</text>
+      </view>
+      <view class="cu-item" bindtap='goCollect'>
+        <view class="cuIcon-favorfill text-grey"></view>
+        <text>收藏夹</text>
+      </view>
+      <view class="cu-item" bindtap='goFootprint'>
+        <view class="cuIcon-attentionfavorfill text-olive"></view>
+        <text>浏览记录</text>
+      </view>
+      <view class="cu-item" bindtap='goAddress'>
+        <view class="cuIcon-locationfill text-green"></view>
+        <text>收货地址</text>
+      </view>
+      <view class="cu-item" bindtap='goHelp'>
+        <view class="cuIcon-questionfill text-orange"></view>
+        <text>帮助中心</text>
+      </view>
+      <view class="cu-item" bindtap='goFeedback'>
+        <view class="cuIcon-communityfill text-yellow"></view>
+        <text>意见反馈</text>
+      </view>
+      <view class="cu-item" bindtap='shareMe'>
+        <view class="cuIcon-friendaddfill text-cyan"></view>
+        <text>我的分享</text>
+      </view>
+      <view class="cu-item" bindtap='aboutUs'>
+        <view class="cuIcon-friendfill text-brown"></view>
+        <text>关于我们</text>
+      </view>
+      <view class="cu-item">
+        <view class="content">
+          <button class="cu-btn icon bg-white" open-type="getPhoneNumber" bindgetphonenumber="bindPhoneNumber">
+            <view class="cuIcon-dianhua text-pink"></view>
+          </button>
+          <text>绑定手机号</text>
+        </view>
+      </view>
+      <view class="cu-item">
+        <view class="content">
+          <button class="cu-btn icon bg-white" open-type="contact">
+            <view class="cuIcon-servicefill text-mauve"></view>
+          </button>
+          <text>联系管理员</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="cu-list menu card-menu margin-top-xl shadow-lg" wx:if="{{hasLogin}}" bindtap="exitLogin">
+      <view class="cu-item">
+        <view class="content cu-bar btn-group">
+          <text class="text-grey">退出登录</text>
+        </view>
+      </view>
+    </view>
+
+    <view class='cu-tabbar-height'></view>
+  </view>
+</scroll-view>
+
+
+<!--个人中心抽屉-->
+<view class="DrawerClose {{modalName=='viewModal'?'show':''}}" bindtap="hideModal">
+	<text class="cuIcon-pullright"></text>
+</view>
+  
+<scroll-view bindtouchstart="touchStart" bindtouchend="touchEnd" class="DrawerWindow {{modalName=='viewModal'?'show':''}}">
+  <view class="cu-list menu card-menu margin-top-30 margin-bottom-xl shadow-lg">
+    <view class="cu-item" style='min-height: 200rpx;'>
+      <view wx:if="{{!hasLogin}}" class="content grid col-1">
+        <view class="padding-sm text-sm flex justify-center">
+          <text class="text-grey">允许微信授权后，可体验更多功能</text>
+        </view>
+        <view class="padding-sm flex justify-center">
+          <button bindtap="goLogin" class='cu-btn round bg-green shadow'>微信授权</button>
+        </view>
+      </view>
+      <block wx:else>
+        <view class="content flex justify-center align-center">
+          <view class="flex-sub">
+            <view class="cu-avatar round xl margin-left" style="background-image:url({{userInfo.avatarUrl}});">
+							<block wx:if="{{userInfo.gender != 0}}">
+                <view class="cu-tag badge {{userInfo.gender == 2?'cuIcon-female bg-pink':'cuIcon-male bg-blue'}}"></view>
+              </block>
+						</view>
+          </view>
+          <view class="flex-twice grid col-1 ">
+            <view class="margin-xs bg-white">
+              <view class="cu-tag radius">{{userInfo.nickName}}</view>
+            </view>
+            <view class="margin-xs bg-white">
+              <view class="cu-tag radius bg-green">{{Administrator ? '管理员' : '上帝'}}</view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+		<navigator class="cu-item arrow" url="/pages/ucenter/order/order?tab=0">
+			<view class="content">
+				<text class="cuIcon-goods text-grey"></text>
+				<text class="text-grey">全部订单</text>
+			</view>
+		</navigator>
+    <navigator class="cu-item arrow" url="/pages/ucenter/order/order?tab=1">
+			<view class="content">
+				<text class="cuIcon-refund text-grey"></text>
+				<text class="text-grey">待付款</text>
+			</view>
+		</navigator>
+    <navigator class="cu-item arrow" url="/pages/ucenter/order/order?tab=2">
+			<view class="content">
+				<text class="cuIcon-deliver text-grey"></text>
+				<text class="text-grey">待发货</text>
+			</view>
+		</navigator>
+    <navigator class="cu-item arrow" url="/pages/ucenter/order/order?tab=3">
+			<view class="content">
+				<text class="cuIcon-countdown text-grey"></text>
+				<text class="text-grey">待收货</text>
+			</view>
+		</navigator>
+    <navigator class="cu-item arrow" url="/pages/ucenter/order/order?tab=4">
+			<view class="content">
+				<text class="cuIcon-message text-grey"></text>
+				<text class="text-grey">待评价</text>
+			</view>
+		</navigator>
+    <navigator class="cu-item arrow" url="/pages/ucenter/admin/admin">
+			<view class="content">
+				<text class="cuIcon-crownfill text-grey"></text>
+				<text class="text-grey">管理后台</text>
+			</view>
+		</navigator>
+	</view>
+</scroll-view>

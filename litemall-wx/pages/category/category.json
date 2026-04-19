@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "goodList": "/lib/components/goodList/goodList"
+  },
+  "enablePullDownRefresh": true,
+  "navigationBarTitleText": "分类详情"
+}

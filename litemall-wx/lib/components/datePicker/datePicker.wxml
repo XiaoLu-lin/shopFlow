@@ -1,0 +1,8 @@
+<view class="cu-form-group">
+  <view class="title text-bold">{{title}}</view>
+  <picker class="no-border" mode="multiSelector" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" value="{{multiIndex}}" range="{{multiArray}}">
+  <view class="picker">
+    {{time}}
+	</view>
+</picker>
+</view>

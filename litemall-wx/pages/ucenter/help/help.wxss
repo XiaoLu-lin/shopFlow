@@ -1,0 +1,102 @@
+
+.container{
+  height: 100%;
+  width: 100%;
+  margin-bottom: 130rpx;
+}
+
+.common-problem .h {
+  height: 120rpx;
+  background: #fff;
+}
+
+.common-problem .h .line {
+  display: inline-block;
+  position: absolute;
+  top: 57rpx;
+  left: 0;
+  z-index: 2;
+  height: 1px;
+  margin-left: 225rpx;
+  width: 300rpx;
+  background: #ccc;
+  text-align: center;
+}
+
+.common-problem .h .title {
+  display: inline-block;
+  position: absolute;
+  top: 41rpx;
+  left: 0;
+  z-index: 3;
+  height: 33rpx;
+  margin-left: 285rpx;
+  width: 180rpx;
+  background: #fff;
+  text-align: center;
+}
+
+.common-problem .b {
+  height: auto;
+  overflow: hidden;
+  margin-bottom: 20rpx;
+  background: #fff;
+}
+
+.common-problem .item {
+  height: auto;
+  overflow: hidden;
+  padding-bottom: 25rpx;
+}
+
+.common-problem .question-box .spot {
+  float: left;
+  display: block;
+  height: 8rpx;
+  width: 8rpx;
+  background: #b4282d;
+  border-radius: 50%;
+  margin-top: 11rpx;
+}
+
+.common-problem .question-box .question {
+  float: left;
+  line-height: 30rpx;
+  padding-left: 10rpx;
+  display: block;
+  font-size: 26rpx;
+  padding-bottom: 15rpx;
+  color: #333;
+}
+
+.common-problem .answer {
+  line-height: 36rpx;
+  padding-left: 16rpx;
+  font-size: 26rpx;
+  float: right;
+  color: #787878;
+}
+
+
+.page{
+    width: 750rpx;
+    background: #fff;
+}
+
+.page view{
+    height: 108rpx;
+    width: 50%;
+    float: left;
+    font-size: 29rpx;
+    color: rgb(17, 16, 16);
+    text-align: center;
+    line-height: 108rpx;
+}
+
+.page .prev{
+    border-right: 1px solid #D9D9D9;
+}
+
+.page .disabled{
+    color: #ccc;
+}

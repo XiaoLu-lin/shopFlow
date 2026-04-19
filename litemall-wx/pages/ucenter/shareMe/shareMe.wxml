@@ -1,0 +1,28 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">分享得佣金</view>
+</cu-custom>
+
+<view class="container">
+
+  <sharePop id="sharePop" name="分享得好礼" url="{{userShare.shareUrl}}"></sharePop>
+
+  <view class="UCenter-bg">
+    <image src="{{userShare.shareUrl}}" class="png" mode="widthFix" bindtap="showShare"></image>
+    <view class="text-xl text-bold">我的分享二维码</view>
+  </view>
+
+  <view class="cu-list menu card-menu" style="margin: 10rpx;">
+    <view class="cu-item">
+      <view class="content cu-bar btn-group">
+        <text class="text-bold">已邀请【{{inviterList.length}}人】</text>
+      </view>
+    </view>
+    <view class="cu-item" wx:for="{{inviterList}}" wx:key="index">
+      <view class="content cu-bar btn-group">
+        <image src="{{item.avatarUrl}}" class="round" style="width: 60rpx;height: 60rpx;" mode="widthFix"></image>
+        <text class="text-grey">{{item.nickName}}</text>
+        <text class="text-grey">{{item.mobile}}</text>
+      </view>
+    </view>
+  </view>
+</view>

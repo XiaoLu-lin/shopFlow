@@ -1,0 +1,42 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">个人信息</view>
+</cu-custom>
+
+<view class="container">
+  <view class="address-list" wx:if="{{ addressList.length > 0 }}" >
+    <view class="cu-list menu card-menu margin-top-sm shadow-lg" style="margin: 20rpx;" 
+    wx:for="{{addressList}}" wx:key="id">
+      <view class="cu-item" bindtap="addressAddOrUpdate" data-address-id="{{item.id}}">
+        <view class="content flex margin-sm margin-top margin-bottom">
+          <view class="margin-right text-xxl">
+            <text class="cuIcon-locationfill text-red" wx:if="{{item.isDefault}}"></text>
+            <text class="cuIcon-location text-red" wx:else></text>
+          </view>
+          <view>
+            <view class="text-black text-bold text-lg">
+              {{item.addressAll}}
+            </view>
+            <view>
+              <text class="margin-right">{{item.name}}</text>
+              <text>{{item.mobile}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="text-xxl">
+          <text class="cuIcon-deletefill" catchtap="deleteAddress" data-address-id="{{item.id}}"></text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="empty-view" wx:if="{{ addressList.length <= 0 }}">
+    <view class="flex-sub text-center margin-top-half">
+      <view class="text-xsl padding">
+        <text class="cuIcon-location text-grey"></text>
+      </view>
+      <view class="padding-0 text-bold text-grey">还没有地址</view>
+    </view>
+  </view>
+  
+  <view class="add-address" bindtap="addressAddOrUpdate" data-address-id="0">新建</view>
+</view>

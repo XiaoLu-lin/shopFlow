@@ -1,0 +1,94 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">售后申请</view>
+</cu-custom>
+
+<view class="container">
+
+  <view class="cu-list menu card-menu shadow-lg margin-top" style="margin: 10rpx;">
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-grey text-bold">退款商品</text>
+        <text class="text-red text-bold fr">售后申请</text>
+      </view>
+    </view>
+
+    <!--商品详情-->
+    <goodsItem goods="{{orderGoods}}"></goodsItem>
+
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-grey text-bold">订单明细</text>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">商品合计</view>
+      <view class="text-grey" style="max-width: 350rpx;">￥{{orderInfo.goodsPrice}}元</view>
+    </view>
+    <view class="cu-item" wx:if="{{orderInfo.grouponPrice > 0}}">
+      <view class="text-bold">团购减免</view>
+      <view class="text-grey" style="max-width: 350rpx;">-￥{{orderInfo.grouponPrice}}元</view>
+    </view>
+    <view class="cu-item" >
+      <view class="text-bold">余额减免</view>
+      <view class="text-grey" style="max-width: 350rpx;">-￥{{orderInfo.integralPrice}}元</view>
+    </view>
+    <view class="cu-item" >
+      <view class="text-bold">优惠券减免</view>
+      <view class="text-grey" style="max-width: 350rpx;">-￥{{orderInfo.couponPrice}}元</view>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">商品运费</view>
+      <view class="text-grey" style="max-width: 350rpx;">+￥{{orderInfo.freightPrice}}元</view>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">实际支付</view>
+      <view class="text-grey" style="max-width: 350rpx;">￥{{orderInfo.actualPrice}}元</view>
+    </view>
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-grey text-bold">退款明细</text>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">退款金额</view>
+      <view class="text-red text-bold" style="max-width: 350rpx;">￥{{ aftersale.amount }}元</view>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">退款类型</view>
+      <picker bindchange="bindMultiPickerChange" value="index" range="{{columns}}">
+        <view class="text-grey" style="max-width: 350rpx;">{{ column }}</view>
+      </picker>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">退款原因</view>
+      <textarea maxlength="100" auto-height="true"	fixed="true" cursor-spacing="10" value="{{aftersale.reason}}" 
+      placeholder="请输入退款原因" style="max-width: 400rpx;" bindinput="reasonInput"></textarea>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">退款说明</view>
+      <textarea maxlength="100" auto-height="true"	fixed="true" cursor-spacing="10" value="{{aftersale.comment}}" 
+      placeholder="请输入退款说明" style="max-width: 400rpx;" bindinput="commentInput"></textarea>
+    </view>
+    
+    <uploadImg imgSite="4" title="上传凭证" bind:getImage="getPictures"></uploadImg>
+  </view>
+
+  <view style="padding-bottom: 140rpx;"></view>
+
+  <view class="cu-list menu card-menu margin-xs shadow-lg after-sale" style="margin: 10rpx;">
+    <view class="cu-item" style="background-color: #ffff">
+      <view class="content">
+          <view class="flex solid-bottom justify-end fr">
+            <button class="cu-btn margin-left bg-green" bindtap="submit">提交申请</button>
+          </view>
+      </view>
+    </view>
+  </view>
+
+</view>

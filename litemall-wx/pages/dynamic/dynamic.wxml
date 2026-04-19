@@ -1,0 +1,106 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">动态</view>
+</cu-custom>
+
+<view class="container">
+  <view class="cu-bar search bg-white">
+    <view class="search-form round">
+      <text class="cuIcon-search"></text>
+      <input type="text" placeholder="请输入动态内容" value="{{content}}" confirm-type="search" 
+      bindinput="bindExchange"></input>
+      <text class="cuIcon-roundclose" style="margin-right: 30rpx;" wx:if="{{content.length > 0}}" 
+      bindtap="clearExchange"></text>
+    </view>
+    <view class="action">
+      <button class="cu-btn bg-green shadow-blur round" bindtap='goSearch'>搜索</button>
+    </view>
+  </view>
+
+  <view class="cu-card dynamic" wx:for="{{dynamicList}}" wx:key="index" wx:if="{{dynamicList.length > 0}}">
+    <view class="cu-item shadow" style="margin: 8rpx 16rpx;border-radius: 10rpx;">
+      <view class="cu-list menu-avatar">
+        <view class="cu-item">
+          <view class="cu-avatar round lg" style="background-image:url({{item.avatarUrl}});" 
+          bindtap="openChat" data-timevo="{{item}}"></view>
+          <view class="content flex-sub">
+            <view class="flex justify-between">
+              <view class="text-bold">{{item.nickName}}</view>
+              <view class="cu-tag radius bg-green" bindtap="showModal" data-index="{{index}}" data-timevo="{{item}}">
+                {{item.admin ? '管理员' : '用户'}}
+                <text class="cuIcon-unfold lg text-white"></text>
+              </view>
+            </view>
+            <view class="text-gray text-sm flex justify-between">
+              {{item.addTime}}
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="text-content">
+        {{item.content}}
+      </view>
+      <view class="grid flex-sub padding-lr grid-square col-3">
+        <view class="bg-img" style="background-image:url({{picUrl}});" wx:for="{{item.picUrls}}" 
+        wx:for-item="picUrl" wx:key="index" bindtap="previewImage" data-url="{{picUrl}}">
+        </view>
+      </view>
+
+      <view class="cu-list menu card-menu margin-xs shadow-lg" style="padding: 30rpx;margin: 0rpx;">
+        <view class="text-gray text-lg" >            
+          <view class="fr" bindtap="showCommentModal" data-valueId="{{item.id}}">
+            <text class="cuIcon-messagefill margin-lr-xs"></text> {{item.commentCount}}
+          </view>
+          <view class="fr margin-right text-{{item.dynamicLike ? 'red': 'grey' }}" 
+          bindtap="likeSubmit" data-index="{{index}}" data-valueId="{{item.id}}">
+            <text class="cuIcon-appreciatefill margin-lr-xs"></text> {{item.likeCount}}
+          </view>
+          <view class="fr margin-right" bindtap="likeSubmit" data-valueId="{{item.id}}">
+            <text class="cuIcon-attentionfill margin-lr-xs"></text> {{item.lookCount}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;" wx:if="{{index != 0 && index%10 == 0}}">
+      <ad unit-id="adunit-48d525d0e4a093a9" ad-type="video" ad-theme="white"></ad>
+    </view>
+  </view>
+
+  <view wx:if="{{dynamicList.length <= 0}}">
+    <view class="flex-sub text-center margin-top-half">
+      <view class="text-xsl padding">
+        <text class="cuIcon-discover text-grey"></text>
+      </view>
+      <view class="padding-0 text-bold text-grey">还没有动态</view>
+    </view>
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;" 
+  wx:if="{{dynamicList.length < 10 && dynamicList.length > 1}}">
+    <ad unit-id="adunit-48d525d0e4a093a9" ad-type="video" ad-theme="white"></ad>
+  </view>
+
+  <view class='cu-tabbar-height'></view>
+</view>
+
+<view class="cu-modal {{modalName=='menuModal'?'show':''}}" bindtap="hideModal">
+  <view class="cu-dialog" catchtap>
+    <scroll-view scroll-y>
+      <view class="cu-list menu">
+        <view class="cu-item solid-bottom" bindtap="editTimeLine">
+          <view class="content">
+            <text class="text-grey">编辑</text>
+          </view>
+        </view>
+        <view class="cu-item solid-bottom" bindtap="deleteTimeLine">
+          <view class="content">
+            <text class="text-grey">删除</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+
+<!-- 评论列表 -->
+<commentModal id="commentModal"></commentModal>

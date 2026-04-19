@@ -1,0 +1,29 @@
+
+
+<view class="cu-progress round sm striped active" wx:if="{{progress != 0}}">
+  <view class="bg-green" style="width: {{ progress + '%'}};"></view>
+</view>
+<view class="cu-bar bg-white">
+  <view class="action text-bold">
+    {{title}}
+  </view>
+  <view class="action text-bold">
+    {{fileList.length}}/{{imgSite}}
+  </view>
+</view>
+
+<view class="cu-form-group">
+  <view class="grid col-4 grid-square flex-sub">
+    <view class="bg-img" wx:for="{{fileList}}" wx:key="index" bindtap="previewImage" data-url="{{fileList[index]}}">
+      <view class="cu-avatar xxl radius" style="background-image:url({{fileList[index]}});">
+        <view class="cu-tag bg-red" catchtap="DelImg" data-index="{{index}}">
+          <text class="cuIcon-close"></text>
+        </view>
+      </view>
+    </view>
+    <view class="solids" bindtap="chooseImage" wx:if="{{fileList.length < imgSite}}">
+      <text class="cuIcon-cameraadd"></text>
+    </view>
+  </view>
+  
+</view>

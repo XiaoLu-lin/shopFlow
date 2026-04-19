@@ -1,0 +1,40 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">店铺编辑</view>
+</cu-custom>
+
+<view class="container">
+  <form bindsubmit='submitBrand'>
+    <view class="cu-list menu card-menu margin-top margin-bottom-xl shadow-lg">
+      <view class="cu-form-group">
+        <view class="title text-bold">真实姓名：</view>
+        <input placeholder="用于提现打款校验" name="trueName" value="{{brand.trueName}}"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">店铺名称：</view>
+        <input placeholder="你的店铺名称" name="name" value="{{brand.name}}"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">通知邮箱：</view>
+        <input placeholder="QQ邮箱" name="mail" value="{{brand.mail}}"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">店铺底价：</view>
+        <input placeholder="商品最低价"  type="digit" name="brandPrice" value="{{brand.floorPrice}}"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">自提地址：</view>
+        <input placeholder="自提地址" name="address" value="{{brand.address}}"></input>
+      </view>
+      <view class="cu-form-group align-start">
+        <view class="title text-bold">店铺介绍：</view>
+        <textarea maxlength="70" name="depict" placeholder="店铺简介，70字以内" value="{{brand.depict}}"></textarea>
+      </view>
+      <view style="margin-top: 1rpx;">
+        <uploadImg imgSite="1" title="店铺图片" pics="{{picUrls}}" bind:getImage="chooseImage"></uploadImg>
+      </view>
+    </view>
+    <view class="cu-list menu card-menu margin-top-xl shadow-lg">
+      <button class="add-button" form-type='submit'>保存店铺</button>
+    </view>
+  </form>
+</view>

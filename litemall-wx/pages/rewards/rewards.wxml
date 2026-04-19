@@ -1,0 +1,66 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">分享得佣金</view>
+</cu-custom>
+
+<view class="container">
+
+  <view class="margin-xs">
+    <view class="margin-top bg-white padding radius-df">
+      <view class="text-black text-sm text-bold">赏金规则：</view>
+      <view class="text-gray text-sm padding-top-xs">1.点击赏金活动的商品进入商品详情页，2.点击商品详情页的分享按钮将商品分享出去，3.其他用户点击你分享的商品链接并下单该商品，4.下单用户确认收货后会将任务奖励自动发送到分享者余额。</view>
+    </view>
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;"  wx:for="{{rewardList}}" wx:key="id">
+    <view class="cu-card article">
+      <view class="cu-item shadow padding" bindtap='rewardShare'  style="margin: 0rpx;" data-id="{{item.rewardTask.id}}">
+        <view class="flex justify-center align-center">
+          <view class="cu-avatar xl radius-sm margin-right" 
+          style="background-image:url({{item.rewardTask.picUrl}}); width: 180rpx; height: 180rpx;"></view>
+          <view class="flex-twice">
+            <view class="margin-left-xs">
+              <view class="text-cut text-black text-bold" style="width:460rpx">{{item.rewardTask.goodsName}}</view>
+              <view class="flex margin-top">
+                <view class="cu-progress round striped active">
+                  <view class="bg-green" style="width:{{item.percentage}};"></view>
+                </view>
+                <text class="margin-left">{{item.percentage}}</text>
+              </view>
+              <view class="cu-capsule radius margin-top">
+                <view class="cu-tag bg-red sm">商品价格</view>
+                <view class="cu-tag line-red sm">{{item.rewardTask.goodsPrice}}元</view>
+              </view>
+              <view class="cu-capsule radius margin-top">
+                <view class="cu-tag bg-orange sm">任务奖励</view>
+                <view class="cu-tag line-orange sm">{{item.rewardTask.award}}元</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="cu-item" wx:if="{{item.joiners && item.joiners.length > 0}}">
+      <view class="content">
+        <text class="text-bold">已邀请【{{item.total}}人】</text>
+      </view>
+    </view>
+    <view class="cu-item" wx:if="{{item.joiners && item.joiners.length > 0}}">
+      <view class="flex-twice grid col-6">
+        <view class="margin-xs" wx:for="{{item.joiners}}"  wx:for-item="vitem" wx:for-index="vindex" wx:key="index">
+          <view class="cu-avatar radius-sm lg" style="background-image:url({{vitem.avatarUrl}});"></view>
+          <view class="flex justify-center">{{vitem.nickName}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{rewardList.length <= 0}}">
+    <view class="flex-sub text-center margin-top-half">
+      <view class="text-xsl padding">
+        <text class="cuIcon-wefill text-grey"></text>
+      </view>
+      <view class="padding-0 text-grey text-bold">暂无赏金活动</view>
+    </view>
+  </view>
+
+  <view class="padding"></view>
+</view>

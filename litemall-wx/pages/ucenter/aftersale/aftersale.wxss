@@ -1,0 +1,137 @@
+page {
+  height: 100%;
+  width: 100%;
+  background: #f4f4f4;
+}
+
+.order-goods {
+  margin-top: 20rpx;
+  background: #fff;
+}
+
+.order-goods .h {
+  height: 93.75rpx;
+  line-height: 93.75rpx;
+  margin-left: 31.25rpx;
+  border-bottom: 1px solid #f4f4f4;
+  padding-right: 31.25rpx;
+}
+
+.order-goods .h .label {
+  float: left;
+  font-size: 30rpx;
+  color: #333;
+}
+
+.order-goods .h .status {
+  float: right;
+  font-size: 30rpx;
+  color: #b4282d;
+}
+
+.order-goods .item {
+  display: flex;
+  align-items: center;
+  height: 192rpx;
+  margin-left: 2.25rpx;
+  padding-right: 18.25rpx;
+  border-bottom: 1px solid #f4f4f4;
+
+}
+
+.order-goods .item:last-child {
+  border-bottom: none;
+}
+
+.order-goods .item .img {
+  height: 168.83rpx;
+  width: 168.83rpx;
+  margin-left: 31.25rpx;
+  background: #f4f4f4;
+}
+
+.order-goods .item .img image {
+  height: 168.83rpx;
+  width: 168.83rpx;
+}
+
+.order-goods .item .info {
+  flex: 1;
+  height: 120.83rpx;
+  margin-left: 20rpx;
+}
+
+.order-goods .item .t {
+  margin-top: 8rpx;
+  height: 33rpx;
+  line-height: 33rpx;
+  margin-bottom: 10.5rpx;
+}
+
+.order-goods .item .t .name {
+  display: block;
+  float: left;
+  height: 33rpx;
+  width: 416rpx;
+  line-height: 33rpx;
+  color: #333;
+  font-size: 32rpx;
+  overflow:hidden;  /**超出的文本隐藏*/
+  text-overflow:ellipsis; /**溢出用省略号显示*/
+  white-space:nowrap; /**溢出不换行*/
+}
+
+.order-goods .item .t .number {
+  display: block;
+  float: right;
+  height: 34rpx;
+  text-align: right;
+  line-height: 54rpx;
+  color: #333;
+  font-size: 34rpx;
+}
+
+.order-goods .item .attr {
+  height: 33rpx;
+  width: 416rpx;
+  line-height: 29rpx;
+  color: #666;
+  margin-bottom: 25rpx;
+  font-size: 25rpx;
+  overflow:hidden;  /**超出的文本隐藏*/
+  text-overflow:ellipsis; /**溢出用省略号显示*/
+  white-space:nowrap; /**溢出不换行*/
+}
+
+.order-goods .item .price {
+  display: block;
+  float: left;
+  height: 11rpx;
+  line-height: 30rpx;
+  color: #a78845;
+  font-size: 32rpx;
+}
+
+.after-sale {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: 100rpx;
+  width: 730rpx;
+  display: flex;
+}
+
+
+
+
+.cu-list.card-menu {
+  overflow: hidden;
+  margin-right: 20rpx;
+  margin-left: 20rpx;
+  margin-bottom: 20rpx;
+  border-radius: 20rpx;
+}
+
+.cu-list+.cu-list {
+  margin-top: 0rpx;
+}

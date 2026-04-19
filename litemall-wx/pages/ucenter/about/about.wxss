@@ -1,0 +1,43 @@
+page{
+  height: 750rpx;
+  width: 100%;
+}
+
+.container{
+  height: 750rpx;
+  width: 100%;
+}
+
+.label {
+  font-size: 26rpx;
+  width: 200rpx;
+} 
+
+
+.about-item{
+  background: white;
+  border-top: solid #f2f2f2 0.5rpx;
+  border-bottom: solid #f2f2f2 0.5rpx;
+  width: 100%;
+  height: 100rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.item-left{
+  font-size: 38rpx;
+  margin-left: 40rpx;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.item-right{
+  margin-right: 15rpx;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.right-icon{
+  width: 40rpx;
+  height: 40rpx;
+}

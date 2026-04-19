@@ -1,0 +1,342 @@
+
+
+.container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  margin-bottom: 250rpx;
+}
+
+.image {
+  width: 150rpx;
+  height: 150rpx;
+}
+
+.cu-card.article>.cu-item {
+  padding-bottom: 30rpx;
+  margin: 15rpx 15rpx 1rpx 15rpx;
+  border-radius: 20rpx;
+}
+
+.cu-card.article>.cu-item .content .img {
+  width: 170rpx;
+  height: 170rpx;
+  border-radius: 20rpx;
+  background: #f4f4f4;
+}
+
+.cu-card.article>.cu-item .content .text-content {
+  font-size: 28rpx;
+  color: #888;
+  overflow: hidden;
+  height: auto !important;
+}
+
+.cu-card.article>.cu-item .content .desc {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  margin-left: 20rpx;
+  justify-content: space-between;
+  width: 66%;
+}
+
+.cu-card.article>.cu-item .title {
+  font-size: 30rpx;
+  font-weight: 646;
+  color: var(--black);
+  line-height: 100rpx;
+  padding: 0 30rpx;
+}  
+
+.desc .price{
+  align-items: center;
+  display: flex;
+  margin-top: 8rpx;
+}
+
+.selnum {
+  width: 235rpx;
+  height: 52rpx;
+  border: 1rpx solid #ccc;
+  display: flex;
+  border-top-left-radius: 30rpx;
+  border-bottom-left-radius: 30rpx;
+  border-top-right-radius: 30rpx;
+  border-bottom-right-radius: 30rpx;
+  
+}
+
+.selnum .cut {
+  width: 70rpx;
+  height: 100%;
+  text-align: center;
+  line-height: 50rpx;
+}
+
+.selnum .number {
+  flex: 1;
+  height: 100%;
+  text-align: center;
+  line-height: 68.75rpx;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  float: left;
+  z-index: 0;
+}
+
+.selnum .add {
+  width: 80rpx;
+  height: 100%;
+  text-align: center;
+  line-height: 50rpx;
+}
+
+.cart-view .group-item .header {
+  width: 100%;
+  height: 94rpx;
+  line-height: 94rpx;
+  padding: 0 26rpx;
+  border-bottom: 1px solid #f4f4f4;
+}
+
+.cart-view .promotion .icon {
+  display: inline-block;
+  height: 24rpx;
+  width: 15rpx;
+}
+
+.cart-view .promotion {
+  margin-top: 25.5rpx;
+  float: left;
+  height: 43rpx;
+  width: 480rpx;
+  line-height: 43rpx;
+  font-size: 0;
+}
+
+.cart-view .promotion .tag {
+  border: 1px solid #f48f18;
+  height: 37rpx;
+  line-height: 31rpx;
+  padding: 0 9rpx;
+  margin-right: 10rpx;
+  color: #f48f18;
+  font-size: 24.5rpx;
+}
+
+.cart-view .promotion .txt {
+  height: 43rpx;
+  line-height: 43rpx;
+  padding-right: 10rpx;
+  color: #333;
+  font-size: 29rpx;
+  overflow: hidden;
+}
+
+.cart-view .get {
+  margin-top: 18rpx;
+  float: right;
+  height: 58rpx;
+  padding-left: 14rpx;
+  border-left: 1px solid #d9d9d9;
+  line-height: 58rpx;
+  font-size: 29rpx;
+  color: #333;
+}
+
+.cart-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  display: flex;
+}
+
+.cart-bottom .checkbox {
+  padding-left: 27rpx;
+}
+
+.cart-bottom .total {
+  width: auto;
+  margin: 33rpx 18rpx;
+  font-size: 29rpx;
+
+}
+
+.cart-bottom .delete {
+  color: #f4f4f4;
+  background-image: linear-gradient(to right, #ab956d 0%, #ab956d 100%);
+  border-top-left-radius: 50rpx;
+  border-bottom-left-radius: 50rpx;
+}
+
+.cart-bottom .checkout {
+  height: 90rpx;
+  width: 210rpx;
+  border-top-right-radius: 50rpx;
+  border-bottom-right-radius: 50rpx;
+
+}
+
+.cu-list.card-menu{
+  overflow: hidden;
+  margin-right: 10rpx;
+  margin-left: 10rpx;
+  border-radius: 20rpx;
+  margin-bottom: 130rpx;
+  width: 97%;
+}
+
+@import "../../lib/wxParse/wxParse.wxss";
+
+.attr-pop-box {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 8;
+  bottom: 0;
+}
+
+.attr-pop {
+  width: 100%;
+  height: auto;
+  padding: 31.25rpx;
+  background: #fff;
+  position: fixed;
+  z-index: 9;
+  bottom: 100rpx;
+}
+
+.attr-pop .close {
+  position: absolute;
+  width: 48rpx;
+  height: 48rpx;
+  right: 31.25rpx;
+  overflow: hidden;
+  top: 31.25rpx;
+}
+
+.attr-pop .close .icon {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.attr-pop .img-info {
+  width: 687.5rpx;
+  height: 177rpx;
+  overflow: hidden;
+  margin-bottom: 41.5rpx;
+}
+
+.attr-pop .img {
+  float: left;
+  height: 177rpx;
+  width: 177rpx;
+  background: #f4f4f4;
+  margin-right: 31.25rpx;
+  border-radius: 20rpx;
+}
+
+.attr-pop .info {
+  float: left;
+  height: 177rpx;
+  display: flex;
+  align-items: center;
+}
+
+.attr-pop .p {
+  font-size: 30rpx;
+  color: #333;
+  height: 33rpx;
+  line-height: 33rpx;
+  margin-bottom: 30rpx;
+}
+
+.attr-pop .a {
+  font-size: 30rpx;
+  color: #333;
+  height: 40rpx;
+  line-height: 40rpx;
+}
+
+.spec-con {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+.spec-con .name {
+  margin-bottom: 20rpx;
+  font-size: 29rpx;
+  color: #333;
+}
+
+
+.spec-con .values {
+  height: auto;
+  margin-bottom: 10rpx;
+  font-size: 0;
+}
+
+.spec-con .value {
+  display: inline-block;
+  height: 62rpx;
+  padding: 0 35rpx;
+  line-height: 60rpx;
+  text-align: center;
+  margin-right: 25rpx;
+  margin-bottom: 16.5rpx;
+  font-size: 25rpx;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+}
+
+.spec-con .value.disable {
+  border: 1px solid #ccc;
+  color: #ccc;
+}
+
+.spec-con .value.selected {
+  border: 1px solid #f48f18;
+  border-radius: 10px;
+  color: #f48f18;
+}
+
+.number-item .selnum {
+  width: 322rpx;
+  height: 71rpx;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  display: flex;
+}
+
+.number-item .cut {
+  width: 93.75rpx;
+  height: 100%;
+ 
+  text-align: center;
+  font-size: 25px;
+  line-height: 65rpx;
+}
+
+.number-item .number {
+  flex: 1;
+  height: 100%;
+  text-align: center;
+  line-height: 68.75rpx;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  float: left;
+}
+
+.number-item .add {
+  width: 93.75rpx;
+  height: 100%;
+  border-radius: 10px;
+  font-size: 25px;
+  text-align: center;
+  line-height: 65rpx;
+}

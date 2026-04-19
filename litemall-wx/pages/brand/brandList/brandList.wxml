@@ -1,0 +1,38 @@
+
+<scroll-view scroll-y class="scrollPage">
+  <cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+    <view slot="content">店铺列表</view>
+  </cu-custom>
+
+  <view class="cu-bar search bg-white">
+    <view class="search-form round">
+      <text class="cuIcon-search"></text>
+      <input type="text" placeholder="请输入店铺名称" value="{{brandName}}" confirm-type="search" bindinput="bindExchange"></input>
+      <text class="cuIcon-roundclose" style="margin-right: 30rpx;" wx:if="{{brandName.length > 0}}" bindtap="clearExchange"></text>
+    </view>
+    <view class="action">
+      <button class="cu-btn bg-green shadow-blur round" bindtap='goSearch'>搜索</button>
+    </view>
+  </view>
+
+  <view class="cu-card">
+    <view class="cu-item bg-img shadow-blur margin" style="background-image:url({{item.picUrl}})" 
+    bindtap="toChild" data-id="{{item.id}}" wx:for="{{brandList}}" wx:key>
+      <view class="cardTitle">
+        {{item.name}}
+        <view class="text-bold fr">{{item.floorPrice}}￥起</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{brandList.length <= 0}}">
+    <view class="flex-sub text-center margin-top-half">
+      <view class="text-xsl padding">
+        <text class="cuIcon-wefill text-grey"></text>
+      </view>
+      <view class="padding-0 text-grey text-bold">暂无店铺</view>
+    </view>
+  </view>
+
+  <view class="cu-tabbar-height"></view>
+</scroll-view>

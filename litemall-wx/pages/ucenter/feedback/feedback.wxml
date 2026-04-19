@@ -1,0 +1,54 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">意见反馈</view>
+</cu-custom>
+
+<view class="container">
+  <view class="cu-list menu card-menu margin-top-xl shadow-lg" style="margin:10rpx;">
+    <view class="cu-item">
+      <view class="title text-bold">反馈类型</view>
+      <picker bindchange="bindPickerChange" style="margin-right: 30rpx;" value="{{index}}" range="{{array}}">
+        <view class="picker">
+          <text class="text-bold text-green">{{array[index]}}</text>
+          <text class="cuIcon-unfold lg text-green"></text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+    <view class="cu-bar bg-white">
+      <view class="action text-grey text-bold">
+        字数限制
+      </view>
+      <view class="action text-grey text-bold">
+        {{content.length}}/300
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="content">
+        <textarea class="comment-textarea" focus="true" bindinput="contentInput" maxlength="300" 
+        placeholder="对我们网站、商品、服务，你还有什么建议吗？你还希望在商城上买到什么？请告诉我们..."></textarea>
+      </view>
+    </view>
+    <uploadImg imgSite="4" title="图片上传" bind:getImage="getContentImage"></uploadImg>
+  </view>
+
+  <view class="cu-list menu card-menu margin-top-xl shadow-lg" style="margin:10rpx;">
+    <view class="cu-item">
+      <view class="title text-bold">联系电话</view>
+      <input placeholder="用于异常沟通反馈" bindinput="mobileInput" value="{{mobile}}" maxlength="11"></input>
+      <view class="cu-capsule radius">
+        <view class="cu-tag bg-blue">
+          +86
+        </view>
+        <view class="cu-tag line-blue">
+          中国大陆
+        </view>
+      </view>
+    </view>
+
+  </view>
+
+  <button class="add-button" bindtap="submitFeedback">提交</button>
+
+</view>

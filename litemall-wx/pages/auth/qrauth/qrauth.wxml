@@ -1,0 +1,23 @@
+<!--pages/auth/qrauth/qrauth.wxml-->
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">授权登陆</view>
+</cu-custom>
+
+<view class="container">
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 40rpx; ">
+    <view class="cu-item">
+      <view class="flex-sub text-center" style="margin-top: 100rpx;">
+        <view class="text-xsl padding" style="font-size: 160rpx;">
+          <text class="cuIcon-shake text-grey"></text>
+        </view>
+        <view class="text-xl text-bold" style="margin-bottom: 40rpx;">登陆 Windows 管理后台</view>
+        <view class="content" style="margin-bottom: 360rpx;">
+          <text class="cuIcon-roundcheckfill text-green" style="font-size: 28rpx;"></text>
+          <text class="text-df text-grey">当前管理员账号登陆</text>
+        </view>
+        <button class="cu-btn bg-green" style="margin-bottom: 50rpx;" bindtap="getSubject">授权登陆</button>
+        <view class="text-lg text-grey" style="margin-bottom: 100rpx;" bindtap="cancel">取消授权</view>
+      </view>
+    </view>
+  </view>
+</view>

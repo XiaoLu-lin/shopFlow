@@ -1,0 +1,36 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">选择优惠券</view>
+</cu-custom>
+
+<view class="container">
+
+  <view  class="cu-list menu card-menu shadow-lg"  style="margin: 10rpx;">
+    <view class="cu-item arrow" style="background: linear-gradient(to right, #cfa568, #e3bf79);" bindtap='unselectCoupon'>
+      <view class="text-bold">不使用优惠券</view>
+    </view>
+  </view>
+
+  <view  class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;" wx:for="{{couponList}}" wx:key="id" bindtap="selectCoupon" data-id="{{item.id}}" data-cid="{{item.cid}}">
+    <view class="cu-item" style='padding-left: 0rpx;min-height: 200rpx;background: linear-gradient(to right, #cfa568, #e3bf79);'>
+      <view class="flex-sub text-center" style="margin-left: 0;">
+        <view class="text-red text-bold text-xxl margin-bottom-xs">{{item.discount}}元</view>
+        <view class="text-white">满{{item.min}}元使用</view>
+      </view>
+      <view class="flex-sub">
+        <view class="text-white text-bold text-xl margin-tb-xs">{{item.name}}</view>
+        <view class="text-white" style="width: 450rpx;">截至日期：{{item.endTime}}</view>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-orange text-bold">{{item.desc}}</text>
+        <view class="cu-capsule round fr">
+          <view class="cu-tag bg-orange">
+            <text class="cuIcon-likefill"></text>
+          </view>
+          <view class="cu-tag line-orange">{{item.tag}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>  

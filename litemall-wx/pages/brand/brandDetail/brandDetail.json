@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "店铺详情",
+  "usingComponents": {
+    "goodList": "/lib/components/goodList/goodList",
+    "commentModal": "/lib/components/commentModal/commentModal"
+  }
+}

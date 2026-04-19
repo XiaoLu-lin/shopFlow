@@ -1,0 +1,51 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">我的售后</view>
+</cu-custom>
+
+<scroll-view scroll-x class="bg-white nav aftersales-switch">
+  <view class="flex text-center">
+    <view class="cu-item flex-sub {{showType == 1?'text-orange cur':''}}" bindtap="switchTab" data-index="1">
+      <text class="text-bold">申请中</text>
+    </view>
+    <view class="cu-item flex-sub {{showType == 2?'text-orange cur':''}}" bindtap="switchTab" data-index="2">
+      <text class="text-bold">处理中</text>
+    </view>
+    <view class="cu-item flex-sub {{showType == 3?'text-orange cur':''}}" bindtap="switchTab" data-index="3">
+      <text class="text-bold">已完成</text>
+    </view>
+    <view class="cu-item flex-sub {{showType == 4?'text-orange cur':''}}" bindtap="switchTab" data-index="4">
+      <text class="text-bold">已拒绝</text>
+    </view>
+  </view>
+</scroll-view>
+
+<view class="container">
+  <view class="no-aftersale" wx:if="{{aftersaleList.length <= 0}}">
+    <view class="flex-sub text-center margin-top-half">
+      <view class="text-xsl padding">
+        <text class="cuIcon-wefill text-grey"></text>
+      </view>
+      <view class="padding-0 text-grey text-bold">空空如也</view>
+    </view>
+  </view>
+
+
+    <navigator url="../aftersaleDetail/aftersaleDetail?id={{item.aftersale.orderId}}"
+     class="cu-list menu card-menu shadow-lg margin-top-sm" wx:for="{{aftersaleList}}" wx:key="id" style="margin: 10rpx;">
+      <view class="cu-item">
+        <view class="content">
+          <text class="text-grey">售后编号：{{item.aftersale.aftersaleSn}}</text>
+          <text class="text-red text-bold fr">{{item.statusText}}</text>
+        </view>
+      </view>
+
+      <!--商品详情-->
+      <goodsItem goods="{{item.orderGoods}}"></goodsItem>
+      
+      <view class="cu-item">
+        <view class="content">
+          <text class="text-red text-bold">申请退款金额：￥{{item.aftersale.amount}}元</text>
+        </view>
+      </view>
+    </navigator>
+</view>

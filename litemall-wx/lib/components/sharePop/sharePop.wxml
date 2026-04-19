@@ -1,0 +1,26 @@
+
+<view class="cu-modal show" hidden="{{!showPop}}" bindtap="closeShare">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white justify-end text-black text-bold solid">
+        <text class="content text-green">{{name}}</text>
+    </view>
+
+    <view class="bg-white padding-xl">
+      <image class="cu-avatar xl bg-white" style="margin-right: 110rpx;" src='/static/images/friend.png'></image>
+      <image class="cu-avatar xl bg-white" style="margin-left: 110rpx;" src='/static/images/wechat.png'></image>
+    </view>
+    
+    <view class="cu-bar bg-white solid">
+      <button class="cu-btn bg-white flex-sub" open-type="openSetting" 
+      bindopensetting="handleSetting" wx:if="{{canWrite}}">
+        <text class="text-bold">生成海报</text>
+      </button>
+      <button class="cu-btn bg-white flex-sub" bindtap="getUserSetting" wx:if="{{!canWrite}}">
+        <text class="text-bold">生成海报</text>
+      </button>
+      <button class="cu-btn bg-white flex-sub" open-type="share">
+        <text class="text-bold">分享给好友</text>
+      </button>
+    </view>
+  </view>
+</view>

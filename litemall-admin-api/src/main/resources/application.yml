@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: litemall-admin-api
+  profiles:
+    active: db, core, admin
+  messages:
+    encoding: UTF-8
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+      enabled: true
+  # jackson时间格式化
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  mvc:
+    throw-exception-if-no-handler-found: true
+
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: 6914
+  compression:
+    enabled: true
+    min-response-size: 20480
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+
+logging:
+  config: classpath:logback-spring.xml
+

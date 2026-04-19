@@ -1,0 +1,47 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">我的订单</view>
+</cu-custom>
+
+<scroll-view scroll-x class="bg-white nav orders-switch">
+  <view class="flex text-center">
+    <view class="cu-item flex-sub {{index==showType?'text-orange cur':''}}" wx:for="{{tableName}}" 
+    wx:key='id' bindtap="switchTab" data-index="{{index}}">
+      <text class="text-bold">{{tableName[index]}}</text>
+    </view>
+  </view>
+</scroll-view>
+
+<view class="container">
+  
+  <view  class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;"
+  bindtap="orderToDetail" data-order='{{item}}' wx:for="{{orderList}}" wx:key="id">
+    <view class="cu-item" >
+      <view class="content">
+        <text class="text-grey">订单编号：{{item.orderSn}}</text>
+        <text class="text-red text-bold fr">{{item.orderStatusText}}</text>
+      </view>
+    </view>
+
+    <!--商品详情-->
+    <goodsItem goods="{{item.orderGoods}}"></goodsItem>
+
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-red text-bold">合计实付：￥{{item.actualPrice}}元</text>
+        <block wx:if="{{item.isGroupon}}">
+          <zan-capsule color="#f37b1d" class="fr" leftText="团购活动" rightText="{{item.grouponStatus}}" />
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <view class="no-order" wx:if="{{orderList.length <= 0}}">
+    <view class="flex-sub text-center margin-top-half">
+      <view class="text-xsl padding">
+        <text class="cuIcon-goods text-grey"></text>
+      </view>
+      <view class="padding-0 text-grey text-bold">还没有订单</view>
+    </view>
+  </view>
+
+</view>

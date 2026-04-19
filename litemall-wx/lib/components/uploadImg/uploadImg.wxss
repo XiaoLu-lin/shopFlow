@@ -1,0 +1,4 @@
+/* lib/components/uploadImg/uploadImg.wxss */
+
+@import "/lib/colorui/icon.wxss";
+@import "/lib/colorui/main.wxss";

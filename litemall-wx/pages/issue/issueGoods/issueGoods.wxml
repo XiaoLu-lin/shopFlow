@@ -1,0 +1,327 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">发布商品</view>
+</cu-custom>
+
+<view class="container">
+
+  <form bindsubmit='submitGoods'>
+    <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+      <view class="cu-form-group">
+        <view class="title text-bold">交易提醒：</view>
+        <view class="title text-bold text-grey">微信支付服务费 {{initGoods.brokerage}}% (自动扣除)</view>
+      </view>
+      <view class="cu-form-group" wx:if="{{goods.id <= 0}}">
+        <view class="title text-bold">所属店铺:</view>
+        <view class="title text-bold text-grey">{{brand.name}}</view>
+      </view>
+      <view class="cu-form-group" wx:if="{{goods.id || Administrator}}">
+        <view class="title text-bold">商品状态</view>
+        <picker bindchange="PickerChange" value="{{goods.status}}" range="{{picker}}"  wx:if="{{Administrator}}">
+          <view class="picker">
+            <text class="title text-{{goods.status == 1?'green':'red'}} text-bold">{{picker[goods.status]}}</text>
+          </view>
+        </picker>
+        <view class="title text-{{goods.status == 1?'green':'red'}} text-bold" wx:else>{{picker[goods.status]}}</view>
+      </view>
+
+      <view class="cu-form-group text-red" wx:if="{{goods.remarks && goods.status == 3}}">
+        <view class="title text-bold">驳回原因:</view>
+        <input style="color:#F76260" name="remarks" value="{{goods.remarks}}"></input>
+      </view>
+
+      <view class="cu-form-group">
+        <view class="title text-bold">商品编号:</view>
+        <input placeholder="纯数字（随便填）" type="number" name="goodsSn" value="{{goods.goodsSn}}"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">商品名称:</view>
+        <input placeholder="必填" name="name" value="{{goods.name}}"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">商品简介:</view>
+        <input placeholder="必填" name="brief" value="{{goods.brief}}"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">商品单位:</view>
+        <input placeholder="件/个/盒" name="unit" value="{{goods.unit}}"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">市场售价:</view>
+        <input placeholder="0.00（原价）" type="digit" name="counterPrice" bindinput="bindCounterPriceInput" 
+        value="{{goods.counterPrice}}"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">商品分类</view>
+        <picker mode="multiSelector" bindchange="MultiChange" bindcolumnchange="MultiColumnChange" 
+        value="{{multiIndex}}" range-key="label" range="{{multiArray}}">
+          <view class="picker text-bold">
+            {{categoryList[multiIndex[0]].label}}，{{categoryList[multiIndex[0]].children[multiIndex[1]].label}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="cu-form-group">
+        <view class="title text-bold">是否团购</view>
+        <switch class="red sm" name="isGroupon" bindtap="buidGroupon" checked='{{goods.isGroupon}}'></switch>
+      </view>
+      <view class="cu-form-group" wx:if="{{Administrator}}">
+        <view class="title text-bold">是否热卖</view>
+        <switch class="red sm" name="isHot" checked='{{goods.isHot}}'></switch>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">是否新品</view>
+        <switch class="red sm" name="isNew" checked='{{goods.isNew}}'></switch>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">是否自提</view>
+        <switch class="red sm" name="isTakeTheir" bindtap="buidisTakeTheir" checked='{{goods.isTakeTheir}}'></switch>
+      </view>
+      <view class="cu-form-group" wx:if="{{goods.isTakeTheir}}">
+        <view class="title text-bold">自提地址:</view>
+        <input placeholder="取货地址" name="address" value="{{goods.address}}"></input>
+      </view>
+      <view style="margin-top: 1rpx;">
+        <uploadImg imgSite="1" title="商品图片" pic="{{goods.picUrl}}" bind:getImage="goodPicImage"></uploadImg>
+      </view>
+      <view style="margin-top: 1rpx;">
+        <uploadImg imgSite="4" title="宣传画廊" pics="{{goods.gallery}}" bind:getImage="goodGalleryImage"></uploadImg>
+      </view>
+    </view>
+
+    <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;" wx:if="{{goods.isGroupon}}">
+      <view class="cu-item arrow" bindtap="showModal" data-target="grouponRulesVisiable">
+        <view class="content">
+          <text class="text-bold">团购规则</text>
+          <text class="cuIcon-question"></text>
+          <text class="text-grey">（必填）</text>
+        </view>
+      </view>
+      <view class="cu-item grid col-4 text-center">
+        <view class="text-grey text-bold">减免金额</view>
+        <view class="text-grey text-bold">团购人数</view>
+        <view class="text-grey text-bold">结束日期</view>
+      </view>
+      <view class="cu-item grid col-4 text-center">
+        <view class="text-{{grouponRules.discount<=0?'red':'grey'}}">{{grouponRules.discount}}</view>
+        <view class="text-{{grouponRules.discountMember<=0?'red':'grey'}}">{{grouponRules.discountMember}}</view>
+        <view class="text-grey">{{grouponRules.expireTime}}</view>
+      </view>
+    </view>
+
+    <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+      <view class="cu-item arrow">
+        <view class="content" bindtap="showModal" data-target="specImageHint">
+          <text class="text-bold">商品规格</text>
+          <text class="cuIcon-question"></text>
+          <text class="text-grey">（选填）</text>
+        </view>
+        <view class="content" bindtap="showModal" data-target="specVisiable">
+          <view class="cu-tag bg-blue radius fr">多规格</view>
+        </view>
+      </view>
+      <view class="cu-item grid col-4 text-center" wx:if="{{specifications.length > 0}}">
+        <view class="text-grey text-bold">规格名</view>
+        <view class="text-grey text-bold">规格值</view>
+        <view class="text-grey text-bold">规格图片</view>
+        <text class="cuIcon-delete text-white" style="font-size: 44rpx;"></text>
+      </view>
+      <view class="cu-item grid col-4 text-center" bindtap="specDelete" 
+      data-index="{{index}}" wx:for="{{specifications}}" wx:key="id">
+        <view class="text-grey">{{item.specification}}</view>
+        <view class="text-grey">{{item.value}}</view>
+        <view class="cu-avatar bg-white radius" style="background-image:url({{item.picUrl}});"></view>
+        <text class="cuIcon-delete text-red" style="font-size: 44rpx;"></text>
+      </view>
+    </view>
+
+    <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+      <view class="cu-item" bindtap="showModal" data-target="productsImageHint">
+        <view class="content">
+          <text class="text-bold">货品库存</text>
+          <text class="cuIcon-question"></text>
+          <text class="text-grey text-df">（选填）</text>
+        </view>
+      </view>
+      <view class="cu-item grid col-5 text-center" wx:if="{{products.length > 0}}">
+        <view class="text-grey text-bold">货品规格</view>
+        <view class="text-grey text-bold">货品售价</view>
+        <view class="text-grey text-bold">货品数量</view>
+        <view class="text-grey text-bold">货品图片</view>
+        <text class="cuIcon-edit text-white" style="font-size: 44rpx;"></text>
+      </view>
+      <view class="cu-item grid col-5 text-center" wx:for="{{products}}" wx:key="id" 
+      bindtap="showModal" data-target="productVisiable" data-index="{{index}}">
+        <view class="text-grey">{{item.specifications}}</view>
+        <view class="text-{{(item.price<1 || item.price>1000)?'red':'grey'}}">{{item.price}}</view>
+        <view class="text-{{item.number<=0?'red':'grey'}}">{{item.number}}</view>
+        <view class="cu-avatar bg-white radius" style="background-image:url({{item.url}});"></view>
+        <text class="cuIcon-edit text-green" style="font-size: 44rpx;"></text>
+      </view>
+    </view>
+
+    <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+      <view class="cu-item arrow">
+        <view class="content" bindtap="showModal" data-target="attributeImageHint">
+          <text class="text-bold">商品参数</text>
+          <text class="cuIcon-question"></text>
+          <text class="text-grey">（选填）</text>
+        </view>
+        <view class="content" bindtap="showModal" data-target="attributeVisiable">
+          <view class="cu-tag bg-blue radius fr">添加</view>
+        </view>
+      </view>
+      <view class="cu-item grid col-3 text-center" wx:if="{{attributes.length > 0}}">
+        <view class="text-grey text-bold">参数名称</view>
+        <view class="text-grey text-bold">参数值</view>
+        <text class="cuIcon-delete text-white" style="font-size: 44rpx;"></text>
+      </view>
+      <view class="cu-item grid col-3 text-center" bindtap="attrDelete" wx:for="{{attributes}}" wx:key="id">
+        <view class="text-grey">{{item.attribute}}</view>
+        <view class="text-grey">{{item.value}}</view>
+        <text class="cuIcon-delete text-red" style="font-size: 44rpx;"></text>
+      </view>
+    </view>
+    <view class='cu-tabbar-height'></view>
+    <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+      <view class="cu-item" style="background-color: #ffff">
+        <view class="content">
+          <view class="flex solid-bottom justify-end fr">
+            <button class="cu-btn margin-left bg-green" form-type='submit' wx:if="{{goods.id<=0}}">发布商品</button>  
+            <button class="cu-btn margin-left bg-red" bindtap="goodsDelete" wx:if="{{goods.id>0}}">删除商品</button> 
+            <button class="cu-btn margin-left bg-green" form-type='submit' wx:if="{{goods.id>0}}">更新商品</button>  
+          </view>
+        </view>
+      </view>
+    </view>
+  </form>
+</view>
+
+<view class="cu-modal {{modalName=='specVisiable'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white justify-end">
+      <view class="content text-bold">设置规格</view>
+      <view class="action" bindtap="hideModal">
+        <text class="cuIcon-close text-red"></text>
+      </view>
+    </view>
+    <form bindsubmit='submitSpec'>
+      <view class="cu-form-group">
+        <view class="title text-bold">规格名:</view>
+        <input placeholder="必填" name="specification"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">规格值:</view>
+        <input placeholder="必填" name="value"></input>
+      </view>
+      <view style="margin-top: 1rpx;">
+        <uploadImg imgSite="1" title="规格图片" pic="{{specForm.picUrl}}" bind:getImage="specFormImage"></uploadImg>
+      </view>
+      <view class="cu-bar bg-white">
+          <button class="cu-btn line-green text-green flex-sub margin-sm" bindtap="hideModal">取消</button>
+          <button class="cu-btn bg-green flex-sub margin-sm" form-type='submit'>确定</button>
+      </view>
+    </form>
+  </view>
+</view>
+
+<view class="cu-modal {{modalName=='productVisiable'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white justify-end">
+      <view class="content text-bold">添加货品</view>
+      <view class="action" bindtap="hideModal">
+        <text class="cuIcon-close text-red"></text>
+      </view>
+    </view>
+    <form bindsubmit='submitProduct'>
+      <view class="cu-form-group">
+        <view class="title text-bold">货品规格:</view>
+        <view class="cu-tag bg-blue radius">{{products[index].specifications}}</view>
+        <view></view><!--这行不能删-->
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">货品售价:</view>
+        <input placeholder="{{initGoods.minAmount}}~{{initGoods.maxAmount}}元" type="digit" name="price" 
+        value="{{products[index].price}}"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">货品数量:</view>
+        <input placeholder="必填" type="number" name="number" value="{{products[index].number}}"></input>
+      </view>
+      <view style="margin-top: 1rpx;">
+        <uploadImg imgSite="1" title="货品图片" pic="{{products[index].url}}" bind:getImage="productsImage"></uploadImg>
+      </view>
+      <view class="cu-bar bg-white">
+          <button class="cu-btn line-green text-green flex-sub margin-sm" bindtap="hideModal">取消</button>
+          <button class="cu-btn bg-green flex-sub margin-sm" form-type='submit'>确定</button>
+      </view>
+    </form>
+  </view>
+</view>
+
+<view class="cu-modal {{modalName=='grouponRulesVisiable'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white justify-end">
+      <view class="content text-bold">编辑团购规则</view>
+      <view class="action" bindtap="hideModal">
+        <text class="cuIcon-close text-red"></text>
+      </view>
+    </view>
+    <form bindsubmit='submitGrouponRules'>
+      <view class="cu-form-group">
+        <view class="title text-bold">减免金额:</view>
+        <input placeholder="必填(0.00)" type="digit" name="discount" value="{{grouponRules.discount}}"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">团购人数:</view>
+        <input placeholder="必填" type="number" name="discountMember" value="{{grouponRules.discountMember}}"></input>
+      </view>
+
+      <datePicker title="截至日期:" startTime="true" bind:getTime="getGrouponExpireTime"></datePicker>
+
+      <view class="cu-bar bg-white">
+        <button class="cu-btn line-green text-green flex-sub margin-sm" bindtap="hideModal">取消</button>
+        <button class="cu-btn bg-green flex-sub margin-sm" form-type='submit'>确定</button>
+      </view>
+    </form>
+  </view>
+</view>
+
+
+<view class="cu-modal {{modalName=='attributeVisiable'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white justify-end">
+      <view class="content text-bold">添加商品参数</view>
+      <view class="action" bindtap="hideModal">
+        <text class="cuIcon-close text-red"></text>
+      </view>
+    </view>
+    <form bindsubmit='submitAttribute'>
+      <view class="cu-form-group">
+        <view class="title text-bold">参数名:</view>
+        <input placeholder="必填" name="attribute"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title text-bold">参数值:</view>
+        <input placeholder="必填" name="value"></input>
+      </view>
+      
+      <view class="cu-bar bg-white">
+        <button class="cu-btn line-green text-green flex-sub margin-sm" bindtap="hideModal">取消</button>
+        <button class="cu-btn bg-green flex-sub margin-sm" form-type='submit'>确定</button>
+      </view>
+    </form>
+  </view>
+</view>
+
+<!--服务协议-->
+<lyg-popup protocolPath="/pages/ucenter/help/help"></lyg-popup>
+
+<!--提示弹窗-->
+<view class="cu-modal {{modalName=='imageHint'?'show':''}}">
+  <view class="cu-dialog">
+    <image src="{{imageHint}}" style="height: 700rpx;"></image>
+    <view class="cu-bar bg-grey">
+      <view class="action margin-0 flex-sub  solid-left" bindtap="hideModal">我知道了</view>
+    </view>
+  </view>
+</view>

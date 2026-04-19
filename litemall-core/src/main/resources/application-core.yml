@@ -1,0 +1,143 @@
+litemall:
+  # 开发者应该设置成自己的wx相关信息
+  wx:
+    token: xxxxxxxxxxxxxxxxxxxxxxxx
+    aes-key: xxxxxxxxxxxxxxxxxxx
+    app-id: xxxxxxxxxxxxxxxxxxxxx
+    app-secret: xxxxxxxxxxxxxxxxxxxxxx
+    mch-id: xxxxxxxxxxxxxxxxx
+    mch-key: xxxxxxxxxxxxxxxxxxxxxx
+    api-v3-key: xxxxxxxxxxxxxxxxxxx
+    notify-url: https://www.ysling.com.cn/wx/order/pay-notify
+    # 商户证书文件路径
+    # 请参考“商户证书”一节 https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=4_3
+    key-path: D:/微信支付/WXCertUtil/cert/1621104141_20220218_cert/apiclient_cert.p12
+    private-cert-path: D:/微信支付/WXCertUtil/cert/1621104141_20220218_cert/apiclient_cert.pem
+    private-key-path: D:/微信支付/WXCertUtil/cert/1621104141_20220218_cert/apiclient_key.pem
+
+  #通知相关配置
+  notify:
+    mail:
+      # 邮件通知配置,邮箱一般用于接收业务通知例如收到新的订单，sendto 定义邮件接收者，通常为商城运营人员
+      enable: false
+      host: smtp.qq.com
+      username: 2024511631@qq.com
+      password: xxxxxxxxxxxxxxxxx
+      sendFrom: 2024511631@qq.com
+      sendTo: 927069313@qq.com
+      port: 465
+    # 短消息模版通知配置
+    # 短信息用于通知客户，例如发货短信通知，注意配置格式；template-name，template-templateId 请参考 NotifyType 枚举值
+    sms:
+      enable: false
+      # 如果是腾讯云短信，则设置active的值tencent
+      # 如果是阿里云短信，则设置active的值aliyun
+      active: tencent
+      sign: litemall
+      template:
+        - name: paySucceed  #支付成功
+          templateId: 633788
+        - name: captcha   #验证码
+          templateId: 633787
+        - name: ship    #订单发送
+          templateId: 633779
+        - name: refund    #退款通知
+          templateId: 633781
+      tencent:
+        appid: 1400367955
+        appkey: xxxxxxxxxxxxx
+      aliyun:
+        regionId: xxx
+        accessKeyId: xxx
+        accessKeySecret: xxx
+
+  # 快鸟物流查询配置
+  express:
+    enable: false
+    appId: "1649067"
+    appKey: "efdd28ba-c3d2-4a25-97ed-3344bd774d7d"
+    vendors:
+      - code: "ZS"
+        name: "商家自送"
+      - code: "ZTO"
+        name: "中通快递"
+      - code: "YTO"
+        name: "圆通速递"
+      - code: "YD"
+        name: "韵达速递"
+      - code: "YZPY"
+        name: "邮政快递包裹"
+      - code: "EMS"
+        name: "EMS"
+      - code: "DBL"
+        name: "德邦快递"
+      - code: "FAST"
+        name: "快捷快递"
+      - code: "ZJS"
+        name: "宅急送"
+      - code: "TNT"
+        name: "TNT快递"
+      - code: "UPS"
+        name: "UPS"
+      - code: "DHL"
+        name: "DHL"
+      - code: "FEDEX"
+        name: "FEDEX联邦(国内件)"
+      - code: "FEDEX_GJ"
+        name: "FEDEX联邦(国际件)"
+
+  # 对象存储配置
+  storage:
+    # 当前工作的对象存储模式，分别是local、aliyun、tencent、qiniu
+    active: local
+    # 本地对象存储配置信息
+    local:
+      storagePath: storage
+      # 这个地方应该是wx模块的WxStorageController的fetch方法对应的地址
+      address: http://localhost:6914/wx/storage/fetch/
+    # 阿里云对象存储配置信息
+    aliyun:
+      endpoint: oss-cn-shenzhen.aliyuncs.com
+      accessKeyId: 111111
+      accessKeySecret: xxxxxx
+      bucketName: litemall
+    # 腾讯对象存储配置信息
+    # 请参考 https://cloud.tencent.com/document/product/436/6249
+    tencent:
+      secretId: xxxxxxxxxx
+      secretKey: xxxxxxxxxxx
+      region: ap-xxxxxxxxx
+      bucketName: xxxxxxxxxxxx
+    # 七牛云对象存储配置信息
+    qiniu:
+      endpoint: http://pd5cb6ulu.bkt.clouddn.com
+      accessKey: 111111
+      secretKey: xxxxxx
+      bucketName: litemall
+
+  #百度内容审核校验
+  baidu:
+    enable: false
+    appid: xxxxxxxxx
+    apiKey: xxxxxxxxx
+    secretKey: xxxxxxxxx
+
+
+############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
+sa-token:
+  # jwt秘钥
+  jwt-secret-key: aksdjhlakhdsashdlakshdlakd
+  # token名称 (同时也是cookie名称)
+  token-name: X-Litemall-Admin-Token
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 86400
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: true
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: false

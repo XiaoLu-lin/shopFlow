@@ -1,0 +1,58 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">{{chatName}}</view>
+</cu-custom>
+
+<view id="viewCommunicationBody" style="margin-bottom: {{InputBottom}}px;">
+  <view class="cu-chat" wx:for="{{messageList}}"  wx:key="index">
+    <!--接收方-->
+    <view class="cu-item self" wx:if="{{item.avatarUrl && receiveUserId != item.sendUserId}}">
+      <view class="main">
+        <view class="content shadow" style="display: block;">
+          <view class="text-content">
+            <text selectable="true">{{item.content}}</text>
+          </view>
+          <image src="{{picUrl}}" class="radius" mode="widthFix" wx:for="{{item.picUrls}}" wx:for-item="picUrl" wx:key="index" bindtap="previewImage" data-url="{{picUrl}}"></image>
+        </view>
+      </view>
+      <view class="cu-avatar radius" style="background-image:url({{item.avatarUrl}});"></view>
+      <view class="date">{{item.addTime}}</view>
+    </view>
+    <!--发送方-->
+    <view class="cu-item" wx:if="{{item.avatarUrl && receiveUserId == item.sendUserId}}">
+      <view class="cu-avatar radius" style="background-image:url({{item.avatarUrl}});"></view>
+      <view class="main">
+        <view class="content shadow" style="display: block;">
+          <view class="text-content">
+            <text selectable="true">{{item.content}}</text>
+          </view>
+          <image src="{{picUrl}}" class="radius" mode="widthFix" wx:for="{{item.picUrls}}" wx:for-item="picUrl" wx:key="index" bindtap="previewImage" data-url="{{picUrl}}"></image>
+        </view> 
+      </view>
+      <view class="date">{{item.addTime}}</view>
+    </view>
+    <!--提示信息-->
+    <view class="cu-info" wx:if="{{!item.avatarUrl}}">
+      <text class="cuIcon-roundclosefill text-red">{{item.content}}</text> 
+    </view>
+  </view>
+</view>
+
+<!--底部输入框-->
+<form bindsubmit='sendMessage'>
+  <view class="cu-bar foot input {{InputBottom != 0?'cur':''}}" style="bottom:{{InputBottom}}px">
+    <view class="action">
+      <text class="cuIcon-sound text-grey"></text>
+    </view>
+    <textarea class="comment-textarea" bindtap="textarea" bindfocus="InputFocus" bindblur="InputBlur" maxlength="500" auto-height="true" 	fixed="true" cursor-spacing="10" style="min-height: 60rpx;" name="content" value="{{content}}" adjust-position="{{false}}"></textarea>
+    <view class="action margin-right-sm">
+      <text class="cuIcon-roundadd text-grey" bindtap="roundadd"></text>
+    </view>
+    <button class="cu-btn bg-green shadow" form-type='submit'>发送</button>
+  </view>
+  
+  <!--图片选择-->
+  <view class="cart-bottom" id="add-image" wx:if="{{addImage}}">
+    <uploadImg imgSite="4" pics="{{picUrls}}" bind:getImage="getMessageImage"></uploadImg>
+  </view>
+</form>
+

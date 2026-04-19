@@ -1,0 +1,25 @@
+@import "/lib/colorui/main.wxss";
+@import "/lib/colorui/icon.wxss";
+
+.active{
+  color: #39b54a;
+}
+.default{
+  color: #fff;
+}
+
+.bg-black {
+	background-color: #333333;
+	color: #39b54a;
+}
+
+.bg-green {
+	background-color: #39b54a;
+	color: #ffffff;
+}
+
+.cu-bar.tabbar{
+	padding: 0;
+	height: calc(120rpx + env(safe-area-inset-bottom) / 2);
+	padding-bottom: calc(env(safe-area-inset-bottom) / 2);
+}

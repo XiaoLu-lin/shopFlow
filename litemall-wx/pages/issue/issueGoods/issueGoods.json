@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "uploadImg": "/lib/components/uploadImg/uploadImg",
+    "datePicker": "/lib/components/datePicker/datePicker",
+    "lyg-popup": "/lib/components/lyg-popup/lyg-popup"
+  }
+}

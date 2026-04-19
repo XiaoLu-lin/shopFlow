@@ -1,0 +1,105 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">售后详情</view>
+</cu-custom>
+
+<view class="container">
+  <view class="cu-list menu card-menu shadow-lg margin-top" style="margin: 10rpx;">
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-grey text-bold">退款商品</text>
+        <text class="text-red text-bold fr">{{statusColumns[aftersale.status]}}</text>
+      </view>
+    </view>
+
+    <!--商品详情-->
+    <goodsItem goods="{{orderGoods}}"></goodsItem>
+
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-grey text-bold">订单明细</text>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">商品合计</view>
+      <view class="text-grey" style="max-width: 350rpx;">￥{{order.goodsPrice}}元</view>
+    </view>
+    <view class="cu-item" wx:if="{{order.grouponPrice > 0}}">
+      <view class="text-bold">团购减免</view>
+      <view class="text-grey" style="max-width: 350rpx;">-￥{{order.grouponPrice}}元</view>
+    </view>
+    <view class="cu-item" >
+      <view class="text-bold">余额减免</view>
+      <view class="text-grey" style="max-width: 350rpx;">-￥{{order.integralPrice}}元</view>
+    </view>
+    <view class="cu-item" >
+      <view class="text-bold">优惠券减免</view>
+      <view class="text-grey" style="max-width: 350rpx;">-￥{{order.couponPrice}}元</view>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">商品运费</view>
+      <view class="text-grey" style="max-width: 350rpx;">+￥{{order.freightPrice}}元</view>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">实际支付</view>
+      <view class="text-grey" style="max-width: 350rpx;">￥{{order.actualPrice}}元</view>
+    </view>
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-grey text-bold">退款明细</text>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">售后状态</view>
+      <view class="text-grey" style="max-width: 350rpx;">{{ statusColumns[aftersale.status]}}</view>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">申请时间</view>
+      <view class="text-grey" style="max-width: 350rpx;">{{ aftersale.addTime }}</view>
+    </view>
+    <view class="cu-item" >
+      <view class="text-bold">服务编号</view>
+      <view class="text-grey" style="max-width: 350rpx;">{{ aftersale.aftersaleSn }}</view>
+    </view>
+    <view class="cu-item" >
+      <view class="text-bold">退款金额</view>
+      <view class="text-red text-bold" style="max-width: 350rpx;">￥{{ aftersale.amount }}元</view>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">退款类型</view>
+      <view class="text-grey" style="max-width: 350rpx;">{{ typeColumns[aftersale.type]}}</view>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">退款原因</view>
+      <view class="text-grey" style="max-width: 350rpx;">{{ aftersale.reason }}</view>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">退款说明</view>
+      <view class="text-grey" style="max-width: 350rpx;">{{ aftersale.comment }}</view>
+    </view>
+    <view class="cu-item">
+      <view class="text-bold">退款凭证</view>
+    </view>
+    <view class="cu-item">
+      <view class="grid flex-sub padding-right-sm grid-square col-4">
+        <view class="bg-img" style="background-image:url({{picUrl}});" wx:for="{{aftersale.pictures}}" 
+        wx:for-item="picUrl" wx:key="index" bindtap="previewImage" data-url="{{picUrl}}">
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view style="padding-bottom: 140rpx;"></view>
+
+  <view class="cu-list menu card-menu shadow-lg cu-bar foot" wx:if="{{aftersale.status == 4}}" 
+  style="width: 97%;margin: 10rpx;background-color: #ffff;">
+    <view class="cu-item fr" style="background-color: #ffff">
+      <button class="cu-btn margin-left bg-red" bindtap="aftersaleOrder">重新申请</button>
+    </view>
+  </view>
+</view>

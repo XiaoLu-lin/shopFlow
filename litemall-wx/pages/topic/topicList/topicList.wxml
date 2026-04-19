@@ -1,0 +1,45 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">专题</view>
+</cu-custom>
+
+<view class="container">
+  <view class="cu-bar search bg-white">
+    <view class="search-form round">
+      <text class="cuIcon-search"></text>
+      <input type="text" placeholder="请输入专题标题" value="{{title}}" confirm-type="search" bindinput="bindExchange"></input>
+      <text class="cuIcon-roundclose" style="margin-right: 30rpx;" wx:if="{{title.length > 0}}" bindtap="clearExchange"></text>
+    </view>
+    <view class="action">
+      <button class="cu-btn bg-green shadow-blur round" bindtap='goSearch'>搜索</button>
+    </view>
+  </view>
+
+  <view class="cu-card article" wx:for="{{topicList}}" wx:key="id">
+    <navigator class="cu-item shadow" style="margin: 10rpx;" url="/pages/topic/topicDetail/topicDetail?id={{item.id}}">
+      <view class="title">
+        <view class="text-cut">{{item.title}}</view>
+      </view>
+      <view class="content">
+        <image src="{{item.picUrl}}" mode="aspectFill"></image>
+        <view class="desc">
+          <view class="text-content">{{item.subtitle}}</view>
+          <view class="text-right text-grey">
+            <view class="cu-tag bg-red light sm radius fl">{{item.price}}元起</view>
+            <text class="cuIcon-attentionfill margin-left-xs padding-top"></text> {{item.readCount}}
+            <text class="cuIcon-appreciatefill margin-left-xs"></text> {{item.likeCount}}
+            <text class="cuIcon-messagefill margin-left-xs"></text> {{item.commentCount}}
+          </view>
+        </view>
+      </view>
+    </navigator>
+  </view>
+
+  <view wx:if="{{topicList.length <= 0}}">
+    <view class="flex-sub text-center margin-top-half">
+      <view class="text-xsl padding">
+        <text class="cuIcon-wefill text-grey"></text>
+      </view>
+      <view class="padding-0 text-grey text-bold">暂无专题</view>
+    </view>
+  </view>
+</view>

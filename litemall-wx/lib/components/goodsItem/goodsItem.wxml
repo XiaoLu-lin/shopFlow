@@ -1,0 +1,29 @@
+
+
+<view class="cu-list menu card-menu shadow-lg" style="margin: 0;border-radius: 0rpx;">
+  <view class="cu-item" style="min-height: 170rpx; padding-right: 0;">
+    <view class="content flex justify-center align-center">
+      <navigator hover-class='none' class="margin-right" url="/pages/goodsDetail/goodsDetail?goodId={{goods.goodsId}}">
+        <view class="cu-avatar xxl radius-sm" style="background-image:url({{goods.picUrl}});"></view>
+      </navigator>
+      <view class="flex-twice flex">
+        <view class="basis-lx" style="flex-basis: 75%;">
+          <view class="text-bold text-cut margin-bottom-xs" style="width: 380rpx;">{{goods.goodsName}}</view>
+          <view class="cu-tag text-cut bg-cyan light" style="width: 380rpx;">
+            {{ (goods.isTakeTheir ? "自提 | " : "") + goods.specifications }}
+          </view>
+        </view>
+        <view class="basis-xs text-center" style="flex-basis: 25%;">
+          <view class="text-price text-red text-lg price text-bold">{{goods.price}}</view>
+          <view class="text-grey margin-top-xs">共{{goods.number}}件</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="cu-item" wx:if="{{goods.isTakeTheir && showAddress}}">
+    <view class="content">
+      <text>自提地址：{{goods.address}}</text>
+    </view>
+  </view>
+</view>

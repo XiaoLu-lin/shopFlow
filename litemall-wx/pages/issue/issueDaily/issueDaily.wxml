@@ -1,0 +1,35 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">分享日常</view>
+</cu-custom>
+
+<view class="container">
+
+  <view class="margin-xs">
+    <view class="margin-top bg-white padding radius-df">
+      <view class="text-black text-sm text-bold">操作说明：</view>
+      <view class="text-gray text-sm padding-top-xs">日常分享提交后，会在动态内显示并全部人可见，如想删除可点击动态右上角的绿色按钮，会出现提示弹窗点击删除即可。</view>
+    </view>
+  </view>
+  
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+    <view class="cu-bar bg-white">
+      <view class="action text-grey text-bold">
+        字数限制
+      </view>
+      <view class="action text-grey text-bold">
+        {{content.length}}/500
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="content">
+        <textarea class="comment-textarea" focus="true" bindinput="contentInput" maxlength="500" 
+        placeholder="分享你想分享的日常"></textarea>
+      </view>
+    </view>
+    <uploadImg imgSite="9" title="图片上传" bind:getImage="getContentImage"></uploadImg>
+  </view>
+
+  <view style="height: 200rpx;"></view>
+
+  <button class="add-button" bindtap="submitIssue">提交</button>
+</view>

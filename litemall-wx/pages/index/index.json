@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "首页",
+  "backgroundTextStyle": "light",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "redPacket": "/lib/components/redPacket/redPacket",
+    "goodList": "/lib/components/goodList/goodList"
+  }
+}

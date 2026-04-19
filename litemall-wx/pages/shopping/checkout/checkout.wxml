@@ -1,0 +1,130 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">填写订单</view>
+</cu-custom>
+
+<view class="container">
+  <view class="cu-list menu card-menu margin-top-sm shadow-lg">
+    <view class="cu-item arrow" bindtap="selectAddress" wx:if="{{checkedAddress.id > 0}}">
+      <view class="content flex margin-sm margin-top margin-bottom">
+        <view class="margin-right text-xxl">
+          <text class="cuIcon-locationfill text-red"></text>
+        </view>
+        <view>
+          <view class="text-black text-bold text-lg">
+          {{checkedAddress.addressAll}}
+          </view>
+          <view>
+            <text class="margin-right">{{checkedAddress.name}}</text>
+            <text>{{checkedAddress.mobile}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="cu-item arrow" bindtap="selectAddress" wx:else>
+      <view class="content flex margin-sm margin-top margin-bottom">
+        <view class="margin-right text-xxl">
+          <text class="cuIcon-location text-red "></text>
+        </view>
+        <view>
+          <view class="text-black text-bold text-lg">
+            还没有地址，去添加
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="cu-list menu card-menu shadow-lg" wx:for="{{checkedGoodsList}}" wx:key="id">
+    <navigator class="cu-item arrow" url="/pages/brand/brandDetail/brandDetail?id={{item.brandId}}" 
+    wx:if="{{item.brandName}}">
+      <view class="content">
+        <text class="cuIcon-shop text-grey"></text>
+        <text class="text-grey">{{item.brandName}}</text>
+      </view>
+    </navigator>
+    <!--商品详情-->
+    <goodsItem goods="{{item}}"></goodsItem>
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg">
+    <view class="cu-form-group">
+      <view class="title text-bold">余额抵扣</view>
+      <switch class="red sm" name="isDeduction" bindtap="buidDeduction" checked='{{isDeduction}}'></switch>
+    </view>
+  </view>
+  
+  <view class="cu-list menu card-menu shadow-lg">
+    <view class="cu-item arrow" bindtap="selectCoupon">
+      <view class="content">
+        <text class="cuIcon-ticket text-grey"></text>
+        <block wx:if="{{couponId == 0}}">
+          <text class="text-grey">没有可用的优惠券</text>
+          <text class="text-grey fr">0张</text>
+        </block>
+        <block wx:elif="{{couponId == -1}}">
+          <text class="text-grey">可用优惠券</text>
+          <text class="text-grey fr">{{availableCouponLength}}张</text>
+        </block>
+        <block wx:else>
+          <text class="text-grey">优惠券减免</text>
+          <text class="text-grey fr">-￥{{couponPrice}}元</text>
+        </block>      
+      </view>
+    </view>
+    <view style="margin-top: 1rpx;"></view>
+    <view class="cu-item">
+      <view class="content flex">
+        <text class="cuIcon-message text-grey" style="margin-top: 8rpx;"></text>
+        <input style="width: 100%;" bindinput="bindMessageInput" placeholder="订单备注" value="{{message}}" />
+      </view>
+    </view>
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg">
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-grey text-bold">支付明细</text>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view>商品合计</view>
+      <view class="text-grey" style="max-width: 350rpx;">￥{{goodsTotalPrice}}元</view>
+    </view>
+    <view class="cu-item" wx:if="{{grouponPrice > 0}}">
+      <view>团购减免</view>
+      <view class="text-grey" style="max-width: 350rpx;">-￥{{grouponPrice}}元</view>
+    </view>
+    <view class="cu-item" >
+      <view>余额减免</view>
+      <view class="text-grey" style="max-width: 350rpx;">-￥{{integralPrice}}元</view>
+    </view>
+    <view class="cu-item" >
+      <view>优惠券减免</view>
+      <view class="text-grey" style="max-width: 350rpx;">-￥{{couponPrice}}元</view>
+    </view>
+    <view class="cu-item">
+      <view>商品运费</view>
+      <view class="text-grey" style="max-width: 350rpx;">+￥{{freightPrice}}元</view>
+    </view>
+    <view class="cu-item">
+      <view>订单合计</view>
+      <view class="text-grey" style="max-width: 350rpx;">￥{{orderTotalPrice}}元</view>
+    </view>
+  </view>
+
+  <view style="padding-bottom: 140rpx;"></view>
+
+  <view class="cu-list menu card-menu margin-xs shadow-lg order-total">
+    <view class="cu-item" style="background-color: #ffff">
+      <view class="content">
+        <view class="cu-bar tabbar border shop">          
+          <view class="flex solid-bottom justify-end">
+            <view class="text-bold text-lg text-red">实付：￥{{actualPrice}}</view>
+          </view>
+          <view class="flex solid-bottom justify-end">
+            <view class="checkout bg-red submit" type="info" bindtap="submitOrder">去付款</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

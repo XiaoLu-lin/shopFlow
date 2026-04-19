@@ -1,0 +1,200 @@
+<view class="cu-custom" style="height:{{CustomBar}}px">
+  <view class="cu-bar fixed bg-gradual-yellow" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+    <view class="action" style="margin-left:calc(750rpx - {{Custom.right}}px)">
+      <view class="cu-avatar round margin-right-sm" style="background-image:url({{userInfo.avatarUrl}});"></view>
+      <navigator class="search-form round" style="margin: 0rpx;" url="/pages/search/search">
+        <text class="cuIcon-search padding-lr-xs"></text>
+        <input type="text" disabled="true" style="padding-right: 30rpx;" placeholder="商品搜索"></input>
+        <text class="cuIcon-search" style="color: #f5f5f5;"></text>
+      </navigator>
+    </view>
+  </view>
+</view>
+
+<view class="container">
+  <!--分类-->
+  <scroll-view scroll-x class="bg-white nav" scroll-with-animation scroll-left="{{scrollLeft}}">
+    <view class="cu-item {{index==TabCur?'text-green cur':''}}" wx:for="{{channel}}" wx:key="id" 
+    bindtap="switchCate" data-id="{{item.id}}">
+      <text class="text-bold text-black">{{item.name}}</text>
+    </view>
+  </scroll-view>
+
+  <!--广告-->
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;" wx:if="{{banner.length > 0}}">
+    <swiper class="screen-swiper square-dot" indicator-dots="true" circular="true" autoplay="true" interval="5000" duration="500" style="max-height: 250rpx;min-height: 250rpx;">
+      <swiper-item wx:for="{{banner}}" wx:key="id">
+        <navigator hover-class='none' url="{{item.link}}">
+          <view class="image">
+            <image src="{{item.url}}" mode="aspectFill" style="width: 100%;height: 250rpx;"></image>
+          </view>
+        </navigator>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!--优惠券弹窗-->
+  <redPacket id="redPacket" couponArr="{{coupons}}"></redPacket>
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;" 
+  wx:if="{{coupons.length > 0 && hasLogin}}">
+    <view class="cu-item arrow" bindtap="showCoupon">
+      <view class="content">
+        <text class="cuIcon-ticket text-red text-bold"></text>
+        <text class="text-bold">优惠券领取</text>
+      </view>
+    </view>
+  </view>
+
+  <!--店铺与专题-->
+  <view class='nav-list'>
+    <navigator hover-class='none' url="{{item.url}}" class="nav-li bg-{{item.color}} margin-xs" 
+    wx:for="{{elements}}" wx:key="index">
+      <view class="nav-title">{{item.title}}</view>
+      <view class="nav-name">{{item.name}}</view>
+      <text class='cuIcon-{{item.icon}}'></text>
+    </navigator>
+  </view>
+
+  <!--热卖轮播-->
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+    <view class="cu-list" wx:if="{{hotGoods.length > 0}}">
+      <swiper circular="true" autoplay="true" interval="5000" duration="500"  style="height: 560rpx;"
+      previous-margin="{{windowWidth/2.3}}rpx" next-margin="{{windowWidth/2.3}}rpx">
+        <swiper-item wx:for="{{hotGoods}}" wx:key="id">
+          <navigator hover-class='none' class="cu-card case" url="/pages/goodsDetail/goodsDetail?goodId={{item.id}}">
+            <view class="cu-card case" style="margin: 10rpx;">
+              <view class="cu-item shadow" style="margin: 0rpx;">
+                <view class="image">
+                  <image src="{{item.picUrl}}" mode="aspectFill" style="width: 100%;height: 320rpx;"></image>
+                </view>
+                <view class="margin-sm">
+                  <view class="text-cut text-black margin-bottom-xs text-bold" style="width:100%">{{item.name}}</view>
+                  <view class="text-cut text-grey margin-bottom-xs text-sm" style="width:100%">{{item.brief}}</view>
+                  <view class="flex justify-between margin-bottom-xs">
+                    <view class="cu-capsule radius"  wx:if="{{item.isNew}}">
+                      <view class="cu-tag bg-olive sm">N</view>
+                      <view class="cu-tag line-olive sm">新品</view>
+                    </view>
+                    <view class="cu-capsule radius" wx:if="{{item.isHot}}">
+                      <view class="cu-tag bg-red sm">H</view>
+                      <view class="cu-tag line-red sm">热卖</view>
+                    </view>
+                    <block wx:if="{{item.isGroupon}}">
+                      <view class="cu-capsule radius">
+                        <view class="cu-tag bg-orange sm">G</view>
+                        <view class="cu-tag line-orange sm">团购</view>
+                      </view>
+                    </block>
+                    <block wx:else>
+                      <view class="cu-capsule radius" wx:if="{{item.counterPrice > item.retailPrice}}">
+                        <view class="cu-tag bg-orange sm">H</view>
+                        <view class="cu-tag line-orange sm">折扣</view>
+                      </view>
+                    </block>
+                  </view>
+                  <view class="flex justify-between">
+                    <view class="cu-capsule radius">
+                      <view class="cu-tag bg-grey sm">原价</view>
+                      <view class="cu-tag line-grey text-price sm">{{item.counterPrice}}</view>
+                    </view>
+                    <view class="cu-capsule radius">
+                      <view class="cu-tag bg-red sm">现价</view>
+                      <view class="cu-tag line-red text-price sm">{{item.retailPrice}}</view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </navigator>
+        </swiper-item>
+      </swiper>
+    </view>
+  </view>
+
+
+  <!--赏金任务 -->
+  <view class="cu-good-act margin-xs bg-white light" wx:if="{{rewardTaskList.length > 0}}">
+    <navigator class="cu-good-t-box bg-olive" hover-class='none' url="/pages/rewards/rewards">
+      <view class="cu-good-title">赏金任务</view>
+    </navigator>
+    <view class="cu-good-point-con {{rewardTaskList.length==1?'cu-good-wd1':rewardTaskList.length==2?'cu-good-wd2':''}}">
+      <swiper class="swiper-box" indicator-dots="{{false}}" autoplay="{{true}}" interval="{{1500}}" duration="{{1000}}" circular="true" display-multiple-items="{{rewardTaskList.length >= 3 ? 3 : rewardTaskList.length}}">
+        <swiper-item wx:for="{{rewardTaskList}}" wx:key="index" bindtap="rewardShare" data-id="{{item.id}}">
+          <view class="cu-good-point-flex-w">
+            <image class="cu-good-point-img radius-lg" src="{{item.picUrl}}"></image>
+            <view>奖励{{item.award}}</view>
+          </view>
+        </swiper-item>
+      </swiper>
+    </view>
+  </view>
+
+  <!--团购活动 -->
+  <view class="cu-good-act margin-xs bg-white light" wx:if="{{grouponRuleList.length > 0}}">
+    <navigator class="cu-good-t-box bg-green" hover-class='none' url="/pages/grouponList/grouponList">
+      <view class="cu-good-title">团购活动</view>
+    </navigator>
+    <view class="cu-good-point-con {{grouponRuleList.length==1?'cu-good-wd1':grouponRuleList.length==2?'cu-good-wd2':''}}">
+      <swiper class="swiper-box" indicator-dots="{{false}}" autoplay="{{true}}" interval="{{1500}}" duration="{{1000}}" circular="true" display-multiple-items="{{grouponRuleList.length >= 3 ? 3 : grouponRuleList.length}}">
+        <swiper-item wx:for="{{grouponRuleList}}" wx:key="index" bindtap="getGrouponGoods" data-id="{{item.goodsId}}">
+          <view class="cu-good-point-flex-w">
+            <image class="cu-good-point-img radius-lg" src="{{item.picUrl}}"></image>
+            <view>优惠{{item.discount}}</view>
+          </view>
+        </swiper-item>
+      </swiper>
+    </view>
+  </view>
+
+  
+
+  <!--新品推荐-->
+  <view class="a-section a-new" wx:if="{{newGoods.length > 0}}">
+    <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+      <navigator class="cu-item arrow" url="/pages/goods/newGoods/newGoods" >
+        <view class="content">
+          <text class="cuIcon-goods text-red text-bold"></text>
+          <text class="text-bold">新品首发</text>
+        </view>
+      </navigator>
+    </view>
+    <goodList goods="{{newGoods}}"></goodList>
+  </view>
+
+  <!--热卖推荐-->
+  <view class="a-section a-new" wx:if="{{hotGoods.length > 0}}">
+    <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+      <navigator class="cu-item arrow" url="/pages/goods/hotGoods/hotGoods">
+        <view class="content">
+          <text class="cuIcon-goods text-red text-bold"></text>
+          <text class="text-bold">热卖商品</text>
+        </view>
+      </navigator>
+    </view>
+    <goodList goods="{{hotGoods}}"></goodList>
+  </view>
+
+  <!--推荐专区-->
+  <view class="a-section a-new" wx:if="{{allGoods.length > 0}}">
+    <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+      <navigator class="cu-item arrow" url="/pages/goods/hotGoods/hotGoods">
+        <view class="content">
+          <text class="cuIcon-goods text-red text-bold"></text>
+          <text class="text-bold">商品推荐</text>
+        </view>
+      </navigator>
+    </view>
+    <goodList goods="{{allGoods}}"></goodList>
+  </view>
+  
+  <view wx:if="{{allGoods.length <= 0}}">
+    <view class="flex-sub text-center margin-top">
+      <view class="text-xsl padding">
+        <text class="cuIcon-wefill text-grey"></text>
+      </view>
+      <view class="padding-0 text-grey text-bold">暂无商品</view>
+    </view>
+  </view>
+  
+  <view class='cu-tabbar-height'></view>
+</view>

@@ -1,0 +1,52 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">个人信息</view>
+</cu-custom>
+
+<view class="container">
+  <form bindsubmit='submit'>
+    <view class="cu-list menu card-menu shadow-lg" style="margin: 30rpx; ">
+      <view class="cu-item">
+        <view class="flex-sub text-center" style="margin-top: 50rpx; margin-bottom: 50rpx;">
+          <button class="cu-avatar round xxl"  open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+            <view class="cu-avatar round xxl" style="background-image:url({{avatarUrl}});">
+              <view class="cu-tag badge"></view>
+            </view>
+          </button>
+        </view>
+      </view>
+
+      <view class="cu-form-group">
+        <view class="title text-bold">用户昵称：</view>
+        <input type="nickName" name="nickName" value="{{nickName}}" placeholder="请输入用户昵称"/>
+      </view>
+
+      <view class="cu-form-group">
+        <view class="title text-bold">手机号码：</view>
+        <input name="mobile" value="{{mobile}}" placeholder="请输入手机号码"/>
+      </view>
+      
+      <view class="cu-form-group">
+        <view class="title text-bold">生日日期：</view>
+        <picker mode="date" value="{{birthday}}" bindchange="BirthdayChange">
+          <view class="picker">
+            {{birthday}}
+          </view>
+        </picker>
+      </view>
+
+      <radio-group class="block">
+        <view class="cu-form-group">
+          <view class="title text-bold">用户性别：</view>
+          <view>
+            <radio class="blue" checked="{{gender == 1}}" bindtap="bindIsGender" data-gender="1">男</radio>
+            <radio class="red margin-left-sm" checked="{{gender == 2}}" bindtap="bindIsGender" data-gender="2">女</radio>
+          </view>
+        </view>
+      </radio-group>
+    </view>
+
+    <button class="add-address" form-type='submit'>提交信息</button>
+  </form>
+
+</view>
+

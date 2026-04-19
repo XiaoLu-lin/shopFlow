@@ -1,0 +1,46 @@
+<view>
+  <!-- 弹窗遮罩层 -->
+  <view wx:if="{{isShowCouponPopUp}}" class="popover-mask-layer"></view>
+  <!-- 优惠劵弹窗 //用hidden而不用wx:if原因是hidden条件不成立时候也会加载图片-->
+  <view hidden="{{!isShowCouponPopUp}}" class="coupon-pop-up" catchtouchmove="onPreventTouchMove" animation="{{animationData}}">
+    <view class="body">
+      <view class="top-images">
+        <!-- 顶部gif背景图 //监听图片加载完后再开启弹窗-->
+        <image src="{{topImages}}"></image>
+      </view>
+      <view class="mid-coupons">
+        <view class="content">
+          <scroll-view scroll-y="true">
+            <block wx:for="{{couponArr}}" for-index="index" wx:key="index">
+              <view class="row">
+                <view class="coupon">
+                  <view class="left">
+                    <image src="{{couponLeftImages}}"></image>
+                  </view>
+                  <view class="mid">
+                    <view>{{item.name}}</view>
+                    <view>满{{item.min}}元可用</view>
+                  </view>
+                  <view class="right">
+                    <view>￥<text>{{item.discount}}</text></view>
+                    <view bindtap="getCoupons" data-index="{{index}}" 
+                    wx:if="{{!item.HasItBeenClaimed}}" class="unclaimed">领取</view>
+                    <view bindtap="alreadyReceived" wx:if="{{item.HasItBeenClaimed}}" class="already-received">已领取</view>
+                  </view>
+                </view>
+              </view>
+            </block>
+          </scroll-view>
+        </view>
+        <view class="bottom-get-btn">
+          <view bindtap="getAllCoupons">全部领取</view>
+        </view>
+      </view>
+      <view class="bottom-close-btn">
+        <view class="bottom-close-btn-child" bindtap="closeTheCouponPopUp">
+          <image src="{{closeBtnImages}}"></image>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

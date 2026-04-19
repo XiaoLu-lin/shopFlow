@@ -1,0 +1,222 @@
+
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">订单详情</view>
+</cu-custom>
+
+<view class="container">
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;" wx:if="{{!groupon.id}}">
+    <view class="cu-item">
+      <view class="content">
+        <view class="cu-steps">
+          <view class="cu-item {{index>orderBasics?'':item.color}}" wx:for="{{orderBasicsList}}" wx:key="index">
+            <text class="cuIcon-{{item.icon}}"></text> {{item.name}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;" wx:if="{{groupon.id}}">
+    <view class="cu-item">
+      <view class="content">
+        <view class="cu-steps">
+          <view class="cu-item {{index>grouponBasics?'':item.color}}" wx:for="{{groupBasicsList}}" wx:key="index">
+            <text class="cuIcon-{{item.icon}}"></text> {{item.name}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <sharePop id="sharePop" name="分享团购" url="{{groupon.shareUrl}}"></sharePop>
+  
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;" 
+  wx:if="{{groupon.id && grouponBasics==1 && status != 1}}">
+    <view class="cu-item">
+      <view class="content">
+        <button class="cu-btn bg-white fl" style="margin-left: -30rpx;">
+          <text class="text-bold">还差【{{rules.discountMember-joiners.length}}人】拼团成功</text>
+        </button> 
+        <button class="cu-btn margin-left bg-red fr" bindtap="showShare">邀请参团</button>   
+      </view>
+    </view>
+  </view>
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;" wx:if="{{groupon.id}}">
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-bold">已参团【{{joiners.length}}人】</text>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="flex-twice grid col-6">
+        <view class=" margin-xs" wx:for-items="{{joiners}}" wx:key="id" data-id="{{item.id}}">
+          <view class="cu-avatar radius-sm lg" style="background-image:url({{item.avatarUrl}});"></view>
+          <view class="flex justify-center">{{item.nickName}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+    <block wx:if="{{handleOption.comment && (orderGoods.comment == 0)}}">
+      <navigator class="cu-item arrow" url="/pages/comment/commentPost/commentPost?goodsId={{orderGoods.id}}">
+        <view class="content  text-bold">
+          <text class="cuIcon-comment text-grey"></text>
+          <text class="text-grey">去评论</text>
+        </view>
+      </navigator>
+    </block>
+    <block wx:else>
+      <view class="cu-item">
+        <view class="content">
+          <text class="text-grey">订单状态</text>
+          <text class="text-red fr text-bold" wx:if="{{handleOption.comment && (orderGoods.comment != 0)}}">已评价</text>
+          <text class="text-red fr text-bold" wx:else>{{orderInfo.orderStatusText}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!--商品详情-->
+    <goodsItem goods="{{orderGoods}}" showAddress="{{true}}"></goodsItem>
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+    <view class="cu-item arrow" bindtap="shipSubscribe" wx:if="{{orderBasics == 1 || grouponBasics == 3}}">
+      <view class="content">
+        <text class="text-bold">订阅发货通知</text>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="content flex margin-sm margin-top margin-bottom">
+        <view class="margin-right text-xxl">
+          <text class="cuIcon-locationfill text-red"></text>
+        </view>
+        <view>
+          <view class="text-black text-bold text-lg">{{orderInfo.address}}</view>
+          <view>
+            <text class="margin-right">{{orderInfo.consignee}}</text>
+            <text class="margin-right"> | </text>
+            <text>{{orderInfo.mobile}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;" wx:if="{{orderInfo.expNo}}">
+    <view class="cu-item arrow" bindtap="searchDetail" wx:if="{{orderInfo.expSuccess}}">
+      <view class="content">
+        <text class="text-bold">物流查询</text>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view>快递公司：</view>
+      <view class="text-grey" style="max-width: 350rpx;">{{orderInfo.expName}}</view>
+    </view>
+    <view class="cu-item">
+      <view>物流单号：</view>
+      <view class="text-grey" style="max-width: 350rpx;">{{orderInfo.expNo}}</view>
+    </view>
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+    <view class="cu-item arrow" bindtap="openChat" wx:if="{{status == 1}}">
+      <view class="content">
+        <text class="text-bold">联系买家</text>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-grey text-bold">订单信息</text>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view>下单时间：</view>
+      <view class="text-grey" style="max-width: 350rpx;">{{orderInfo.addTime}}</view>
+    </view>
+    <view class="cu-item">
+      <view>订单编号：</view>
+      <view class="text-grey" style="max-width: 350rpx;">{{orderInfo.orderSn}}</view>
+    </view>
+    <view class="cu-item" >
+      <view>支付时间：</view>
+      <view class="text-grey" style="max-width: 350rpx;">{{orderInfo.payTime}}</view>
+    </view>
+    <view class="cu-item">
+      <view>订单留言：</view>
+      <view class="text-grey" style="max-width: 350rpx;">{{orderInfo.message}}</view>
+    </view>
+  </view>
+
+  <view class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;">
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-grey text-bold">支付信息</text>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view>商品合计：</view>
+      <view class="text-grey" style="max-width: 350rpx;">￥{{orderInfo.goodsPrice}}元</view>
+    </view>
+    <view class="cu-item" wx:if="{{orderInfo.grouponPrice > 0}}">
+      <view>团购减免：</view>
+      <view class="text-grey" style="max-width: 350rpx;">-￥{{orderInfo.grouponPrice}}元</view>
+    </view>
+    <view class="cu-item">
+      <view>余额减免：</view>
+      <view class="text-grey" style="max-width: 350rpx;">-￥{{orderInfo.integralPrice}}元</view>
+    </view>
+    <view class="cu-item">
+      <view>优惠券减免：</view>
+      <view class="text-grey" style="max-width: 350rpx;">-￥{{orderInfo.couponPrice}}元</view>
+    </view>
+    <view class="cu-item">
+      <view>商品运费：</view>
+      <view class="text-grey" style="max-width: 350rpx;">+￥{{orderInfo.freightPrice}}元</view>
+    </view>
+  </view>
+  
+  <view style="padding-bottom: 140rpx;"></view>
+
+  <view class="cu-list menu card-menu margin-xs shadow-lg order-info" style="margin: 10rpx;">
+    <view class="cu-item" style="background-color: #ffff">
+      <view class="content">
+        <button class="cu-btn bg-white" style="padding-left: 0;">
+          <text class="text-red text-bold">实付￥{{orderInfo.actualPrice}}元</text>
+        </button>
+        <view class="flex solid-bottom justify-end fr">
+          <button class="cu-btn margin-left bg-red" bindtap="cancelOrder" wx:if="{{handleOption.cancel}}">取消订单</button>   
+          <button class="cu-btn margin-left bg-green" bindtap="payOrder" wx:if="{{handleOption.pay}}">去付款</button>  
+          <button class="cu-btn margin-left bg-red" bindtap="refundOrder" wx:if="{{handleOption.refund}}">申请退款</button>  
+          <button class="cu-btn margin-left bg-red" bindtap="deleteOrder" wx:if="{{handleOption.delete}}">删除订单</button>   
+          <button class="cu-btn margin-left bg-red" bindtap="aftersaleOrder" wx:if="{{handleOption.aftersale}}">申请售后</button>  
+          <button class="cu-btn margin-left bg-green" bindtap="confirmOrder" wx:if="{{handleOption.confirm}}">确认收货</button>  
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="cu-modal bottom-modal {{expandFlag?'show':''}}" style="text-align: inherit;">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white">
+      <view class="action text-green" bindtap="expandDetail">确定</view>
+      <view class="action text-blue" bindtap="expandDetail">取消</view>
+    </view>
+
+    <scroll-view scroll-y="true" style="height: 1000rpx;" enable-passive="true" catchtouchmove="true">
+      <view class="cu-timeline">
+        <view class="cu-item" wx:for="{{expressInfo.Traces}}" wx:key="item">
+          <view class="content">
+            <view class="cu-capsule radius">
+              <view class="cu-tag bg-cyan">{{item.AcceptTime}}</view>
+            </view>
+            <view class="margin-top">{{item.AcceptStation}}</view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "商品详情",
+  "usingComponents": {
+    "sharePop": "/lib/components/sharePop/sharePop",
+    "goodList": "/lib/components/goodList/goodList"
+  }
+}

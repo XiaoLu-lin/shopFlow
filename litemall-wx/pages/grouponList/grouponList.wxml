@@ -1,0 +1,63 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">团购专区</view>
+</cu-custom>
+
+<view class="container">
+
+  <view class="margin-xs">
+    <view class="margin-top bg-white padding radius-df">
+      <view class="text-black text-sm text-bold">团购规则：</view>
+      <view class="text-gray text-sm padding-top-xs">1.团购流程，点击团购商品并选中团购下单，下单完成后在订单详情页面会有团购分享按钮，当有人根据分享连接进入团购商品并下单，则表示参团成功。如参团人数满足团购要求人数则表示拼团成功。2.如果团购到达截至日期或团购活动被管理员取消则自动团购失败并发起退款。</view>
+    </view>
+  </view>
+
+  <view class='nav-list'>
+    <navigator hover-class='none' url="/pages/goodsDetail/goodsDetail?goodId={{item.id}}" 
+    class="nav-li" wx:for="{{grouponList}}" wx:key>
+      <view class="cu-card case">
+        <view class="cu-item shadow" style="margin: 0rpx;">
+          <view class="image">
+            <image src="{{item.picUrl}}" style="width: 100%;height: 320rpx;"></image>
+          </view>
+          <view class="margin-sm">
+            <view class="text-cut text-black margin-bottom-xs">{{item.name}}</view>
+            <view class="text-cut text-grey margin-bottom-xs text-sm">{{item.brief}}</view>
+            <view class="cu-capsule radius margin-bottom-xs" style="margin-left: 0;">
+              <view class="cu-tag bg-red sm">截至日期</view>
+              <view class="cu-tag line-red sm">{{item.expireTime}}</view>
+            </view>
+            <view class="flex justify-between">
+              <view class="cu-capsule radius">
+                <view class="cu-tag bg-grey sm">原价</view>
+                <view class="cu-tag line-grey text-price sm">{{item.counterPrice}}</view>
+              </view>
+              <view class="cu-capsule radius margin-bottom-xs">
+                <view class="cu-tag bg-red sm">{{item.grouponMember}}人立减</view>
+                <view class="cu-tag line-red text-price sm">{{item.grouponDiscount}}</view>
+              </view>
+            </view>
+            <view class="flex justify-between">
+              <view class="cu-capsule radius">
+                <view class="cu-tag bg-orange sm">现价</view>
+                <view class="cu-tag line-orange text-price sm">{{item.retailPrice}}</view>
+              </view>
+              <view class="cu-capsule radius">
+                <view class="cu-tag bg-red sm">团购价</view>
+                <view class="cu-tag line-red text-price sm">{{item.grouponPrice}}</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </navigator>
+  </view>
+
+  <view wx:if="{{grouponList.length <= 0}}">
+    <view class="flex-sub text-center margin-top-half">
+      <view class="text-xsl padding">
+        <text class="cuIcon-wefill text-grey"></text>
+      </view>
+      <view class="padding-0 text-grey text-bold">暂无团购活动</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,64 @@
+
+.cu-bar .action:first-child {
+  margin-left: 30rpx;
+  font-size: 40rpx;
+}
+
+.cu-dialog {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: auto;
+  margin-right: auto;
+  width: 680rpx;
+  max-width: 100%;
+  /* background-color: #f8f8f8; */
+  border-radius: 30rpx;
+  overflow: hidden;
+}
+
+.padding-xl {
+  padding: 100rpx;
+}
+
+.text-xxl {
+  font-size: 40rpx;
+}
+
+.cu-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1110;
+  opacity: 0;
+  outline: 0;
+  text-align: center;
+  -ms-transform: scale(1.185);
+  transform: scale(1.185);
+  backface-visibility: hidden;
+  perspective: 2000rpx;
+  background: 0;
+  transition: all 0.3s ease-in-out 0s;
+  pointer-events: none;
+}
+
+.cu-bar .content {
+  position: absolute;
+  text-align: center;
+  width: calc(100% - 340rpx);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  margin: auto;
+  height: 60rpx;
+  font-size: 39rpx;
+  line-height: 60rpx;
+  cursor: none;
+  pointer-events: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

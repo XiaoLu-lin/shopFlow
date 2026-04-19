@@ -1,0 +1,53 @@
+<view class='nav-list'>
+  <navigator class="nav-li" hover-class='none' url="{{goodUrl}}?goodId={{item.id}}" wx:for="{{goods}}" wx:key="index">
+    <view class="cu-card case">
+      <view class="cu-item shadow" style="margin: 0rpx;">
+        <view class="image">
+          <image src="{{item.picUrl}}" mode="aspectFill" style="width: 100%;height: 320rpx;"></image>
+          <block wx:if="{{Administrator || isMyBrand}}">
+            <view class="cu-tag bg-red" wx:if="{{item.status == 0}}">待审核</view>
+            <view class="cu-tag bg-green" wx:if="{{item.status == 1}}">已上架</view>
+            <view class="cu-tag bg-red" wx:if="{{item.status == 2}}">已下架</view>
+            <view class="cu-tag bg-red" wx:if="{{item.status == 3}}">已驳回</view>
+          </block>
+        </view>
+        <view class="margin-sm">
+          <view class="text-cut text-black margin-bottom-xs text-bold" style="width:100%">{{item.name}}</view>
+          <view class="text-cut text-grey margin-bottom-xs text-sm" style="width:100%">{{item.brief}}</view>
+          <view class="flex justify-between margin-bottom-xs">
+            <view class="cu-capsule radius"  wx:if="{{item.isNew}}">
+              <view class="cu-tag bg-olive sm">N</view>
+              <view class="cu-tag line-olive sm">新品</view>
+            </view>
+            <view class="cu-capsule radius" wx:if="{{item.isHot}}">
+              <view class="cu-tag bg-red sm">H</view>
+              <view class="cu-tag line-red sm">热卖</view>
+            </view>
+            <block wx:if="{{item.isGroupon}}">
+              <view class="cu-capsule radius">
+                <view class="cu-tag bg-orange sm">G</view>
+                <view class="cu-tag line-orange sm">团购</view>
+              </view>
+            </block>
+            <block wx:else>
+              <view class="cu-capsule radius" wx:if="{{item.counterPrice > item.retailPrice}}">
+                <view class="cu-tag bg-orange sm">H</view>
+                <view class="cu-tag line-orange sm">折扣</view>
+              </view>
+            </block>
+          </view>
+          <view class="flex justify-between">
+            <view class="cu-capsule radius">
+              <view class="cu-tag bg-grey sm">原价</view>
+              <view class="cu-tag line-grey text-price sm">{{item.counterPrice}}</view>
+            </view>
+            <view class="cu-capsule radius">
+              <view class="cu-tag bg-red sm">现价</view>
+              <view class="cu-tag line-red text-price sm">{{item.retailPrice}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </navigator>
+</view>

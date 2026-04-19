@@ -1,0 +1,28 @@
+
+<view class="cu-modal show" hidden="{{!showPopup}}">
+  <view class="cu-dialog" style="width: 650rpx;border-radius: 30rpx;">
+    <view class="cu-bar bg-white justify-end" style="margin-top: 20rpx;">
+        <text class="content text-green" style="font-size: 38rpx;">{{title}}</text>
+    </view>
+
+    <view class='bg-white padding-lr-lg padding-bottom radius shadow-lg'>
+      <view class='text-content' style="text-align: start;">
+        <view>请你务必认真阅读、充分理解“服务协议”和“隐私政策”各条款，
+        包括但不限于：为了向你提供数据、分享等服务所要获取的权限信息。</view>
+        <view class='margin-top-sm'>你可以阅读 
+        <text class="text-blue" bindtap="service">《服务协议》</text>和
+        <text class="text-blue" bindtap="service">《隐私政策》</text>
+        了解详细信息。如您同意，请点击"同意"开始接受我们的服务。</view>
+      </view>
+    </view>
+
+    <view class="cu-bar bg-white padding-tb-sm solid">
+      <button class="cu-btn bg-white flex-sub" bindtap="cancel" >
+        <text class="text-xl">暂不使用</text>
+      </button>
+      <button class="cu-btn bg-white flex-sub" bindtap="confirm">
+        <text class="text-xl ">同意</text>
+      </button>
+    </view>
+  </view>
+</view>

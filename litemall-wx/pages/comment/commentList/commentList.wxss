@@ -1,0 +1,12 @@
+.comments {
+  width: 100%;
+  height: 100%;
+  margin-top: 95rpx;
+}
+
+.comments-switch {
+  position: fixed;
+  z-index: 99999;
+  height: 95rpx;
+  margin-top: 0rpx;
+}

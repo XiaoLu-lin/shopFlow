@@ -1,0 +1,7 @@
+logging:
+  level:
+    root:  ERROR
+    org.springframework:  ERROR
+    org.mybatis:  ERROR
+    org.ysling.litemall.wx:  DEBUG
+    org.ysling.litemall:  ERROR

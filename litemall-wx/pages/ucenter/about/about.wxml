@@ -1,0 +1,48 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">关于我们</view>
+</cu-custom>
+
+<view class="container">
+  <view class="cu-list menu card-menu margin-top-xl shadow-lg">
+    <view class="cu-item">
+      <view class="label text-bold">店铺名称:</view>
+      <view class="about-item">
+        <view class="item-left">
+          <text>{{name}}</text> 
+        </view>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="label text-bold">店铺地址:</view>
+      <view class="about-item">
+        <view class="item-left">
+          <text>{{address}}</text> 
+        </view>
+        <view class="item-right" bindtap="showLocation">
+          <text class="cuIcon-locationfill text-red"></text> 
+        </view>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="label text-bold">联系电话:</view>
+      <view class="about-item">
+        <view class="item-left">
+          <text>{{phone}}</text> 
+        </view>
+        <view class="item-right" bindtap="callPhone">
+          <text class="cuIcon-servicefill text-red"></text> 
+        </view>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="label text-bold">QQ交流群: </view>
+      <view class="about-item">
+        <view class="item-left">
+          <text>{{qq}}</text> 
+        </view>
+      </view>
+    </view>
+  </view>
+
+  
+</view>

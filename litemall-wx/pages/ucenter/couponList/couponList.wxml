@@ -1,0 +1,72 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">我的优惠券</view>
+</cu-custom>
+
+<scroll-view scroll-x class="bg-white nav">
+  <view class="flex text-center">
+    <view class="cu-item flex-sub {{index==status?'text-orange cur':''}}" wx:for="{{tableName}}" 
+    wx:key='id' bindtap="switchTab" data-index="{{index}}">
+      <text class="text-bold">{{tableName[index]}}</text>
+    </view>
+  </view>
+</scroll-view>
+
+<view class="cu-bar search bg-white" wx:if="{{status == 0}}">
+  <view class="search-form round">
+    <text class="cuIcon-search"></text>
+    <input type="text" placeholder="请输入优惠码" value="{{code}}" confirm-type="search" bindinput="bindExchange"></input>
+    <text class="cuIcon-roundclose" style="margin-right: 30rpx;" wx:if="{{code.length > 0}}" bindtap="clearExchange"></text>
+  </view>
+  <view class="action">
+    <button class="cu-btn bg-green shadow-blur round" bindtap='goExchange'>兑换</button>
+  </view>
+</view>
+
+<view class="container">
+  <view  class="cu-list menu card-menu shadow-lg" style="margin: 20rpx;" wx:if="{{status == 0}}">
+    <view class="fr">
+      <text class="cuIcon-question text-gray margin-right-xs"></text>
+      <text class="text-gray">使用说明</text>
+    </view>
+  </view>
+
+  <view  class="cu-list menu card-menu shadow-lg" style="margin: 10rpx;" wx:for="{{couponList}}" wx:key="id">
+    <view class="cu-item" style='padding-left: 0rpx;min-height: 200rpx;background: linear-gradient(to right, #cfa568, #e3bf79);'>
+      <view class="flex-sub text-center" style="margin-left: 0;">
+        <view class="text-{{status==0?'red':'white'}} text-bold text-xxl margin-bottom-xs">{{item.discount}}元</view>
+        <view class="text-white">满{{item.min}}元使用</view>
+      </view>
+      <view class="flex-sub">
+        <view class="text-white text-bold text-xl margin-tb-xs">{{item.name}}</view>
+        <block wx:if="{{status != 0}}">
+          <block wx:if="{{status == 1}}">
+            <view class="text-white" style="width: 450rpx;">优惠券已使用</view>
+          </block>
+          <block wx:if="{{status == 2}}">
+            <view class="text-white" style="width: 450rpx;">优惠券已过期</view>
+          </block>
+        </block>
+        <block wx:else>
+          <block wx:if="{{item.startTime == item.endTime}}">
+            <view class="text-white" style="width: 450rpx;">截至日期：不限</view>
+          </block>
+          <block wx:else>
+            <view class="text-white" style="width: 450rpx;">开始日期：{{item.startTime}}</view>
+            <view class="text-white" style="width: 450rpx;">截至日期：{{item.endTime}}</view>
+          </block>
+        </block>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="content">
+        <text class="text-{{status==0?'orange':'grey'}} text-bold">{{item.desc}}</text>
+        <view class="cu-capsule round fr">
+          <view class="cu-tag bg-{{status==0?'orange':'grey'}}">
+            <text class="cuIcon-likefill"></text>
+          </view>
+          <view class="cu-tag line-{{status==0?'orange':'grey'}}">{{item.tag}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

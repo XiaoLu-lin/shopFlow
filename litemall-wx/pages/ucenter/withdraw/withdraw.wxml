@@ -1,0 +1,85 @@
+<cu-custom bgColor="bg-gradual-blue" isCustom="{{true}}">
+  <view slot="content">我的收益</view>
+</cu-custom>
+
+<view class="container">
+
+  <view class="cu-list card-menu grid col-2 no-border margin" style="margin: 10rpx;">
+    <view class="cu-item">
+      <view class="text-bold">我的余额</view>
+      <text class="text-bold" style="font-size: 36rpx;color: #e54d42;">{{integral}}￥</text>
+    </view>
+
+    <view class="cu-item">
+      <view class="content">
+        <button class="cu-btn bg-green fr margin-top-sm" bindtap="showModal" style="width: 200rpx;">去提现</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="cu-list menu card-menu" style="margin: 10rpx;">
+    <view class="cu-item">
+      <view class="content cu-bar btn-group">
+        <text class="text-bold text-grey">历史交易记录</text>
+      </view>
+    </view>
+    <view class="cu-item" style='min-height: 170rpx; padding-right: 0;' wx:for="{{dealList}}" wx:key="id">
+      <view class="content flex justify-center align-center">
+        <view class="margin-right">
+          <view class="cu-avatar radius-sm" style="background-image:url({{item.picUrl}}); width: 110rpx;height: 110rpx;">
+          </view>
+        </view>
+        <view class="flex-twice flex">
+          <view class="basis-lx" style="flex-basis: 75%;">
+            <view class="text-bold text-cut margin-bottom-xs" style="width: 360rpx;">{{item.batchTime}}</view>
+            <view class="cu-tag text-cut bg-{{item.status === 'SUCCESS' ? 'green' : 'red'}} light" style="width: 380rpx;">
+              {{item.dealTypeText + " | "  +  item.statusText}}
+            </view>
+          </view>
+        </view>
+        <view class="basis-xs text-center" style="flex-basis: 25%;">
+          <view class="text-lg price text-bold text-{{item.status === 'SUCCESS' ? 'green' : 'red'}}">
+            {{item.award > 0?"+":""}}{{item.award}}￥
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+
+<view class="cu-modal show" hidden="{{!showPop}}" bindtap="closeShare">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white justify-end text-black text-bold solid">
+        <text class="content text-green text-xxl">提现到微信余额</text>
+    </view>
+    <form bindsubmit='cashAdvance'>
+      <view class="cu-list menu card-menu shadow-lg" style="margin: 0rpx;">
+        <view class="cu-bar bg-white">
+          <view class="action text-grey text-bold text-xl">
+            可提现金额
+          </view>
+          <view class="action text-red text-bold text-xl">
+            {{integral}}￥
+          </view>
+        </view>
+        <view class="cu-item">
+          <view class="content">
+            <textarea class="comment-textarea text-xl margin-tb" type="digit" name="cashAmount" focus="true"
+            maxlength="10" placeholder="请输入提现金额"></textarea>
+          </view>
+        </view>
+      </view>
+      
+      <view class="cu-bar bg-white padding-tb solid">
+        <button class="cu-btn bg-white flex-sub" bindtap="showModal" >
+          <text class="text-bold text-xl text-red">取消</text>
+        </button>
+        <button class="cu-btn bg-white flex-sub" form-type='submit'>
+          <text class="text-bold text-xl text-green">提现</text>
+        </button>
+      </view>
+    </form>
+  </view>
+</view>
+

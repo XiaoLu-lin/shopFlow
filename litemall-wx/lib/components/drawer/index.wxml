@@ -1,0 +1,59 @@
+<!--个人中心抽屉-->
+
+  
+<scroll-view bindtouchstart="touchStart" bindtouchend="touchEnd" class="DrawerWindow {{modalName=='viewModal'?'show':''}}">
+  <view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg">
+    <view class="cu-item" style='min-height: 200rpx;'>
+      <view wx:if="{{!hasLogin}}" class="content grid col-1">
+        <view class="padding-sm text-sm flex justify-center">
+          <text class="text-grey">允许微信授权后，可体验更多功能</text>
+        </view>
+        <view class="padding-sm flex justify-center">
+          <button bindtap="goLogin" class='cu-btn round bg-green shadow'>微信授权</button>
+        </view>
+      </view>
+      <block wx:else>
+        <view class="content flex justify-center align-center">
+          <view class="flex-sub">
+              <view class="cu-avatar xl round menu-img" style="background-image:url({{userInfo.avatarUrl}});"></view>
+          </view>
+          <view class="flex-twice grid col-1 ">
+            <view class="text-lg margin-xs">
+              <text class="text-black text-bold">{{userInfo.nickName}}</text>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+		<navigator class="cu-item arrow" url="/pages/ucenter/order/order?tab=0">
+			<view class="content">
+				<text class="cuIcon-goods text-grey"></text>
+				<text class="text-grey">全部订单</text>
+			</view>
+		</navigator>
+    <navigator class="cu-item arrow" url="/pages/ucenter/order/order?tab=1">
+			<view class="content">
+				<text class="cuIcon-refund text-grey"></text>
+				<text class="text-grey">待付款</text>
+			</view>
+		</navigator>
+    <navigator class="cu-item arrow" url="/pages/ucenter/order/order?tab=2">
+			<view class="content">
+				<text class="cuIcon-deliver text-grey"></text>
+				<text class="text-grey">待发货</text>
+			</view>
+		</navigator>
+    <navigator class="cu-item arrow" url="/pages/ucenter/order/order?tab=3">
+			<view class="content">
+				<text class="cuIcon-countdown text-grey"></text>
+				<text class="text-grey">待收货</text>
+			</view>
+		</navigator>
+    <navigator class="cu-item arrow" url="/pages/ucenter/order/order?tab=4">
+			<view class="content">
+				<text class="cuIcon-message text-grey"></text>
+				<text class="text-grey">待评价</text>
+			</view>
+		</navigator>
+	</view>
+</scroll-view>

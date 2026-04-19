@@ -1,0 +1,156 @@
+<view class="cu-custom" style="height:{{CustomBar}}px">
+  <view class="cu-bar fixed bg-gradual-blue" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+    <view class="action" style="margin-left:calc(750rpx - {{Custom.right}}px)">
+      <view class="cu-avatar round margin-right-sm" style="background-image:url({{userInfo.avatarUrl}});"></view>
+      <navigator class="search-form round" style="margin: 0rpx;" url="/pages/search/search">
+        <text class="cuIcon-search padding-lr-xs"></text>
+        <input type="text" disabled="true" style="padding-right: 30rpx;" placeholder="商品搜索"></input>
+        <text class="cuIcon-search" style="color: #f5f5f5;"></text>
+      </navigator>
+    </view>
+  </view>
+</view>
+
+<view class="container">
+  <scroll-view scroll-x class="bg-gradual-blue nav">
+    <view class="flex text-center">
+      <view class="cu-item flex-sub text-bold">送货上门</view>
+      <view class="cu-item flex-sub text-bold">退款无忧</view>
+      <view class="cu-item flex-sub text-bold">自由交易</view>
+    </view>
+  </scroll-view>
+  <view class="no-login" wx:if="{{!hasLogin}}">
+    <view class="cu-list menu card-menu margin-top-half margin-bottom-xl shadow-lg">
+      <view class="cu-item" style='min-height: 200rpx;'>
+        <view wx:if="{{!hasLogin}}" class="content grid col-1">
+          <view class="padding-sm text-sm flex justify-center">
+            <text class="text-grey">允许微信授权后，可体验更多功能</text>
+          </view>
+          <view class="padding-sm flex justify-center">
+            <button bindtap="goLogin" class='cu-btn round bg-green shadow'>授权登陆</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class='login' wx:else>
+    <view class="no-cart" wx:if="{{cartGoods.length <= 0}}">
+      <view class="flex-sub text-center margin-top-half" wx:if="{{hasLogin}}">
+        <view class="text-xsl padding">
+          <text class="cuIcon-goodsnew text-grey"></text>
+        </view>
+        <view class="padding-0 text-grey text-bold">购物车还没有商品</view>
+      </view>
+    </view>
+    <view class="cart-view" wx:else>
+      <view class="cu-card article" wx:for="{{cartGoods}}" wx:key="id">
+        <view class="cu-item">
+          <navigator hover-class='none' class="title" url="/pages/brand/brandDetail/brandDetail?id={{item.brandId}}"  open-type="navigate" wx:if="{{item.brandName}}">
+            <text class="cuIcon-shop text-grey margin-right-xs"></text>
+            <text class="text-grey">{{item.brandName}}</text>
+            <text class="cuIcon-right fr text-grey"></text>
+          </navigator>
+          <view wx:else class="padding-top"></view>
+          <view class="content" style="padding-left: 10rpx;">
+
+            <view class="cu-form-group" style="padding: 0;padding-right: 10rpx;">
+              <checkbox class="round blue" checked="{{item.checked}}"data-item-index="{{index}}" bindtap="checkedItem"></checkbox>
+            </view>
+
+            <navigator hover-class='none' url="/pages/goodsDetail/goodsDetail?goodId={{item.goodsId}}"  open-type="navigate">
+              <image class="img" src="{{item.picUrl}}" mode="aspectFill"></image>
+            </navigator>
+            <view class="desc">
+              <view class="text-bold text-cut margin-bottom-xs">{{item.goodsName}}</view>
+              <view class="cu-tag text-cut bg-cyan light" bindtap="switchAttrPop" data-item-index="{{index}}">
+                {{item.specifications||''}}
+              </view>
+              <view class="text-center" > 
+                <text class="cuIcon-unfold text-gray"></text> 
+              </view>
+              <view class="flex solid-bottom justify-between">
+                <text class="text-price text-red text-xl price text-bold">{{item.price}}</text>
+                <view class="selnum">
+                  <view class="cut" bindtap="cutNumber" data-item-index="{{index}}">-</view>
+                  <input value="{{item.number}}" class="number" disabled="true" type="number" />
+                  <view class="add" bindtap="addNumber" data-item-index="{{index}}">+</view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="cu-list menu card-menu margin-xs shadow-lg cart-bottom">
+        <view class="cu-item">
+          <view class="content">
+            <view class="cu-bar bg-white tabbar border shop cart-bottom">
+                <view class="flex solid-bottom justify-end">
+                  <view class="cu-form-group" style="padding-right: 5rpx;padding-left: 20rpx;">
+                    <checkbox class="round blue" checked="{{checkedAllStatus ? 'checked' : ''}}" bindtap="checkedAll"></checkbox>
+                    <text class="margin-left-xs">全选({{cartTotal.checkedGoodsCount}})</text>
+                  </view>
+                  <view class="total text-red text-bold">{{!isEditCart ? '合计:￥'+cartTotal.checkedGoodsAmount : ''}}</view>
+                </view>
+                <view class="flex solid-bottom justify-end">
+                  <view class="delete submit" bindtap="editCart">{{!isEditCart ? '编辑' : '完成'}}</view>
+                  <view class="checkout bg-grey submit" bindtap="deleteCart" wx:if="{{isEditCart}}">删除所选</view>
+                  <view class="checkout bg-red submit" bindtap="checkoutOrder" wx:if="{{!isEditCart}}">下单</view>
+                </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view style="height: 250rpx;"></view>
+</view>
+
+  <!-- 规格选择界面 -->
+<view class="attr-pop-box" hidden="{{!openAttr}}">
+  <view class="attr-pop">
+    <view class="close" bindtap="closeAttr">
+      <text class="cuIcon-roundclose text-gray" style="font-size: 36rpx;"></text>     
+    </view>
+
+    <view class="content flex justify-center align-center">
+      <image class="image margin-right radius" src="{{checkedSpecPicUrl}}" 
+      wx:if="{{checkedSpecPicUrl}}" mode="aspectFill"></image>
+      <image class="image margin-right-sm radius" src="{{goods.picUrl}}" mode="aspectFill" wx:else></image>
+      <view class="flex-twice">
+        <view class="basis-lg">
+          <view class="margin-tb">
+            <view class="text-bold text-cut" style="width: 500rpx;">价格：￥{{checkedSpecPrice}}</view>
+          </view>
+          <view class="margin-tb">
+            <view class="text-bold text-cut" style="width: 500rpx;">规格：{{tmpSpecText}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 规格列表 -->
+    <view class="spec-con margin-top-sm">
+      <view class="spec-item" wx:for="{{specificationList}}" wx:key="name">
+        <view class="name text-bold">{{item.name}}</view>
+        <view class="values">
+          <view class="value text-cut {{vitem.checked ? 'selected' : ''}}" bindtap="clickSkuValue" wx:for="{{item.valueList}}" wx:for-item="vitem" wx:key="id" data-value-id="{{vitem.id}}" data-name="{{vitem.specification}}">{{vitem.value}}</view>
+        </view>
+      </view>
+
+      <!-- 数量 -->
+      <view class="number-item">
+        <view class="name text-bold">数量</view>
+        <view class="flex solid-bottom padding-bottom justify-between">
+          <view class="selnum">
+            <view class="cut" bindtap="cutNumber" data-item-index="{{goodsIndex}}">-</view>
+            <input value="{{checkedNumber}}" class="number" disabled="true" type="number" />
+            <view class="add" bindtap="addNumber" data-item-index="{{goodsIndex}}">+</view>
+          </view>
+          <button class="cu-btn bg-red lg" bindtap="submitAttr" data-item-index="{{goodsIndex}}">确定</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

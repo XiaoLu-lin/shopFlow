@@ -1,0 +1,12 @@
+/* pages/rewards/rewards.wxss */
+
+.goods_name_right {
+  font-weight: 550;
+  width: 140rpx;
+  text-align: center;
+  font-size: 27rpx;
+  color: #f4f4f4;
+  border-radius: 50rpx;
+  letter-spacing: 3rpx;
+  background-image: linear-gradient(to right, #f3d10e 0%, #f48f18 100%)
+}
