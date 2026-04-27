@@ -1,0 +1,86 @@
+version: '3.9'
+
+services:
+  shopflow-backend:
+    image: shopflow-backend:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: shopflow-backend
+    restart: always
+    ports:
+      - "6914:6914"
+    environment:
+      TZ: Asia/Shanghai
+    depends_on:
+      shopflow-mysql:
+        condition: service_healthy
+      shopflow-redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/opt/shopflow/logs
+    networks:
+      - shopflow-net
+
+  shopflow-nginx:
+    image: nginx:1.25-alpine
+    container_name: shopflow-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./doc/conf/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./dist:/usr/share/nginx/html:ro
+      - /etc/nginx/cert:/etc/nginx/cert:ro
+    depends_on:
+      - shopflow-backend
+    networks:
+      - shopflow-net
+
+  shopflow-mysql:
+    image: mysql:8.0
+    container_name: shopflow-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-rootpassword}"
+      MYSQL_DATABASE: litemall2
+      MYSQL_USER: litemall2
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD:-SNmH5r48ZYedtmJz}"
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - shopflow-mysql-data:/var/lib/mysql
+      - ./litemall-db/sql/litemall_plus.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "litemall2", "-pSNmH5r48ZYedtmJz"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - shopflow-net
+
+  shopflow-redis:
+    image: redis:7-alpine
+    container_name: shopflow-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - shopflow-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - shopflow-net
+
+volumes:
+  shopflow-mysql-data:
+  shopflow-redis-data:
+
+networks:
+  shopflow-net:
+    driver: bridge

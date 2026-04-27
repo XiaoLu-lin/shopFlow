@@ -1,4 +1,4 @@
-# litemall-plus介绍
+# ShopFlow
 
 对【litemall 】的全面优化，原litemall主要面向单体商户（B2C模式）
 经改良后litemall-plus则是（平台管理员->小程序店铺->用户）（可单体，可SaaS模式）

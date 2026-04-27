@@ -8,6 +8,6 @@ MAINTAINER "927069313@qq.com"
 ENV TZ=Asia/Shanghai
 
 #添加jar
-ADD litemall-plus.jar litemall-plus.jar
+ADD shopflow.jar shopflow.jar
 EXPOSE 6914
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","./litemall-plus.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","./shopflow.jar"]
