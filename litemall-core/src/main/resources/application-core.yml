@@ -3,12 +3,12 @@ litemall:
   wx:
     token: xxxxxxxxxxxxxxxxxxxxxxxx
     aes-key: xxxxxxxxxxxxxxxxxxx
-    app-id: xxxxxxxxxxxxxxxxxxxxx
+    app-id: wx7adc490b816e2549
     app-secret: xxxxxxxxxxxxxxxxxxxxxx
     mch-id: xxxxxxxxxxxxxxxxx
     mch-key: xxxxxxxxxxxxxxxxxxxxxx
     api-v3-key: xxxxxxxxxxxxxxxxxxx
-    notify-url: https://www.ysling.com.cn/wx/order/pay-notify
+    notify-url: https://manager.enshipeixue.com/wx/order/pay-notify
     # 商户证书文件路径
     # 请参考“商户证书”一节 https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=4_3
     key-path: D:/微信支付/WXCertUtil/cert/1621104141_20220218_cert/apiclient_cert.p12
@@ -94,7 +94,7 @@ litemall:
     local:
       storagePath: storage
       # 这个地方应该是wx模块的WxStorageController的fetch方法对应的地址
-      address: http://localhost:6914/wx/storage/fetch/
+      address: https://manager.enshipeixue.com/wx/storage/fetch/
     # 阿里云对象存储配置信息
     aliyun:
       endpoint: oss-cn-shenzhen.aliyuncs.com

@@ -10,7 +10,7 @@ spring:
   redis:
     database: 0
     port: 6379
-    host: localhost
+    host: 127.0.0.1
     password:
     timeout: 50000
     lettuce:
@@ -27,7 +27,7 @@ spring:
       strict: false
       datasource:
         master: # 数据源1配置
-          url: jdbc:mysql://localhost:3306/litemall2?serverTimezone=GMT%2B8&autoReconnect=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=true
+          url: jdbc:mysql://127.0.0.1:3306/litemall2?serverTimezone=GMT%2B8&autoReconnect=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=true
           username: litemall2
           password: "SNmH5r48ZYedtmJz"
           driver-class-name: com.mysql.cj.jdbc.Driver

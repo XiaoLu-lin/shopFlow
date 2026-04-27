@@ -1,6 +1,6 @@
 spring:
   application:
-    name: litemall-admin-api
+    name: shopflow-admin-api
   profiles:
     active: db, core, admin
   messages:

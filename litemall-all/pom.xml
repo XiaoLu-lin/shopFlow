@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>org.ysling</groupId>
-        <artifactId>litemall-plus</artifactId>
+        <artifactId>shopflow</artifactId>
         <version>0.1.0</version>
     </parent>
 

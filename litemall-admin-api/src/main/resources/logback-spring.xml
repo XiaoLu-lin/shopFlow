@@ -15,8 +15,11 @@
 
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/log.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/log-%d{yyyy-MM-dd}.log</fileNamePattern>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/log-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>20MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>300MB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <pattern>
@@ -27,8 +30,11 @@
 
     <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/error.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/error-%d{yyyy-MM-dd}.log</fileNamePattern>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/error-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>20MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>300MB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <pattern>
@@ -50,8 +56,8 @@
     </root>
     <logger name="org.mybatis" level="ERROR" />
     <logger name="org.springframework" level="ERROR" />
-    <logger name="org.ysling.litemall.core" level="DEBUG" />
-    <logger name="org.ysling.litemall.db" level="DEBUG" />
-    <logger name="org.ysling.litemall.admin" level="DEBUG" />
-    <logger name="org.ysling.litemall" level="DEBUG" />
+    <logger name="org.ysling.litemall.core" level="WARN" />
+    <logger name="org.ysling.litemall.db" level="WARN" />
+    <logger name="org.ysling.litemall.admin" level="WARN" />
+    <logger name="org.ysling.litemall" level="WARN" />
 </configuration>
