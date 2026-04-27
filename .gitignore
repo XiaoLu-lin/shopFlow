@@ -34,7 +34,12 @@ target/
 
 ### logs ####
 /logs/
+**/logs/
 *.log
+
+### runtime data ###
+/backup/
+**/backup/
 
 ### temp ignore ###
 *.cache
