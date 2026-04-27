@@ -1,7 +1,7 @@
 {
-  "name": "litemall-admin",
+  "name": "shopflow-admin",
   "version": "1.0.0",
-  "description": "litemall-admin basing on vue-element-admin 4.3.0",
+  "description": "ShopFlow Admin based on vue-element-admin 4.3.0",
   "author": "ysling <927069313@qq.com>",
   "license": "MIT",
   "scripts": {

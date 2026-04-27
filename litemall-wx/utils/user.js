@@ -41,7 +41,6 @@ function login() {
   });
 }
 
-
 /**
  * 调用微信登录
  */
@@ -50,15 +49,13 @@ function loginByWeixin(e) {
     return login().then((res) => {
       wx.getUserInfo({
         success: (userinfo) => {
-          //登录远程服务器
           util.request(api.AuthLoginByWeixin, {
-            wxCode: res.code,                       //微信授权码
-            phoneCode: e ? e.detail.code : "",               //手机号授权码
-            inviter: wx.getStorageSync('inviter'),  //邀请码
-            userInfo: userinfo.userInfo,            //用户信息
+            wxCode: res.code,
+            phoneCode: e ? e.detail.code : "",
+            inviter: wx.getStorageSync('inviter'),
+            userInfo: userinfo.userInfo,
           }, 'POST').then(res => {
             if (res.errno === "success") {
-              //存储用户信息
               wx.setStorageSync('userInfo', res.data.userInfo);
               wx.setStorageSync('userToken', res.data.userToken);
               resolve(res);
@@ -76,23 +73,28 @@ function loginByWeixin(e) {
   });
 }
 
-
 /**
  * 调用账号登录
  */
 function loginByAccount(username,password,code) {
   return new Promise(function(resolve, reject) {
-    return login().then(() => {
-      //登录远程服务器
-      util.request(api.AuthLoginByAccount, {
-        code: code,
-        username: username,
-        password: password,
-      }, 'POST').then(res => {
+    const prepareLogin = api.UseWxLoginForAccountLogin ? login() : Promise.resolve();
+    const payload = {
+      username: username,
+      password: password,
+    };
+    if (code) {
+      payload.code = code;
+    }
+    prepareLogin.then(() => {
+      util.request(api.AuthLoginByAccount, payload, 'POST').then(res => {
         if (res.errno === "success") {
-          //存储用户信息
           wx.setStorageSync('adminInfo', res.data.adminInfo);
           wx.setStorageSync('adminToken', res.data.adminToken);
+          if (res.data.userInfo && res.data.userToken) {
+            wx.setStorageSync('userInfo', res.data.userInfo);
+            wx.setStorageSync('userToken', res.data.userToken);
+          }
           resolve(res);
         } else {
           reject(res);
@@ -102,7 +104,7 @@ function loginByAccount(username,password,code) {
       });
     }).catch((err) => {
       reject(err);
-    })
+    });
   });
 }
 

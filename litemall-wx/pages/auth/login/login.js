@@ -1,8 +1,5 @@
-var api = require('../../../config/api.js');
 var util = require('../../../utils/util.js');
-var user = require('../../../utils/user.js');
 
-var app = getApp();
 
 Page({
 
@@ -13,20 +10,6 @@ Page({
 
   },
 
-  //获取登陆授权
-  bindPhoneNumber: function(e) {
-    // 拒绝授权
-    if (e.detail.errMsg !== "getPhoneNumber:ok") {
-      return;
-    }
-    user.loginByWeixin(e).then(res => {
-      app.globalData.hasLogin = true;
-      wx.navigateBack({
-        delta: 1
-      })
-    })
-  },
-  
   accountLogin: function() {
     wx.navigateTo({
       url: "/pages/auth/accountLogin/accountLogin"

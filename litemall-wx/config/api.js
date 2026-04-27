@@ -1,17 +1,42 @@
 // 以下是业务服务器API地址
-// 本机开发时使用
-var WxApiRoot = 'http://localhost:6914/wx/';
-// 云平台部署时使用
-// var WxApiRoot = 'http://192.168.1.3:6914/wx/';
-// 云平台测试地址
-// var WxApiRoot = 'https://test.ysling.com.cn/wx/';
-// // 云平台上线时使用
-// var WxApiRoot = 'https://www.ysling.com.cn/wx/';
+function getEnvVersion() {
+  try {
+    if (typeof wx !== 'undefined' && wx.getAccountInfoSync) {
+      return wx.getAccountInfoSync().miniProgram.envVersion || 'develop';
+    }
+  } catch (e) {
+  }
+  return 'develop';
+}
+
+const ENV_CONFIG = {
+  develop: {
+    apiRoot: 'http://192.168.1.11:6914/wx/',
+    wsRoot: 'ws://192.168.1.11:6914/websocket',
+    useWxLoginForAccountLogin: false,
+  },
+  trial: {
+    apiRoot: 'https://test.ysling.com.cn/wx/',
+    wsRoot: 'wss://test.ysling.com.cn/websocket',
+    useWxLoginForAccountLogin: true,
+  },
+  release: {
+    apiRoot: 'https://www.ysling.com.cn/wx/',
+    wsRoot: 'wss://www.ysling.com.cn/websocket',
+    useWxLoginForAccountLogin: true,
+  },
+};
+
+const currentEnvVersion = getEnvVersion();
+const currentEnvConfig = ENV_CONFIG[currentEnvVersion] || ENV_CONFIG.develop;
+var WxApiRoot = currentEnvConfig.apiRoot;
 
 module.exports = {
+  EnvVersion: currentEnvVersion,
+  // 管理员账号登录前是否先调用 wx.login，开发版联调默认关闭
+  UseWxLoginForAccountLogin: currentEnvConfig.useWxLoginForAccountLogin,
   // Socket链接
-  WSS_SERVER_URL: 'wss://www.ysling.com.cn/websocket',
-  // WSS_SERVER_URL: 'ws://localhost:6914/websocket',
+  WSS_SERVER_URL: currentEnvConfig.wsRoot,
 
   adminUrl: 'https://manager.enshipeixue.com/#/login',//管理后台地址
   ShipTmplIds: 'Uy7q5hPRyiL2IRZo22HQ5Je8quwKoL7kzpX3S0SC5q4',//发货订阅模板id

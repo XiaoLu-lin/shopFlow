@@ -29,18 +29,12 @@
 		</view>
 		<view class="cu-item" style="padding: 0rpx 60rpx 0rpx 60rpx;">
 			<view class="form-item-code">
-        <view class="text-bold margin-top">验证码</view>
-				<view class="form-item code-item">
-					<input class="code" value="{{code}}" bindinput="bindCodeInput" placeholder="请输入验证码" />
-					<text class="cuIcon-roundclosefill lg text-gray clear" id="clear-code" wx:if="{{ code.length > 0 }}" 
-          name="close" catchtap="clearInput"></text>   
-				</view>
-        <button class="cu-btn bg-green shadow-blur fr margin-top-sm" bindtap="sendCode">获取验证码</button>
+        <view class="text-gray text-sm margin-top">已绑定过小程序用户的管理员账号可直接登录</view>
 			</view>
 		</view>
 		<view class="cu-item">
 			<view class="content">
-			<button type="primary" class="login-btn" open-type="getPhoneNumber" bindgetphonenumber="bindPhoneNumber">管理员登陆</button>
+			<button type="primary" class="login-btn" bindtap="accountLogin">管理员登陆</button>
 			</view>
 		</view>
     <!-- <view class="cu-item">

@@ -10,8 +10,7 @@
 		</view>
 		<view class="cu-item">
 			<view class="content">
-				<button type="primary" class="wx-login-btn" open-type="getPhoneNumber" 
-        bindgetphonenumber="bindPhoneNumber">手机号登陆</button>
+				<view class="text-gray text-sm">当前已切换为管理员账号密码登录</view>
 			</view>
 		</view>
 		<view class="cu-item">
