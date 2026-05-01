@@ -1,0 +1,111 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>shopflow-all</artifactId>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>org.ysling</groupId>
+        <artifactId>ShopFlow</artifactId>
+        <version>0.1.0</version>
+    </parent>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.ysling</groupId>
+            <artifactId>shopflow-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ysling</groupId>
+            <artifactId>shopflow-db</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ysling</groupId>
+            <artifactId>shopflow-wx-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ysling</groupId>
+            <artifactId>shopflow-admin-api</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <configuration>
+                            <executable>true</executable>
+                            <classifier>exec</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <!--将../shopflow-admin/dist打包到/target/classes/static-->
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes/static</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>../shopflow-admin/dist</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <!--将所有子包的/src/main/resources/打包到/target/classes/-->
+                    <execution>
+                        <id>copy-resources-all</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>../shopflow-admin-api/src/main/resources/</directory>
+                                    <excludes>
+                                        <exclude>smart-doc.json</exclude>
+                                        <exclude>logback-spring.xml</exclude>
+                                    </excludes>
+                                </resource>
+                                <resource>
+                                    <directory>../shopflow-wx-api/src/main/resources/</directory>
+                                    <excludes>
+                                        <exclude>smart-doc.json</exclude>
+                                        <exclude>logback-spring.xml</exclude>
+                                    </excludes>
+                                </resource>
+                                <resource>
+                                    <directory>../shopflow-core/src/main/resources/</directory>
+                                </resource>
+                                <resource>
+                                    <directory>../shopflow-db/src/main/resources/</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

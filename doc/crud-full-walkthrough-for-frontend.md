@@ -27,9 +27,9 @@
 
 参考入口：
 
-1. [litemall-admin/src/utils/request.js](../litemall-admin/src/utils/request.js)
-2. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/web](../litemall-admin-api/src/main/java/org/ysling/litemall/admin/web)
-3. [litemall-db/src/main/java](../litemall-db/src/main/java)
+1. [shopflow-admin/src/utils/request.js](../shopflow-admin/src/utils/request.js)
+2. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web](../shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web)
+3. [shopflow-db/src/main/java](../shopflow-db/src/main/java)
 
 ---
 
@@ -77,9 +77,9 @@
 
 目录参考：
 
-1. [litemall-db/src/main/java/org/ysling/litemall/db/domain](../litemall-db/src/main/java/org/ysling/litemall/db/domain)
-2. [litemall-db/src/main/java/org/ysling/litemall/db/dao](../litemall-db/src/main/java/org/ysling/litemall/db/dao)
-3. [litemall-db/src/main/resources/mappers](../litemall-db/src/main/resources/mappers)
+1. [shopflow-db/src/main/java/org/ysling/shopflow/db/domain](../shopflow-db/src/main/java/org/ysling/shopflow/db/domain)
+2. [shopflow-db/src/main/java/org/ysling/shopflow/db/dao](../shopflow-db/src/main/java/org/ysling/shopflow/db/dao)
+3. [shopflow-db/src/main/resources/mappers](../shopflow-db/src/main/resources/mappers)
 
 你至少要有这几个查询：
 
@@ -125,8 +125,8 @@ Service 负责：
 
 参考：
 
-1. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminAuthController.java](../litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminAuthController.java)
-2. [litemall-core/src/main/java/org/ysling/litemall/core/utils/response/ResponseUtil.java](../litemall-core/src/main/java/org/ysling/litemall/core/utils/response/ResponseUtil.java)
+1. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminAuthController.java](../shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminAuthController.java)
+2. [shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response/ResponseUtil.java](../shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response/ResponseUtil.java)
 
 ---
 
@@ -155,7 +155,7 @@ Service 负责：
 
 目录参考：
 
-1. [litemall-admin/src/api](../litemall-admin/src/api)
+1. [shopflow-admin/src/api](../shopflow-admin/src/api)
 
 这个文件里至少定义：
 
@@ -175,7 +175,7 @@ Service 负责：
 
 目录参考：
 
-1. [litemall-admin/src/views](../litemall-admin/src/views)
+1. [shopflow-admin/src/views](../shopflow-admin/src/views)
 
 页面先做最小版本：
 
@@ -196,7 +196,7 @@ Service 负责：
 
 目录参考：
 
-1. [litemall-admin/src/router](../litemall-admin/src/router)
+1. [shopflow-admin/src/router](../shopflow-admin/src/router)
 
 如果你项目菜单是后端权限驱动，还要在后端菜单权限里增加对应配置。
 
@@ -231,13 +231,13 @@ Service 负责：
 
 后端启动（管理端）：
 
-1. 进入 litemall-admin-api
+1. 进入 shopflow-admin-api
 2. 设置 JDK8
 3. 执行 mvn spring-boot:run -DskipTests
 
 前端启动：
 
-1. 在 litemall-admin 安装依赖
+1. 在 shopflow-admin 安装依赖
 2. 执行 npm run dev
 3. Node 18 如果报 OpenSSL 错误，增加 NODE_OPTIONS=--openssl-legacy-provider
 

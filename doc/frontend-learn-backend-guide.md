@@ -1,4 +1,4 @@
-# 前端学后端完整指南（基于 litemall-plus 项目）
+# 前端学后端完整指南（基于 shopflow 项目）
 
 ## 写在最前面
 
@@ -20,11 +20,11 @@
 
 | 子系统 | 前端 | 后端 | 说明 |
 |--------|------|------|------|
-| 管理后台 | litemall-admin (Vue 2) | litemall-admin-api (Spring Boot) | 你最先接触的 |
-| 微信小程序 | litemall-wx (原生小程序) | litemall-wx-api (Spring Boot) | 后面再看 |
-| 公共基础 | — | litemall-core | 权限、缓存、通知等 |
-| 数据层 | — | litemall-db | 43 张表的 ORM |
-| 聚合部署 | — | litemall-all | 一键打包 |
+| 管理后台 | shopflow-admin (Vue 2) | shopflow-admin-api (Spring Boot) | 你最先接触的 |
+| 微信小程序 | shopflow-wx (原生小程序) | shopflow-wx-api (Spring Boot) | 后面再看 |
+| 公共基础 | — | shopflow-core | 权限、缓存、通知等 |
+| 数据层 | — | shopflow-db | 43 张表的 ORM |
+| 聚合部署 | — | shopflow-all | 一键打包 |
 
 ### 1.2 后端技术栈一句话说明
 
@@ -67,9 +67,9 @@ Service 层
       │  调用 queryAll(wrapper) 查数据库
       ▼
 MyBatis Plus → MySQL
-      │  SELECT * FROM litemall_issue WHERE question LIKE '%测试%' LIMIT 0,10
+      │  SELECT * FROM shopflow_issue WHERE question LIKE '%测试%' LIMIT 0,10
       ▼
-Service 返回 List<LitemallIssue>
+Service 返回 List<ShopflowIssue>
       ▼
 Controller 调用 ResponseUtil.okList(list)
       │  { errno: "success", errmsg: "成功", data: { list: [...], total: 50, pages: 5 } }
@@ -94,8 +94,8 @@ Controller 调用 ResponseUtil.okList(list)
 **要做的事**：
 
 1. 启动 MySQL，导入数据库
-2. 启动 litemall-admin-api（端口 6914）
-3. 启动 litemall-admin 前端（端口 9527）
+2. 启动 shopflow-admin-api（端口 6914）
+3. 启动 shopflow-admin 前端（端口 9527）
 4. 登录管理后台，打开一个列表页
 5. 打开 Chrome DevTools → Network，找到这个页面发的请求
 6. 在后端代码里找到对应的 Controller 方法
@@ -104,10 +104,10 @@ Controller 调用 ResponseUtil.okList(list)
 
 | 顺序 | 文件 | 你要搞明白什么 |
 |------|------|--------------|
-| 1 | [litemall-admin/src/api/login.js](../litemall-admin/src/api/login.js) | 前端登录请求发到哪里 |
-| 2 | [litemall-admin/src/utils/request.js](../litemall-admin/src/utils/request.js) | token 怎么自动带上的 |
-| 3 | [AdminAuthController.java](../litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminAuthController.java) | 后端登录接口怎么处理的 |
-| 4 | [ResponseUtil.java](../litemall-core/src/main/java/org/ysling/litemall/core/utils/response/ResponseUtil.java) | 统一返回格式 errno/errmsg/data 怎么来的 |
+| 1 | [shopflow-admin/src/api/login.js](../shopflow-admin/src/api/login.js) | 前端登录请求发到哪里 |
+| 2 | [shopflow-admin/src/utils/request.js](../shopflow-admin/src/utils/request.js) | token 怎么自动带上的 |
+| 3 | [AdminAuthController.java](../shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminAuthController.java) | 后端登录接口怎么处理的 |
+| 4 | [ResponseUtil.java](../shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response/ResponseUtil.java) | 统一返回格式 errno/errmsg/data 怎么来的 |
 
 **验收标准**：
 - 你能说清楚：前端点击登录后，请求从哪发出、到哪个后端方法、返回了什么结构。
@@ -126,13 +126,13 @@ Controller 调用 ResponseUtil.okList(list)
 
 | 层 | 文件 | 你要搞明白什么 |
 |----|------|--------------|
-| 前端 API | [litemall-admin/src/api/demoCrud.js](../litemall-admin/src/api/demoCrud.js) | 5 个接口分别是什么请求方式 |
-| 前端页面 | [litemall-admin/src/views/mall/demoCrud.vue](../litemall-admin/src/views/mall/demoCrud.vue) | 页面怎么调 API、怎么用返回数据 |
-| 后端 Controller | [AdminDemoCrudController.java](../litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminDemoCrudController.java) | 5 个接口方法分别干什么 |
-| 后端 Service | [AdminDemoCrudService.java](../litemall-admin-api/src/main/java/org/ysling/litemall/admin/service/AdminDemoCrudService.java) | 校验和查询逻辑怎么写 |
-| 请求参数 | [DemoCrudListBody.java](../litemall-admin-api/src/main/java/org/ysling/litemall/admin/model/democrud/body/DemoCrudListBody.java) | 列表查询参数怎么定义 |
-| 数据库实体 | [LitemallIssue.java](../litemall-db/src/main/java/org/ysling/litemall/db/domain/LitemallIssue.java) | 实体类怎么对应数据库表 |
-| 数据库 Service | [IssueServiceImpl.java](../litemall-db/src/main/java/org/ysling/litemall/db/service/impl/IssueServiceImpl.java) | 基础 CRUD 方法从哪来 |
+| 前端 API | [shopflow-admin/src/api/demoCrud.js](../shopflow-admin/src/api/demoCrud.js) | 5 个接口分别是什么请求方式 |
+| 前端页面 | [shopflow-admin/src/views/mall/demoCrud.vue](../shopflow-admin/src/views/mall/demoCrud.vue) | 页面怎么调 API、怎么用返回数据 |
+| 后端 Controller | [AdminDemoCrudController.java](../shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminDemoCrudController.java) | 5 个接口方法分别干什么 |
+| 后端 Service | [AdminDemoCrudService.java](../shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/service/AdminDemoCrudService.java) | 校验和查询逻辑怎么写 |
+| 请求参数 | [DemoCrudListBody.java](../shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/model/democrud/body/DemoCrudListBody.java) | 列表查询参数怎么定义 |
+| 数据库实体 | [ShopflowIssue.java](../shopflow-db/src/main/java/org/ysling/shopflow/db/domain/ShopflowIssue.java) | 实体类怎么对应数据库表 |
+| 数据库 Service | [IssueServiceImpl.java](../shopflow-db/src/main/java/org/ysling/shopflow/db/service/impl/IssueServiceImpl.java) | 基础 CRUD 方法从哪来 |
 
 **核心知识点**：
 
@@ -166,15 +166,15 @@ Controller 调用 ResponseUtil.okList(list)
 
 | 主题 | 文件 | 你要搞明白什么 |
 |------|------|--------------|
-| 权限拦截 | [SaTokenConfigure.java](../litemall-core/src/main/java/org/ysling/litemall/core/satoken/config/SaTokenConfigure.java) | 哪些路径不需要登录、拦截器怎么注册的 |
-| 统一响应 | [ResponseUtil.java](../litemall-core/src/main/java/org/ysling/litemall/core/utils/response/ResponseUtil.java) | ok()、okList()、badArgument() 都返回什么 |
-| 请求封装 | [litemall-admin/src/utils/request.js](../litemall-admin/src/utils/request.js) | 前端怎么判断 errno 并做分支处理 |
+| 权限拦截 | [SaTokenConfigure.java](../shopflow-core/src/main/java/org/ysling/shopflow/core/satoken/config/SaTokenConfigure.java) | 哪些路径不需要登录、拦截器怎么注册的 |
+| 统一响应 | [ResponseUtil.java](../shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response/ResponseUtil.java) | ok()、okList()、badArgument() 都返回什么 |
+| 请求封装 | [shopflow-admin/src/utils/request.js](../shopflow-admin/src/utils/request.js) | 前端怎么判断 errno 并做分支处理 |
 
 **核心知识点**：
 
 ```
 前端请求带 Header:
-  X-Litemall-Admin-Token: xxxx
+  X-ShopFlow-Admin-Token: xxxx
 
 后端 Sa-Token 拦截器检查这个 token：
   ├── token 有效 → 继续执行 Controller
@@ -205,17 +205,17 @@ Controller 调用 ResponseUtil.okList(list)
 第 1 步：数据库建表
   └── 建一张 demo_tag 表（id, name, sort_order, add_time, update_time, deleted）
 
-第 2 步：litemall-db 加数据层
-  ├── domain/LitemallDemoTag.java       （实体类）
+第 2 步：shopflow-db 加数据层
+  ├── domain/ShopflowDemoTag.java       （实体类）
   ├── mapper/DemoTagMapper.java         （Mapper 接口）
   └── service/impl/DemoTagServiceImpl.java （基础 CRUD）
 
-第 3 步：litemall-admin-api 加业务层
+第 3 步：shopflow-admin-api 加业务层
   ├── model/demotag/body/DemoTagListBody.java （查询参数）
   ├── service/AdminDemoTagService.java         （业务服务）
   └── web/AdminDemoTagController.java          （5 个接口）
 
-第 4 步：litemall-admin 加前端
+第 4 步：shopflow-admin 加前端
   ├── src/api/demoTag.js               （API 定义）
   ├── src/views/mall/demoTag.vue       （列表页面）
   └── src/router/index.js             （加路由）
@@ -270,11 +270,11 @@ public class AdminXxxService extends XxxServiceImpl {
 | 文件 | 你要搞明白什么 |
 |------|--------------|
 | [pom.xml](../pom.xml) | Maven 怎么管理多个子模块 |
-| [litemall-all/pom.xml](../litemall-all/pom.xml) | 聚合模块怎么把所有模块打成一个 JAR |
-| [application.yml](../litemall-admin-api/src/main/resources/application.yml) | 端口和 profile 怎么配 |
-| [application-db.yml](../litemall-db/src/main/resources/application-db.yml) | 数据库连接怎么配 |
+| [shopflow-all/pom.xml](../shopflow-all/pom.xml) | 聚合模块怎么把所有模块打成一个 JAR |
+| [application.yml](../shopflow-admin-api/src/main/resources/application.yml) | 端口和 profile 怎么配 |
+| [application-db.yml](../shopflow-db/src/main/resources/application-db.yml) | 数据库连接怎么配 |
 | [docker/Dockerfile](../docker/Dockerfile) | Docker 怎么打包部署 |
-| [litemall-admin/vue.config.js](../litemall-admin/vue.config.js) | 前端代理和打包配置 |
+| [shopflow-admin/vue.config.js](../shopflow-admin/vue.config.js) | 前端代理和打包配置 |
 
 **核心知识点**：
 
@@ -288,8 +288,8 @@ public class AdminXxxService extends XxxServiceImpl {
   └── /admin → 反向代理到后端 JAR
 
 生产模式（方案二，聚合部署）：
-  litemall-all 把前端 + 后端打成一个 JAR
-  java -jar litemall-all-0.1.0-exec.jar
+  shopflow-all 把前端 + 后端打成一个 JAR
+  java -jar shopflow-all-0.1.0-exec.jar
   一个进程同时提供前端页面和后端 API
 ```
 
@@ -329,7 +329,7 @@ Integer count;                        // count: number
 Boolean active;                       // active: boolean
 List<String> tags;                    // tags: string[]
 Map<String, Object> data;             // data: Record<string, any>
-LitemallIssue issue;                  // issue: LitemallIssue (自定义类型)
+ShopflowIssue issue;                  // issue: ShopflowIssue (自定义类型)
 ```
 
 ### 3.3 常见模式
@@ -341,7 +341,7 @@ if (name == null) {
 }
 
 // for 循环和前端一样
-for (LitemallIssue item : list) {
+for (ShopflowIssue item : list) {
     // 处理每一项
 }
 

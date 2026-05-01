@@ -1,4 +1,4 @@
-# litemall-plus 后端架构说明（前端开发视角）
+# shopflow 后端架构说明（前端开发视角）
 
 ## 1. 文档目标
 
@@ -9,7 +9,7 @@
 3. 登录与权限是怎么校验的
 4. 出问题时该优先查哪里
 
-适用范围：管理后台前端 litemall-admin 与管理后端 litemall-admin-api 的联调、排错、部署。
+适用范围：管理后台前端 shopflow-admin 与管理后端 shopflow-admin-api 的联调、排错、部署。
 
 ---
 
@@ -19,26 +19,26 @@
 
 核心模块：
 
-1. litemall-db
+1. shopflow-db
 - 主要职责：数据访问层、实体、Mapper、分页、动态数据源
 - 关键依赖：MyBatis-Plus、Druid、MySQL、PageHelper
-- 参考文件：[litemall-db/pom.xml](../litemall-db/pom.xml)
+- 参考文件：[shopflow-db/pom.xml](../shopflow-db/pom.xml)
 
-2. litemall-core
+2. shopflow-core
 - 主要职责：通用基础能力（鉴权、拦截器、Redis、工具类、统一响应、通知、任务）
 - 关键依赖：Sa-Token、Redis、WebSocket、支付/对象存储 SDK
-- 参考文件：[litemall-core/pom.xml](../litemall-core/pom.xml)
+- 参考文件：[shopflow-core/pom.xml](../shopflow-core/pom.xml)
 
-3. litemall-admin-api
-- 主要职责：管理端业务接口（给 litemall-admin 前端调用）
+3. shopflow-admin-api
+- 主要职责：管理端业务接口（给 shopflow-admin 前端调用）
 - 运行端口：当前为 6914
-- 参考文件：[litemall-admin-api/src/main/resources/application.yml](../litemall-admin-api/src/main/resources/application.yml)
-- 参考文件：[litemall-admin-api/pom.xml](../litemall-admin-api/pom.xml)
+- 参考文件：[shopflow-admin-api/src/main/resources/application.yml](../shopflow-admin-api/src/main/resources/application.yml)
+- 参考文件：[shopflow-admin-api/pom.xml](../shopflow-admin-api/pom.xml)
 
-4. litemall-wx-api
+4. shopflow-wx-api
 - 主要职责：小程序端业务接口
 
-5. litemall-all
+5. shopflow-all
 - 主要职责：聚合启动模块（将 admin + wx + core + db 组合成一个进程）
 - 用途：一体化部署场景
 
@@ -49,24 +49,24 @@
 以管理前端为例：
 
 1. 页面或 Vuex 调用 api 文件
-- 例如登录信息请求在 [litemall-admin/src/api/login.js](../litemall-admin/src/api/login.js)
+- 例如登录信息请求在 [shopflow-admin/src/api/login.js](../shopflow-admin/src/api/login.js)
 
 2. 统一 axios 封装处理
-- 入口在 [litemall-admin/src/utils/request.js](../litemall-admin/src/utils/request.js)
+- 入口在 [shopflow-admin/src/utils/request.js](../shopflow-admin/src/utils/request.js)
 - baseURL 来自 VUE_APP_BASE_API
 - request 拦截器会附带：
-  - X-Litemall-Admin-Token
-  - X-Litemall-TenantId
+  - X-ShopFlow-Admin-Token
+  - X-ShopFlow-TenantId
 
 3. 开发环境代理转发
-- 配置在 [litemall-admin/vue.config.js](../litemall-admin/vue.config.js)
+- 配置在 [shopflow-admin/vue.config.js](../shopflow-admin/vue.config.js)
 - /admin 代理到本地后端 6914
 
 4. 后端 Controller 接口处理
-- 例如鉴权相关在 [litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminAuthController.java](../litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminAuthController.java)
+- 例如鉴权相关在 [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminAuthController.java](../shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminAuthController.java)
 
 5. 返回统一 JSON 协议
-- 封装类在 [litemall-core/src/main/java/org/ysling/litemall/core/utils/response/ResponseUtil.java](../litemall-core/src/main/java/org/ysling/litemall/core/utils/response/ResponseUtil.java)
+- 封装类在 [shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response/ResponseUtil.java](../shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response/ResponseUtil.java)
 - 统一结构：errno / errmsg / data
 
 ---
@@ -79,7 +79,7 @@
 
 1. POST /admin/auth/login
 - 入参：username、password
-- 登录参数模型在 [litemall-admin-api/src/main/java/org/ysling/litemall/admin/model/auth/body/LoginBody.java](../litemall-admin-api/src/main/java/org/ysling/litemall/admin/model/auth/body/LoginBody.java)
+- 登录参数模型在 [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/model/auth/body/LoginBody.java](../shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/model/auth/body/LoginBody.java)
 
 2. GET /admin/auth/info
 - 用于拉取当前用户信息、角色、权限
@@ -90,7 +90,7 @@
 ### 4.2 鉴权拦截
 
 Sa-Token 全局拦截器在 core 模块注册：
-- [litemall-core/src/main/java/org/ysling/litemall/core/satoken/config/SaTokenConfigure.java](../litemall-core/src/main/java/org/ysling/litemall/core/satoken/config/SaTokenConfigure.java)
+- [shopflow-core/src/main/java/org/ysling/shopflow/core/satoken/config/SaTokenConfigure.java](../shopflow-core/src/main/java/org/ysling/shopflow/core/satoken/config/SaTokenConfigure.java)
 
 请求默认会进入鉴权逻辑，部分接口通过注解放行。
 
@@ -102,7 +102,7 @@ Sa-Token 全局拦截器在 core 模块注册：
 2. errno = A0223：未登录，前端会触发重新登录
 3. 其它 errno：统一弹错误提示
 
-逻辑在 [litemall-admin/src/utils/request.js](../litemall-admin/src/utils/request.js)。
+逻辑在 [shopflow-admin/src/utils/request.js](../shopflow-admin/src/utils/request.js)。
 
 ---
 
@@ -111,7 +111,7 @@ Sa-Token 全局拦截器在 core 模块注册：
 管理端后端启动依赖：
 
 1. MySQL
-- 数据源配置在 [litemall-db/src/main/resources/application-db.yml](../litemall-db/src/main/resources/application-db.yml)
+- 数据源配置在 [shopflow-db/src/main/resources/application-db.yml](../shopflow-db/src/main/resources/application-db.yml)
 
 2. Redis
 - 用于 token、限流、任务等能力
@@ -128,20 +128,20 @@ Sa-Token 全局拦截器在 core 模块注册：
 前端日常联调最常看这几类目录：
 
 1. 管理端接口实现
-- [litemall-admin-api/src/main/java/org/ysling/litemall/admin/web](../litemall-admin-api/src/main/java/org/ysling/litemall/admin/web)
+- [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web](../shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web)
 
 2. 通用响应与鉴权能力
-- [litemall-core/src/main/java/org/ysling/litemall/core/utils/response](../litemall-core/src/main/java/org/ysling/litemall/core/utils/response)
-- [litemall-core/src/main/java/org/ysling/litemall/core/satoken](../litemall-core/src/main/java/org/ysling/litemall/core/satoken)
+- [shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response](../shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response)
+- [shopflow-core/src/main/java/org/ysling/shopflow/core/satoken](../shopflow-core/src/main/java/org/ysling/shopflow/core/satoken)
 
 3. 前端请求封装与接口定义
-- [litemall-admin/src/utils/request.js](../litemall-admin/src/utils/request.js)
-- [litemall-admin/src/api](../litemall-admin/src/api)
+- [shopflow-admin/src/utils/request.js](../shopflow-admin/src/utils/request.js)
+- [shopflow-admin/src/api](../shopflow-admin/src/api)
 
 4. 运行配置
-- [litemall-admin/vue.config.js](../litemall-admin/vue.config.js)
-- [litemall-admin-api/src/main/resources/application.yml](../litemall-admin-api/src/main/resources/application.yml)
-- [litemall-db/src/main/resources/application-db.yml](../litemall-db/src/main/resources/application-db.yml)
+- [shopflow-admin/vue.config.js](../shopflow-admin/vue.config.js)
+- [shopflow-admin-api/src/main/resources/application.yml](../shopflow-admin-api/src/main/resources/application.yml)
+- [shopflow-db/src/main/resources/application-db.yml](../shopflow-db/src/main/resources/application-db.yml)
 
 ---
 
@@ -166,8 +166,8 @@ Sa-Token 全局拦截器在 core 模块注册：
 
 看请求头是否包含：
 
-1. X-Litemall-Admin-Token
-2. X-Litemall-TenantId
+1. X-ShopFlow-Admin-Token
+2. X-ShopFlow-TenantId
 
 ### 第四步：确认业务返回协议
 
@@ -191,14 +191,14 @@ Sa-Token 全局拦截器在 core 模块注册：
 
 后端打包后常见产物：
 
-1. litemall-admin-api 的 exec jar（单独管理端后端）
-2. litemall-all 的 exec jar（聚合模式）
+1. shopflow-admin-api 的 exec jar（单独管理端后端）
+2. shopflow-all 的 exec jar（聚合模式）
 
 ### 前端
 
 管理前端打包产物目录：
 
-1. litemall-admin/dist
+1. shopflow-admin/dist
 
 ### 常见误区
 
@@ -223,7 +223,7 @@ Sa-Token 全局拦截器在 core 模块注册：
 
 ## 10. 给前端同学的建议
 
-1. 日常开发优先用 litemall-admin-api 单独联调，定位问题更快
+1. 日常开发优先用 shopflow-admin-api 单独联调，定位问题更快
 2. 先看 errno 再看 HTTP 状态
 3. 先看代理和端口，再看业务代码
 4. 把请求头与响应体打印完整，联调效率会明显提高
@@ -237,22 +237,22 @@ Sa-Token 全局拦截器在 core 模块注册：
 - [pom.xml](../pom.xml)
 
 2. 管理端后端端口配置
-- [litemall-admin-api/src/main/resources/application.yml](../litemall-admin-api/src/main/resources/application.yml)
+- [shopflow-admin-api/src/main/resources/application.yml](../shopflow-admin-api/src/main/resources/application.yml)
 
 3. 管理端鉴权控制器
-- [litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminAuthController.java](../litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminAuthController.java)
+- [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminAuthController.java](../shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminAuthController.java)
 
 4. 统一响应协议
-- [litemall-core/src/main/java/org/ysling/litemall/core/utils/response/ResponseUtil.java](../litemall-core/src/main/java/org/ysling/litemall/core/utils/response/ResponseUtil.java)
+- [shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response/ResponseUtil.java](../shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response/ResponseUtil.java)
 
 5. Sa-Token 拦截器注册
-- [litemall-core/src/main/java/org/ysling/litemall/core/satoken/config/SaTokenConfigure.java](../litemall-core/src/main/java/org/ysling/litemall/core/satoken/config/SaTokenConfigure.java)
+- [shopflow-core/src/main/java/org/ysling/shopflow/core/satoken/config/SaTokenConfigure.java](../shopflow-core/src/main/java/org/ysling/shopflow/core/satoken/config/SaTokenConfigure.java)
 
 6. 前端请求封装
-- [litemall-admin/src/utils/request.js](../litemall-admin/src/utils/request.js)
+- [shopflow-admin/src/utils/request.js](../shopflow-admin/src/utils/request.js)
 
 7. 前端登录 API
-- [litemall-admin/src/api/login.js](../litemall-admin/src/api/login.js)
+- [shopflow-admin/src/api/login.js](../shopflow-admin/src/api/login.js)
 
 8. 前端 dev 代理
-- [litemall-admin/vue.config.js](../litemall-admin/vue.config.js)
+- [shopflow-admin/vue.config.js](../shopflow-admin/vue.config.js)

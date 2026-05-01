@@ -24,13 +24,13 @@ jobs:
           cache: maven
 
       - name: Maven package (skip tests)
-        run: mvn -pl litemall-all -am clean package -DskipTests
+        run: mvn -pl shopflow-all -am clean package -DskipTests
 
       - name: Upload backend jar
         uses: actions/upload-artifact@v4
         with:
           name: backend-jar
-          path: litemall-all/target/litemall-all-*-exec.jar
+          path: shopflow-all/target/shopflow-all-*-exec.jar
           retention-days: 1
 
   build-frontend:
@@ -47,11 +47,11 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        working-directory: litemall-admin
+        working-directory: shopflow-admin
         run: npm install --legacy-peer-deps
 
       - name: Build production
-        working-directory: litemall-admin
+        working-directory: shopflow-admin
         env:
           NODE_OPTIONS: --openssl-legacy-provider
         run: npm run build:prod
@@ -60,7 +60,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-dist
-          path: litemall-admin/dist/
+          path: shopflow-admin/dist/
           retention-days: 1
 
   deploy:
@@ -85,7 +85,7 @@ jobs:
           path: ./artifacts/frontend
 
       - name: Rename jar
-        run: mv ./artifacts/backend/litemall-all-*-exec.jar ./artifacts/backend/shopflow.jar
+        run: mv ./artifacts/backend/shopflow-all-*-exec.jar ./artifacts/backend/shopflow.jar
 
       - name: Upload jar to server
         uses: appleboy/scp-action@v0.1.7

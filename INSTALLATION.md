@@ -1,4 +1,4 @@
-# litemall-plus 本地环境安装指南
+# shopflow 本地环境安装指南
 
 ## 📋 环境检查
 
@@ -120,7 +120,7 @@
 ### 🔧 **微信开发者工具**（可选）
 **是什么？** 微信小程序的官方开发工具
 
-**为什么需要？** 开发和测试微信小程序 (`litemall-wx` 项目)
+**为什么需要？** 开发和测试微信小程序 (`shopflow-wx` 项目)
 
 **用途：**
 - 📱 在电脑上预览小程序效果
@@ -245,14 +245,14 @@ mysql.server start
 mysql -u root
 
 # 在 MySQL 命令行中执行
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'litemall123';
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'shopflow123';
 ```
 
 #### 验证安装
 ```bash
 mysql --version
 mysql -u root -p
-# 输入密码: litemall123
+# 输入密码: shopflow123
 ```
 
 ---
@@ -289,9 +289,9 @@ redis-cli ping
 mysql -u root -p
 
 # 输入密码后，在 MySQL 命令行执行以下 SQL：
-CREATE DATABASE litemall_plus CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'litemall'@'localhost' IDENTIFIED BY 'litemall123';
-GRANT ALL PRIVILEGES ON litemall_plus.* TO 'litemall'@'localhost';
+CREATE DATABASE shopflow CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'shopflow'@'localhost' IDENTIFIED BY 'shopflow123';
+GRANT ALL PRIVILEGES ON shopflow.* TO 'shopflow'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
 ```
@@ -299,21 +299,21 @@ EXIT;
 ### 2. 导入数据库脚本
 
 项目中的 SQL 脚本位置：
-- [litemall-db/sql/litemall_plus.sql](litemall-db/sql/litemall_plus.sql)
+- [shopflow-db/sql/shopflow.sql](shopflow-db/sql/shopflow.sql)
 
 导入数据库：
 ```bash
-cd litemall-db/sql
+cd shopflow-db/sql
 
 # 导入完整数据库（包括表结构和测试数据）
-mysql -u litemall -p litemall_plus < litemall_plus.sql
+mysql -u shopflow -p shopflow < shopflow.sql
 
-# 输入密码: litemall123
+# 输入密码: shopflow123
 ```
 
 验证导入成功：
 ```bash
-mysql -u litemall -p litemall_plus
+mysql -u shopflow -p shopflow
 SHOW TABLES;
 EXIT;
 ```
@@ -327,16 +327,16 @@ EXIT;
 修改后端配置文件，根据本地数据库设置调整连接字符串。
 
 主要配置文件位置：
-- `litemall-admin-api/src/main/resources/application.yml`
-- `litemall-wx-api/src/main/resources/application.yml`
+- `shopflow-admin-api/src/main/resources/application.yml`
+- `shopflow-wx-api/src/main/resources/application.yml`
 
 检查以下配置项是否匹配本地环境：
 ```yaml
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/litemall_plus?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    username: litemall
-    password: litemall123
+    url: jdbc:mysql://localhost:3306/shopflow?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: shopflow
+    password: shopflow123
     driver-class-name: com.mysql.cj.jdbc.Driver
   
   redis:
@@ -356,17 +356,17 @@ spring:
 
 ```bash
 # 进入项目根目录
-cd /Users/user/Desktop/demo/test/react/litemall-plus-master
+cd /Users/user/Desktop/demo/test/react/shopflow-master
 
 # 编译整个项目
 mvn clean install -DskipTests
 
 # 启动管理后台 API 服务
-cd litemall-admin-api
+cd shopflow-admin-api
 mvn spring-boot:run
 
 # 在另一个终端窗口启动小程序 API 服务
-cd litemall-wx-api
+cd shopflow-wx-api
 mvn spring-boot:run
 ```
 
@@ -385,7 +385,7 @@ mvn spring-boot:run
 
 ```bash
 # 进入管理后台项目目录
-cd litemall-admin
+cd shopflow-admin
 
 # 安装依赖
 npm install
@@ -412,26 +412,26 @@ yarn dev
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    litemall-plus 项目                        │
+│                    shopflow 项目                        │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  📱 前端部分（你的工作）                                      │
 │  ───────────────────────────────────────────                 │
-│  ├─ litemall-admin (管理后台 Vue 项目)                        │
+│  ├─ shopflow-admin (管理后台 Vue 项目)                        │
 │  │  └─ npm run dev → http://localhost:8081                   │
 │  │     (用 Vue + Element UI 开发管理系统)                     │
 │  │                                                            │
-│  └─ litemall-wx (微信小程序项目)                              │
+│  └─ shopflow-wx (微信小程序项目)                              │
 │     └─ 用微信开发者工具 → 预览小程序                           │
 │        (用小程序开发，ColorUI 组件库)                         │
 │                                                              │
 │  🖥️ 后端部分（后端工程师的工作）                               │
 │  ─────────────────────────────                               │
-│  ├─ litemall-admin-api (Maven 项目)                           │
+│  ├─ shopflow-admin-api (Maven 项目)                           │
 │  │  └─ mvn spring-boot:run → http://localhost:8080          │
 │  │     (提供管理后台的 API 接口)                              │
 │  │                                                            │
-│  └─ litemall-wx-api (Maven 项目)                              │
+│  └─ shopflow-wx-api (Maven 项目)                              │
 │     └─ mvn spring-boot:run → http://localhost:8001          │
 │        (提供小程序的 API 接口)                               │
 │                                                              │
@@ -459,7 +459,7 @@ yarn dev
 ### 3. 启动微信小程序（开发环境）
 
 1. 打开微信开发者工具
-2. 选择 `litemall-wx` 目录
+2. 选择 `shopflow-wx` 目录
 3. 设置 AppID（如果需要）
 4. 在开发者工具中启动预览
 
@@ -591,8 +591,8 @@ npm run dev
 
 **前端配置文件位置：**
 ```
-litemall-admin/src/api/config.js  # API 基础地址配置
-litemall-admin/src/utils/request.js   # HTTP 请求配置
+shopflow-admin/src/api/config.js  # API 基础地址配置
+shopflow-admin/src/utils/request.js   # HTTP 请求配置
 ```
 
 修改这些文件中的 baseURL：
@@ -615,7 +615,7 @@ const BASE_URL = 'http://test-api.example.com:8080'
 # 1. 安装 Node.js（如果没装）- 参考上面的安装步骤
 
 # 2. 进入项目目录
-cd /Users/user/Desktop/demo/test/react/litemall-plus-master/litemall-admin
+cd /Users/user/Desktop/demo/test/react/shopflow-master/shopflow-admin
 
 # 3. 安装 npm 依赖
 npm install
@@ -623,7 +623,7 @@ npm install
 
 ### 第 2 步：启动开发服务器（每次开发）
 ```bash
-# 在 litemall-admin 目录中
+# 在 shopflow-admin 目录中
 npm run dev
 
 # 浏览器自动打开 http://localhost:8081
@@ -662,7 +662,7 @@ npm run build
 
 ### 项目文件结构
 ```
-litemall-admin/                # 管理后台前端项目
+shopflow-admin/                # 管理后台前端项目
 ├─ public/                     # 静态文件
 ├─ src/
 │  ├─ App.vue                 # 根组件
@@ -695,10 +695,10 @@ litemall-admin/                # 管理后台前端项目
 - API 文档：[doc/api.md](doc/api.md)
 - 常见问题：[doc/FAQ.md](doc/FAQ.md)
 - 数据库文档：[doc/database.md](doc/database.md)
-- GitHub 问题：https://github.com/linlinjava/litemall/issues
+- GitHub 问题：https://github.com/linlinjava/shopflow/issues
 
 ---
 
 ## 📝 更新日志
 
-- **2026-04-19**: 初始创建，基于 litemall-plus v0.1.0
+- **2026-04-19**: 初始创建，基于 shopflow v0.1.0

@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ysling</groupId>
-    <artifactId>shopflow</artifactId>
+    <artifactId>ShopFlow</artifactId>
     <name>ShopFlow</name>
     <version>0.1.0</version>
     <packaging>pom</packaging>
@@ -21,33 +21,33 @@
     </properties>
 
     <modules>
-        <module>litemall-core</module>
-        <module>litemall-db</module>
-        <module>litemall-wx-api</module>
-        <module>litemall-admin-api</module>
-        <module>litemall-all</module>
+        <module>shopflow-core</module>
+        <module>shopflow-db</module>
+        <module>shopflow-wx-api</module>
+        <module>shopflow-admin-api</module>
+        <module>shopflow-all</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.ysling</groupId>
-                <artifactId>litemall-core</artifactId>
+                <artifactId>shopflow-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.ysling</groupId>
-                <artifactId>litemall-db</artifactId>
+                <artifactId>shopflow-db</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.ysling</groupId>
-                <artifactId>litemall-wx-api</artifactId>
+                <artifactId>shopflow-wx-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.ysling</groupId>
-                <artifactId>litemall-admin-api</artifactId>
+                <artifactId>shopflow-admin-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

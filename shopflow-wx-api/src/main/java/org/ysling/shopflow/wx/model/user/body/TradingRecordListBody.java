@@ -1,0 +1,22 @@
+package org.ysling.shopflow.wx.model.user.body;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.ysling.shopflow.db.entity.PageBody;
+import org.ysling.shopflow.core.annotation.NotValue;
+import java.io.Serializable;
+
+/**
+ * @author Ysling
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class TradingRecordListBody extends PageBody implements Serializable {
+
+    /**
+     * 类型，如果是0则是商品收藏，如果是1则是专题收藏
+     */
+    @NotValue(message = "类型不能为空")
+    private Byte type;
+
+}

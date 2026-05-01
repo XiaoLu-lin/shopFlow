@@ -1,7 +1,7 @@
 # ShopFlow
 
-对【litemall 】的全面优化，原litemall主要面向单体商户（B2C模式）
-经改良后litemall-plus则是（平台管理员->小程序店铺->用户）（可单体，可SaaS模式）
+对【shopflow 】的全面优化，原shopflow主要面向单体商户（B2C模式）
+经改良后shopflow则是（平台管理员->小程序店铺->用户）（可单体，可SaaS模式）
 SaaS平台请进群资讯群主
 
 ## 项目实例
@@ -79,8 +79,8 @@ SaaS平台请进群资讯群主
 
 ## 项目文档
 
-* [wx-API接口文档](https://www.ysling.com.cn/wx-doc/index.html)
-* [admin-API接口文档](https://www.ysling.com.cn/admin-doc/index.html)
+* [wx-API接口文档](https://manager.enshipeixue.com/wx-doc/index.html)
+* [admin-API接口文档](https://manager.enshipeixue.com/admin-doc/index.html)
 * [数据库](./doc/database.md)
 * [常见问题FAQ](./doc/FAQ.md)
 * [1. 系统架构](./doc/project.md)
@@ -111,17 +111,17 @@ Spring Boot后端 + Vue管理员前端 + 微信小程序用户前端 + Vue用户
     * [Nodejs](https://nodejs.org/en/download/)
     * [微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)
     
-2. 数据库直接导入litemall-db/sql下的数据库文件
-    * litemall-plus.sql
+2. 数据库直接导入shopflow-db/sql下的数据库文件
+    * shopflow.sql
 
 3. 启动小商场和管理后台的后端服务
 
     打开命令行，输入以下命令
     ```bash
-    cd litemall-plus
+    cd shopflow
     mvn install
     mvn clean package
-    java -Dfile.encoding=UTF-8 -jar litemall-all/target/litemall-all-0.1.0-exec.jar
+    java -Dfile.encoding=UTF-8 -jar shopflow-all/target/shopflow-all-0.1.0-exec.jar
     ```
     
 4. 启动管理后台前端
@@ -129,7 +129,7 @@ Spring Boot后端 + Vue管理员前端 + 微信小程序用户前端 + Vue用户
     打开命令行，输入以下命令
     ```bash
     npm config set registry http://registry.npm.taobao.org
-    cd litemall-plus/litemall-admin
+    cd shopflow/shopflow-admin
     npm install
     npm run dev
     ```
@@ -143,7 +143,7 @@ Spring Boot后端 + Vue管理员前端 + 微信小程序用户前端 + Vue用户
 
 | 框架                                                                                                                | 说明                                 | 版本         | 学习指南                                                           |
 |-------------------------------------------------------------------------------------------------------------------|------------------------------------|------------|----------------------------------------------------------------|
-| [litemall](https://gitee.com/linlinjava/litemall) | 该项目的基础架构                           |      |
+| [ShopFlow](https://gitee.com/linlinjava/shopflow) | 该项目的基础架构                           |      |
 | [colorui](http://docs.xzeu.com/#/info/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B/%E5%BF%AB%E9%80%9F%E5%B8%83%E7%BD%B2)  | ColorUI是一个css库！！！在你引入样式后可以根据class来调用组件。 |      | 
 | [satoken](https://sa-token.cc/index.html)                                                                         | 一个轻量级 java 权限认证框架，让鉴权变得简单、优雅！      | 1.34.0     | -                                                              |
 | [Spring Boot](https://spring.io/projects/spring-boot)                                                             | 应用开发框架                             | 2.7.8      | [文档](https://github.com/YunaiV/SpringBoot-Labs)                |
@@ -175,5 +175,5 @@ Spring Boot后端 + Vue管理员前端 + 微信小程序用户前端 + Vue用户
 
 ## License
 
-[MulanPSL-2.0](https://gitee.com/JoyAtMeeting/litemall-plus/blob/master/LICENSE)
+[MulanPSL-2.0](https://gitee.com/JoyAtMeeting/shopflow/blob/master/LICENSE)
 Copyright (c) 2022-present ysling

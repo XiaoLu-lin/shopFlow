@@ -1,0 +1,7 @@
+logging:
+  level:
+    root:  ERROR
+    org.springframework:  ERROR
+    org.mybatis:  ERROR
+    org.ysling.shopflow.wx:  DEBUG
+    org.ysling.shopflow:  ERROR
