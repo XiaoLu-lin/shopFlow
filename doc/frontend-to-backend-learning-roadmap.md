@@ -1,4 +1,4 @@
-# 前端转后端学习路线（基于 litemall-plus 实战）
+# 前端转后端学习路线（基于 shopflow 实战）
 
 ## 1. 你现在的起点
 
@@ -35,16 +35,16 @@
 
 对应模块关系：
 
-1. litemall-admin-api：管理端接口（你最先接触）
-2. litemall-core：公共能力（鉴权、响应封装、工具）
-3. litemall-db：数据层（实体、Mapper、SQL）
-4. litemall-all：聚合启动模块
+1. shopflow-admin-api：管理端接口（你最先接触）
+2. shopflow-core：公共能力（鉴权、响应封装、工具）
+3. shopflow-db：数据层（实体、Mapper、SQL）
+4. shopflow-all：聚合启动模块
 
 参考文件：
 
 1. [pom.xml](../pom.xml)
-2. [litemall-admin-api/src/main/resources/application.yml](../litemall-admin-api/src/main/resources/application.yml)
-3. [litemall-db/src/main/resources/application-db.yml](../litemall-db/src/main/resources/application-db.yml)
+2. [shopflow-admin-api/src/main/resources/application.yml](../shopflow-admin-api/src/main/resources/application.yml)
+3. [shopflow-db/src/main/resources/application-db.yml](../shopflow-db/src/main/resources/application-db.yml)
 
 ---
 
@@ -71,7 +71,7 @@
 任务：
 
 1. 启动 MySQL、Redis
-2. 启动 litemall-admin-api
+2. 启动 shopflow-admin-api
 3. 用 curl 访问 /admin/auth/info
 
 验收：
@@ -81,8 +81,8 @@
 
 重点文件：
 
-1. [litemall-admin-api/src/main/resources/application.yml](../litemall-admin-api/src/main/resources/application.yml)
-2. [litemall-db/src/main/resources/application-db.yml](../litemall-db/src/main/resources/application-db.yml)
+1. [shopflow-admin-api/src/main/resources/application.yml](../shopflow-admin-api/src/main/resources/application.yml)
+2. [shopflow-db/src/main/resources/application-db.yml](../shopflow-db/src/main/resources/application-db.yml)
 
 ---
 
@@ -103,8 +103,8 @@
 
 重点文件：
 
-1. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminAuthController.java](../litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminAuthController.java)
-2. [litemall-core/src/main/java/org/ysling/litemall/core/utils/response/ResponseUtil.java](../litemall-core/src/main/java/org/ysling/litemall/core/utils/response/ResponseUtil.java)
+1. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminAuthController.java](../shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminAuthController.java)
+2. [shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response/ResponseUtil.java](../shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response/ResponseUtil.java)
 
 ---
 
@@ -125,8 +125,8 @@
 
 重点目录：
 
-1. [litemall-db/src/main/java](../litemall-db/src/main/java)
-2. [litemall-db/src/main/resources/mappers](../litemall-db/src/main/resources/mappers)
+1. [shopflow-db/src/main/java](../shopflow-db/src/main/java)
+2. [shopflow-db/src/main/resources/mappers](../shopflow-db/src/main/resources/mappers)
 
 ---
 
@@ -147,8 +147,8 @@
 
 重点文件：
 
-1. [litemall-core/src/main/java/org/ysling/litemall/core/satoken/config/SaTokenConfigure.java](../litemall-core/src/main/java/org/ysling/litemall/core/satoken/config/SaTokenConfigure.java)
-2. [litemall-admin/src/utils/request.js](../litemall-admin/src/utils/request.js)
+1. [shopflow-core/src/main/java/org/ysling/shopflow/core/satoken/config/SaTokenConfigure.java](../shopflow-core/src/main/java/org/ysling/shopflow/core/satoken/config/SaTokenConfigure.java)
+2. [shopflow-admin/src/utils/request.js](../shopflow-admin/src/utils/request.js)
 
 ---
 
@@ -245,7 +245,7 @@
 ## 8. 推荐你立刻做的 3 个练习
 
 1. 读懂登录链路
-- 从 [litemall-admin/src/api/login.js](../litemall-admin/src/api/login.js) 到 AdminAuthController
+- 从 [shopflow-admin/src/api/login.js](../shopflow-admin/src/api/login.js) 到 AdminAuthController
 
 2. 给一个列表接口加筛选字段
 - 前端加输入框 + 后端加查询条件

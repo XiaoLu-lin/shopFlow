@@ -1,27 +1,27 @@
-# litemall-plus 项目结构分析
+# shopflow 项目结构分析
 
 ## 1. 项目概述
 
-litemall-plus 是一个企业级电商平台系统，采用前后端分离的分层架构。项目包含四个子系统、七个模块，覆盖微信小程序端、管理后台端的完整业务链路。
+shopflow 是一个企业级电商平台系统，采用前后端分离的分层架构。项目包含四个子系统、七个模块，覆盖微信小程序端、管理后台端的完整业务链路。
 
 ---
 
 ## 2. 整体架构
 
 ```
-litemall-plus (v0.1.0)
+shopflow (v0.1.0)
 ├── 基础系统 (Platform)
-│   ├── litemall-core         核心模块（权限、缓存、存储、通知等公共能力）
-│   ├── litemall-db           数据库模块（43张表、ORM映射、数据服务）
-│   └── litemall-all          打包模块（聚合所有模块，单JAR一键部署）
+│   ├── shopflow-core         核心模块（权限、缓存、存储、通知等公共能力）
+│   ├── shopflow-db           数据库模块（43张表、ORM映射、数据服务）
+│   └── shopflow-all          打包模块（聚合所有模块，单JAR一键部署）
 │
 ├── 管理后台子系统 (Admin)
-│   ├── litemall-admin-api    管理后台后端API（端口6914，37个Controller）
-│   └── litemall-admin        管理后台前端（Vue 2 + Element UI，端口9527）
+│   ├── shopflow-admin-api    管理后台后端API（端口6914，37个Controller）
+│   └── shopflow-admin        管理后台前端（Vue 2 + Element UI，端口9527）
 │
 ├── 微信小程序子系统 (WxMall)
-│   ├── litemall-wx-api       小程序后端API（端口6915）
-│   └── litemall-wx           小程序前端（微信原生 + ColorUI）
+│   ├── shopflow-wx-api       小程序后端API（端口6915）
+│   └── shopflow-wx           小程序前端（微信原生 + ColorUI）
 │
 └── 部署
     └── docker/               Docker 容器化部署
@@ -30,17 +30,17 @@ litemall-plus (v0.1.0)
 模块之间的依赖关系：
 
 ```
-litemall-admin  ──(HTTP)──>  litemall-admin-api
+shopflow-admin  ──(HTTP)──>  shopflow-admin-api
                                     │
-litemall-wx    ──(HTTP)──>   litemall-wx-api
+shopflow-wx    ──(HTTP)──>   shopflow-wx-api
                                     │
                              ┌──────┴──────┐
                              │             │
-                        litemall-core  litemall-db
+                        shopflow-core  shopflow-db
                              │             │
                              └──────┬──────┘
                                     │
-                              litemall-all（聚合打包）
+                              shopflow-all（聚合打包）
 ```
 
 ---
@@ -89,14 +89,14 @@ litemall-wx    ──(HTTP)──>   litemall-wx-api
 
 ## 4. 各模块详细说明
 
-### 4.1 litemall-core — 核心模块
+### 4.1 shopflow-core — 核心模块
 
 提供系统级基础能力，被 admin-api 和 wx-api 共同依赖。
 
 **包结构**：
 
 ```
-org.ysling.litemall.core
+org.ysling.shopflow.core
 ├── annotation/          自定义注解（@JsonBody 等）
 ├── baidu/               百度内容审核（文本、图片）
 ├── config/              全局配置
@@ -160,14 +160,14 @@ org.ysling.litemall.core
 
 ---
 
-### 4.2 litemall-db — 数据库模块
+### 4.2 shopflow-db — 数据库模块
 
 数据持久化层，包含所有数据库表的 ORM 映射和数据访问服务。
 
 **包结构**：
 
 ```
-org.ysling.litemall.db
+org.ysling.shopflow.db
 ├── domain/              数据库实体类（43 个，对应 43 张表）
 ├── entity/              业务实体（GoodsAllinone、PageResult、PageBody 等）
 ├── enums/               枚举类（OrderStatus、GoodsStatus、UserStatus 等）
@@ -187,13 +187,13 @@ org.ysling.litemall.db
 
 | 分类 | 数量 | 核心表 |
 |------|------|--------|
-| 用户相关 | 3 | `litemall_user`, `litemall_address`, `litemall_admin` |
-| 商品相关 | 6 | `litemall_goods`, `litemall_goods_product`, `litemall_goods_specification`, `litemall_goods_attribute`, `litemall_category`, `litemall_brand` |
-| 订单相关 | 3 | `litemall_order`, `litemall_order_goods`, `litemall_aftersale` |
-| 营销相关 | 6 | `litemall_coupon`, `litemall_coupon_user`, `litemall_groupon`, `litemall_groupon_rules`, `litemall_reward`, `litemall_share` |
-| 内容相关 | 5 | `litemall_topic`, `litemall_ad`, `litemall_dynamic`, `litemall_comment`, `litemall_issue` |
-| 系统相关 | 8 | `litemall_admin`, `litemall_role`, `litemall_permission`, `litemall_log`, `litemall_notice`, `litemall_system`, `litemall_tenant`, `litemall_notice_admin` |
-| 其他 | 12 | `litemall_region`, `litemall_storage`, `litemall_cart`, `litemall_collect`, `litemall_footprint`, `litemall_search_history`, `litemall_like`, `litemall_message` 等 |
+| 用户相关 | 3 | `shopflow_user`, `shopflow_address`, `shopflow_admin` |
+| 商品相关 | 6 | `shopflow_goods`, `shopflow_goods_product`, `shopflow_goods_specification`, `shopflow_goods_attribute`, `shopflow_category`, `shopflow_brand` |
+| 订单相关 | 3 | `shopflow_order`, `shopflow_order_goods`, `shopflow_aftersale` |
+| 营销相关 | 6 | `shopflow_coupon`, `shopflow_coupon_user`, `shopflow_groupon`, `shopflow_groupon_rules`, `shopflow_reward`, `shopflow_share` |
+| 内容相关 | 5 | `shopflow_topic`, `shopflow_ad`, `shopflow_dynamic`, `shopflow_comment`, `shopflow_issue` |
+| 系统相关 | 8 | `shopflow_admin`, `shopflow_role`, `shopflow_permission`, `shopflow_log`, `shopflow_notice`, `shopflow_system`, `shopflow_tenant`, `shopflow_notice_admin` |
+| 其他 | 12 | `shopflow_region`, `shopflow_storage`, `shopflow_cart`, `shopflow_collect`, `shopflow_footprint`, `shopflow_search_history`, `shopflow_like`, `shopflow_message` 等 |
 
 **数据库设计特点**：
 
@@ -206,14 +206,14 @@ org.ysling.litemall.db
 
 ---
 
-### 4.3 litemall-admin-api — 管理后台 API
+### 4.3 shopflow-admin-api — 管理后台 API
 
 为管理后台前端提供 RESTful API 接口，运行端口 **6914**。
 
 **包结构**：
 
 ```
-org.ysling.litemall.admin
+org.ysling.shopflow.admin
 ├── annotation/          自定义注解
 │   ├── RequiresPermissionsDesc    权限描述注解
 │   ├── context/                   权限上下文
@@ -273,7 +273,7 @@ org.ysling.litemall.admin
 
 ---
 
-### 4.4 litemall-wx-api — 小程序 API
+### 4.4 shopflow-wx-api — 小程序 API
 
 为微信小程序提供后端 API 接口，运行端口 **6915**。
 
@@ -291,14 +291,14 @@ org.ysling.litemall.admin
 
 ---
 
-### 4.5 litemall-admin — 管理后台前端
+### 4.5 shopflow-admin — 管理后台前端
 
 基于 Vue 2 + Element UI 构建的管理后台 SPA 应用。
 
 **目录结构**：
 
 ```
-litemall-admin/src/
+shopflow-admin/src/
 ├── api/                 API 接口调用（31 个模块）
 ├── views/               页面组件
 │   ├── dashboard/          仪表板（数据统计图表）
@@ -335,12 +335,12 @@ litemall-admin/src/
 
 ---
 
-### 4.6 litemall-wx — 微信小程序前端
+### 4.6 shopflow-wx — 微信小程序前端
 
 **页面结构**：
 
 ```
-litemall-wx/pages/
+shopflow-wx/pages/
 ├── index/                首页
 ├── catalog/              分类
 ├── goods/                商品
@@ -378,7 +378,7 @@ litemall-wx/pages/
 **公共组件**：
 
 ```
-litemall-wx/lib/components/
+shopflow-wx/lib/components/
 ├── commentModal/     评论弹窗
 ├── goodList/         商品列表
 ├── goodsItem/        商品卡片
@@ -389,15 +389,15 @@ litemall-wx/lib/components/
 
 ---
 
-### 4.7 litemall-all — 打包模块
+### 4.7 shopflow-all — 打包模块
 
 聚合所有模块，打包成单一可执行 JAR 文件。
 
 **作用**：
 
-1. 引入 litemall-core、litemall-db、litemall-admin-api、litemall-wx-api 依赖
-2. 将 litemall-admin 前端构建产物打包到 static 目录
-3. 输出 `litemall-all-0.1.0-exec.jar` 可直接运行
+1. 引入 shopflow-core、shopflow-db、shopflow-admin-api、shopflow-wx-api 依赖
+2. 将 shopflow-admin 前端构建产物打包到 static 目录
+3. 输出 `shopflow-all-0.1.0-exec.jar` 可直接运行
 
 ---
 
@@ -469,22 +469,22 @@ litemall-wx/lib/components/
 ```bash
 # 1. 数据库初始化
 mysql -u root -p
-CREATE DATABASE litemall_plus CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-mysql -u root -p litemall_plus < litemall-db/sql/litemall_plus.sql
+CREATE DATABASE shopflow CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+mysql -u root -p shopflow < shopflow-db/sql/shopflow.sql
 
 # 2. 编译后端
 mvn clean install -DskipTests
 
 # 3. 启动管理后台 API（端口 6914）
-cd litemall-admin-api
+cd shopflow-admin-api
 mvn spring-boot:run
 
 # 4. 启动小程序 API（端口 6915）
-cd litemall-wx-api
+cd shopflow-wx-api
 mvn spring-boot:run
 
 # 5. 启动管理后台前端（端口 9527）
-cd litemall-admin
+cd shopflow-admin
 npm install
 npm run dev
 ```
@@ -499,11 +499,11 @@ npm run dev
 
 ### 6.4 一键部署
 
-通过 litemall-all 模块打包成单一 JAR：
+通过 shopflow-all 模块打包成单一 JAR：
 
 ```bash
 mvn clean package -DskipTests
-java -jar litemall-all/target/litemall-all-0.1.0-exec.jar
+java -jar shopflow-all/target/shopflow-all-0.1.0-exec.jar
 ```
 
 ### 6.5 Docker 部署
@@ -511,10 +511,10 @@ java -jar litemall-all/target/litemall-all-0.1.0-exec.jar
 ```bash
 # 构建镜像
 cd docker
-docker build -t litemall-plus .
+docker build -t shopflow .
 
 # 运行容器
-docker run -d -p 6914:6914 --name litemall litemall-plus
+docker run -d -p 6914:6914 --name shopflow shopflow
 ```
 
 ---
@@ -523,14 +523,14 @@ docker run -d -p 6914:6914 --name litemall litemall-plus
 
 | 配置文件 | 位置 | 用途 |
 |----------|------|------|
-| `application.yml` | litemall-admin-api/src/main/resources/ | 管理后台 API 配置（端口、profile 引入） |
-| `application.yml` | litemall-wx-api/src/main/resources/ | 小程序 API 配置 |
-| `application-db.yml` | litemall-db/src/main/resources/ | 数据库连接、Druid 连接池 |
-| `application-core.yml` | litemall-core/src/main/resources/ | 核心配置（微信、存储、通知、物流） |
-| `application.yml` | litemall-all/src/main/resources/ | 聚合启动配置 |
-| `vue.config.js` | litemall-admin/ | Vue 前端配置（代理、构建） |
-| `.env.development` | litemall-admin/ | 前端开发环境变量 |
-| `package.json` | litemall-admin/ | 前端依赖管理 |
+| `application.yml` | shopflow-admin-api/src/main/resources/ | 管理后台 API 配置（端口、profile 引入） |
+| `application.yml` | shopflow-wx-api/src/main/resources/ | 小程序 API 配置 |
+| `application-db.yml` | shopflow-db/src/main/resources/ | 数据库连接、Druid 连接池 |
+| `application-core.yml` | shopflow-core/src/main/resources/ | 核心配置（微信、存储、通知、物流） |
+| `application.yml` | shopflow-all/src/main/resources/ | 聚合启动配置 |
+| `vue.config.js` | shopflow-admin/ | Vue 前端配置（代理、构建） |
+| `.env.development` | shopflow-admin/ | 前端开发环境变量 |
+| `package.json` | shopflow-admin/ | 前端依赖管理 |
 
 ---
 
@@ -559,11 +559,11 @@ docker run -d -p 6914:6914 --name litemall litemall-plus
 浏览器
   │
   ▼
-litemall-admin (Vue 前端)
+shopflow-admin (Vue 前端)
   │  axios 发起 HTTP 请求
   │  例如: GET /admin/demo-crud/list?page=1&limit=10
   ▼
-litemall-admin-api (Spring Boot 后端)
+shopflow-admin-api (Spring Boot 后端)
   │
   ├── Controller 层：接收请求参数，调用 Service
   │   └── AdminDemoCrudController.list(DemoCrudListBody body)
@@ -589,32 +589,32 @@ litemall-admin-api (Spring Boot 后端)
 
 | 文件 | 路径 |
 |------|------|
-| 管理后台启动类 | `litemall-admin-api/src/main/java/org/ysling/litemall/admin/Application.java` |
-| 聚合启动类 | `litemall-all/src/main/java/.../Application.java` |
+| 管理后台启动类 | `shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/Application.java` |
+| 聚合启动类 | `shopflow-all/src/main/java/.../Application.java` |
 
 ### 认证相关
 
 | 文件 | 路径 |
 |------|------|
-| 登录 Controller | `litemall-admin-api/.../web/AdminAuthController.java` |
-| Sa-Token 配置 | `litemall-core/.../satoken/config/SaTokenConfigure.java` |
-| 统一响应 | `litemall-core/.../utils/response/ResponseUtil.java` |
+| 登录 Controller | `shopflow-admin-api/.../web/AdminAuthController.java` |
+| Sa-Token 配置 | `shopflow-core/.../satoken/config/SaTokenConfigure.java` |
+| 统一响应 | `shopflow-core/.../utils/response/ResponseUtil.java` |
 
 ### 数据库相关
 
 | 文件 | 路径 |
 |------|------|
-| 数据库脚本 | `litemall-db/sql/litemall_plus.sql` |
-| 数据库配置 | `litemall-db/src/main/resources/application-db.yml` |
+| 数据库脚本 | `shopflow-db/sql/shopflow.sql` |
+| 数据库配置 | `shopflow-db/src/main/resources/application-db.yml` |
 
 ### 前端入口
 
 | 文件 | 路径 |
 |------|------|
-| 前端入口 | `litemall-admin/src/main.js` |
-| 路由配置 | `litemall-admin/src/router/index.js` |
-| 权限控制 | `litemall-admin/src/permission.js` |
-| API 请求封装 | `litemall-admin/src/utils/request.js` |
+| 前端入口 | `shopflow-admin/src/main.js` |
+| 路由配置 | `shopflow-admin/src/router/index.js` |
+| 权限控制 | `shopflow-admin/src/permission.js` |
+| API 请求封装 | `shopflow-admin/src/utils/request.js` |
 
 ### 部署相关
 

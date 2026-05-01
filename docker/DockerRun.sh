@@ -3,10 +3,10 @@
 #=====================================================================================
 
 #操作/项目路径(Dockerfile存放的路径)
-BASE_PATH=/opt/projects/litemall-plus
+BASE_PATH=/opt/projects/shopflow
 
 #项目名称
-SERVER_NAME=litemall-plus
+SERVER_NAME=shopflow
 
 #获此项目的取容器id
 CID=$(docker ps -a | grep -w "$SERVER_NAME" | awk '{print $1}')
@@ -22,7 +22,7 @@ IID=$(docker images | grep -w "$SERVER_NAME" | awk '{print $3}')
 function transfer(){
     echo "=========================>>>>>>>移动jenkins构建好的jar到Dockerfile所在目录，并重命名为order-meal.jar"
 
-        mv /root/.jenkins/workspace/litemall-plus/litemall-all/target/litemall-all-0.1.0-exec.jar /opt/projects/litemall-plus/litemall-plus.jar
+        mv /root/.jenkins/workspace/shopflow/shopflow-all/target/shopflow-all-0.1.0-exec.jar /opt/projects/shopflow/shopflow.jar
 
     echo "=========================>>>>>>>迁移完成Success"
 
@@ -78,10 +78,10 @@ function run(){
     build
 
     docker run -p 6914:6914 --restart=always --name $SERVER_NAME \
-	-v /opt/projects/litemall-plus/logs:/logs \
-	-v /opt/projects/litemall-plus/backup:/backup \
-	-v /opt/projects/litemall-plus/storage:/storage \
-	-v /opt/projects/litemall-plus/cert:/opt/projects/litemall-plus/cert \
+	-v /opt/projects/shopflow/logs:/logs \
+	-v /opt/projects/shopflow/backup:/backup \
+	-v /opt/projects/shopflow/storage:/storage \
+	-v /opt/projects/shopflow/cert:/opt/projects/shopflow/cert \
 	-d $SERVER_NAME
 
 }

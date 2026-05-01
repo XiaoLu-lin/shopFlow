@@ -1,0 +1,75 @@
+package org.ysling.shopflow.admin.service;
+/**
+ *  Copyright (c) [ysling] [927069313@qq.com]
+ *  [ShopFlow] is licensed under Mulan PSL v2.
+ *  You can use this software according to the terms and conditions of the Mulan PSL v2.
+ *  You may obtain a copy of Mulan PSL v2 at:
+ *              http://license.coscl.org.cn/MulanPSL2
+ *  THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ *  EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ *  MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ *  See the Mulan PSL v2 for more details.
+ */
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.ysling.shopflow.admin.model.system.body.SystemListBody;
+import org.ysling.shopflow.core.system.SystemUtils;
+import org.ysling.shopflow.core.utils.response.ResponseUtil;
+import org.ysling.shopflow.db.domain.ShopflowSystem;
+import org.ysling.shopflow.db.service.impl.SystemServiceImpl;
+import java.util.List;
+import java.util.Objects;
+
+
+/**
+ * 系统配置
+ * @author Ysling
+ */
+@Service
+@CacheConfig(cacheNames = "shopflow_system")
+public class AdminSystemService extends SystemServiceImpl {
+
+
+    /**
+     * 参数校验
+     */
+    public Object validate(ShopflowSystem system) {
+        if (!StringUtils.hasText(system.getName())) {
+            return ResponseUtil.fail("配置名称不能为空");
+        }
+        if (!StringUtils.hasText(system.getValue())) {
+            return ResponseUtil.fail("配置值不能为空");
+        }
+        if (!StringUtils.hasText(system.getDepict())) {
+            return ResponseUtil.fail("配置描述不能为空");
+        }
+        ShopflowSystem name = findByName(system.getName());
+        if (name != null && !Objects.equals(name.getId(), system.getId())){
+            return ResponseUtil.fail("配置名称不能重复");
+        }
+        system.setValue(SystemUtils.checkValue(system.getName(), system.getValue()).toString());
+        return null;
+    }
+
+    @Cacheable(sync = true)
+    public ShopflowSystem findByName(String name) {
+        QueryWrapper<ShopflowSystem> wrapper = new QueryWrapper<>();
+        wrapper.eq(ShopflowSystem.NAME, name);
+        return getOne(wrapper);
+    }
+
+    @Cacheable(sync = true)
+    public List<ShopflowSystem> querySelective(SystemListBody body) {
+        QueryWrapper<ShopflowSystem> wrapper = new QueryWrapper<>();
+        if (StringUtils.hasText(body.getName())){
+            wrapper.likeRight(ShopflowSystem.NAME, body.getName());
+        }
+        return queryAll(wrapper);
+    }
+    
+
+}

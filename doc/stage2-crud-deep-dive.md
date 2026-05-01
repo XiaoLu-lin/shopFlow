@@ -15,7 +15,7 @@
 - [3. 后端 Controller 层：AdminDemoCrudController.java](#3-后端-controller-层admindemocrudcontrollerjava)
 - [4. 后端 Service 层：AdminDemoCrudService.java](#4-后端-service-层admindemocrudservicejava)
 - [5. 请求参数定义：DemoCrudListBody.java + PageBody.java](#5-请求参数定义democrudlistbodyjava--pagebodyjava)
-- [6. 数据库实体：LitemallIssue.java](#6-数据库实体litemallissuejava)
+- [6. 数据库实体：ShopflowIssue.java](#6-数据库实体shopflowissuejava)
 - [7. 数据库服务层：IssueServiceImpl.java](#7-数据库服务层issueserviceimpljava)
 - [8. 继承链全景：为什么你只写 30 行就拥有了完整 CRUD](#8-继承链全景为什么你只写-30-行就拥有了完整-crud)
 - [9. 五大操作完整链路追踪](#9-五大操作完整链路追踪)
@@ -30,20 +30,20 @@
 
 | 序号 | 层 | 文件 | 行数 | 你要搞明白什么 |
 |------|-----|------|------|--------------|
-| 1 | 前端 API | [demoCrud.js](../litemall-admin/src/api/demoCrud.js) | 41 | 5 个接口分别用什么 HTTP 方法 |
-| 2 | 前端页面 | [demoCrud.vue](../litemall-admin/src/views/mall/demoCrud.vue) | 168 | 页面怎么调 API、怎么传参、怎么用返回数据 |
-| 3 | 后端 Controller | [AdminDemoCrudController.java](../litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminDemoCrudController.java) | 99 | 5 个接口方法的路由、权限、参数怎么接 |
-| 4 | 后端 Service | [AdminDemoCrudService.java](../litemall-admin-api/src/main/java/org/ysling/litemall/admin/service/AdminDemoCrudService.java) | 43 | 校验和查询的业务逻辑 |
-| 5 | 请求参数 | [DemoCrudListBody.java](../litemall-admin-api/src/main/java/org/ysling/litemall/admin/model/democrud/body/DemoCrudListBody.java) | 18 | 列表查询参数怎么定义 |
-| 6 | 数据库实体 | [LitemallIssue.java](../litemall-db/src/main/java/org/ysling/litemall/db/domain/LitemallIssue.java) | 111 | Java 类怎么对应数据库表 |
-| 7 | 数据库 Service | [IssueServiceImpl.java](../litemall-db/src/main/java/org/ysling/litemall/db/service/impl/IssueServiceImpl.java) | 240 | 基础 CRUD 和缓存策略 |
+| 1 | 前端 API | [demoCrud.js](../shopflow-admin/src/api/demoCrud.js) | 41 | 5 个接口分别用什么 HTTP 方法 |
+| 2 | 前端页面 | [demoCrud.vue](../shopflow-admin/src/views/mall/demoCrud.vue) | 168 | 页面怎么调 API、怎么传参、怎么用返回数据 |
+| 3 | 后端 Controller | [AdminDemoCrudController.java](../shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminDemoCrudController.java) | 99 | 5 个接口方法的路由、权限、参数怎么接 |
+| 4 | 后端 Service | [AdminDemoCrudService.java](../shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/service/AdminDemoCrudService.java) | 43 | 校验和查询的业务逻辑 |
+| 5 | 请求参数 | [DemoCrudListBody.java](../shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/model/democrud/body/DemoCrudListBody.java) | 18 | 列表查询参数怎么定义 |
+| 6 | 数据库实体 | [ShopflowIssue.java](../shopflow-db/src/main/java/org/ysling/shopflow/db/domain/ShopflowIssue.java) | 111 | Java 类怎么对应数据库表 |
+| 7 | 数据库 Service | [IssueServiceImpl.java](../shopflow-db/src/main/java/org/ysling/shopflow/db/service/impl/IssueServiceImpl.java) | 240 | 基础 CRUD 和缓存策略 |
 
 **另外 2 个辅助文件**（被继承/引用的）：
 
 | 文件 | 作用 |
 |------|------|
-| [PageBody.java](../litemall-db/src/main/java/org/ysling/litemall/db/entity/PageBody.java) | 分页查询参数基类（DemoCrudListBody 的父类） |
-| [IBaseServiceImpl.java](../litemall-db/src/main/java/org/ysling/litemall/db/mybatis/IBaseServiceImpl.java) | 自定义通用服务基类（IssueServiceImpl 的父类） |
+| [PageBody.java](../shopflow-db/src/main/java/org/ysling/shopflow/db/entity/PageBody.java) | 分页查询参数基类（DemoCrudListBody 的父类） |
+| [IBaseServiceImpl.java](../shopflow-db/src/main/java/org/ysling/shopflow/db/mybatis/IBaseServiceImpl.java) | 自定义通用服务基类（IssueServiceImpl 的父类） |
 
 ---
 
@@ -67,7 +67,7 @@
 ┌──────────────────────────────────────────────────────────────────────────┐
 │  ② 前端 demoCrud.js（API 层）                                            │
 │     GET /demo-crud/list?page=1&limit=10&question=测试                    │
-│     自动带上 Header: X-Litemall-Admin-Token: xxxx                        │
+│     自动带上 Header: X-ShopFlow-Admin-Token: xxxx                        │
 └──────────────────────────────┬───────────────────────────────────────────┘
                                │ vue.config.js 代理 → http://localhost:6914
                                ▼
@@ -99,14 +99,14 @@
 │                           ▼                                              │
 │                   ┌──────────────────────────────────────────┐            │
 │                   │ MySQL 执行：                              │            │
-│                   │ SELECT * FROM litemall_issue              │            │
+│                   │ SELECT * FROM shopflow_issue              │            │
 │                   │ WHERE deleted = 0                        │            │
 │                   │   AND question LIKE '%测试%'              │            │
 │                   │ ORDER BY add_time DESC                   │            │
 │                   │ LIMIT 0, 10                              │            │
 │                   └──────────────────────────────────────────┘            │
 └──────────────────────────────┬───────────────────────────────────────────┘
-                               │ 数据库返回 List<LitemallIssue>
+                               │ 数据库返回 List<ShopflowIssue>
                                ▼
 ┌──────────────────────────────────────────────────────────────────────────┐
 │  ⑥ Controller 调用 ResponseUtil.okList(list)                             │
@@ -139,7 +139,7 @@
 
 ### 2.1 API 文件 — demoCrud.js
 
-> 文件路径：`litemall-admin/src/api/demoCrud.js`（41 行）
+> 文件路径：`shopflow-admin/src/api/demoCrud.js`（41 行）
 
 这个文件定义了 5 个函数，对应 CRUD 的 5 个操作：
 
@@ -206,7 +206,7 @@ export function deleteDemoCrud(id) {
 
 ### 2.2 页面组件 — demoCrud.vue
 
-> 文件路径：`litemall-admin/src/views/mall/demoCrud.vue`（168 行）
+> 文件路径：`shopflow-admin/src/views/mall/demoCrud.vue`（168 行）
 
 这是你最熟悉的部分——一个标准的 Element UI 管理后台列表页。拆成几块看：
 
@@ -345,7 +345,7 @@ methods: {
 
 ## 3. 后端 Controller 层：AdminDemoCrudController.java
 
-> 文件路径：`litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminDemoCrudController.java`（99 行）
+> 文件路径：`shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminDemoCrudController.java`（99 行）
 
 ### 类定义（第 24-28 行）
 
@@ -418,7 +418,7 @@ public Object read(@JsonBody String id) {           // @JsonBody 从参数中提
 @SaCheckPermission("admin:issue:create")
 @RequiresPermissionsDesc(menu = {"商城管理", "CRUD练习"}, button = "添加")
 @PostMapping("/create")
-public Object create(@Valid @RequestBody LitemallIssue issue) {     // ← 从 JSON body 接收
+public Object create(@Valid @RequestBody ShopflowIssue issue) {     // ← 从 JSON body 接收
     Object error = demoCrudService.validate(issue);                 // 1. 校验
     if (error != null) {
         return error;                                               // 校验失败，返回错误
@@ -433,7 +433,7 @@ public Object create(@Valid @RequestBody LitemallIssue issue) {     // ← 从 J
 **逐行解读**：
 1. `@PostMapping("/create")` — 处理 POST 请求
 2. `@Valid` — 触发 Java Bean Validation（实体类上的校验注解）
-3. `@RequestBody LitemallIssue issue` — 从请求体的 JSON 自动转成 Java 对象
+3. `@RequestBody ShopflowIssue issue` — 从请求体的 JSON 自动转成 Java 对象
 4. **三步流程**：校验 → 插入 → 返回
 
 **前端请求对应**：
@@ -451,7 +451,7 @@ createDemoCrud({ question: '如何退款？', answer: '请联系客服' })
 @SaCheckPermission("admin:issue:update")
 @RequiresPermissionsDesc(menu = {"商城管理", "CRUD练习"}, button = "编辑")
 @PostMapping("/update")
-public Object update(@Valid @RequestBody LitemallIssue issue) {
+public Object update(@Valid @RequestBody ShopflowIssue issue) {
     Object error = demoCrudService.validate(issue);
     if (error != null) {
         return error;
@@ -507,7 +507,7 @@ Controller 方法 = 权限检查 + 接参数 + 调 Service + 包装响应
 
 ## 4. 后端 Service 层：AdminDemoCrudService.java
 
-> 文件路径：`litemall-admin-api/src/main/java/org/ysling/litemall/admin/service/AdminDemoCrudService.java`（43 行）
+> 文件路径：`shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/service/AdminDemoCrudService.java`（43 行）
 
 这是整个 CRUD 最核心的文件——但只有 43 行。
 
@@ -515,7 +515,7 @@ Controller 方法 = 权限检查 + 接参数 + 调 Service + 包装响应
 
 ```java
 @Service                                         // 注册为 Spring 服务
-@CacheConfig(cacheNames = "litemall_demo_crud")  // 缓存命名空间
+@CacheConfig(cacheNames = "shopflow_demo_crud")  // 缓存命名空间
 public class AdminDemoCrudService extends IssueServiceImpl {
 ```
 
@@ -534,7 +534,7 @@ class AdminDemoCrudService extends IssueService {
 ### 方法 1：validate() — 参数校验
 
 ```java
-public Object validate(LitemallIssue issue) {
+public Object validate(ShopflowIssue issue) {
     String question = issue.getQuestion();        // 取出 question
     if (Objects.isNull(question)) {               // 如果 question 为空
         return ResponseUtil.badArgument();         //   返回"参数不对"
@@ -558,10 +558,10 @@ public Object validate(LitemallIssue issue) {
 
 ```java
 @Cacheable(sync = true)                                     // 结果会被缓存
-public List<LitemallIssue> querySelective(DemoCrudListBody body) {
-    QueryWrapper<LitemallIssue> wrapper = startPage(body);   // 1. 设置分页
+public List<ShopflowIssue> querySelective(DemoCrudListBody body) {
+    QueryWrapper<ShopflowIssue> wrapper = startPage(body);   // 1. 设置分页
     if (StringUtils.hasText(body.getQuestion())) {           // 2. 如果 question 有值
-        wrapper.like(LitemallIssue.QUESTION, body.getQuestion());  // 加模糊搜索
+        wrapper.like(ShopflowIssue.QUESTION, body.getQuestion());  // 加模糊搜索
     }
     return queryAll(wrapper);                                // 3. 执行查询
 }
@@ -572,7 +572,7 @@ public List<LitemallIssue> querySelective(DemoCrudListBody body) {
 **第 1 行：`startPage(body)`**
 
 ```java
-QueryWrapper<LitemallIssue> wrapper = startPage(body);
+QueryWrapper<ShopflowIssue> wrapper = startPage(body);
 ```
 
 `startPage` 是从父类继承来的方法，它做了：
@@ -584,7 +584,7 @@ QueryWrapper<LitemallIssue> wrapper = startPage(body);
 
 ```java
 if (StringUtils.hasText(body.getQuestion())) {
-    wrapper.like(LitemallIssue.QUESTION, body.getQuestion());
+    wrapper.like(ShopflowIssue.QUESTION, body.getQuestion());
 }
 ```
 
@@ -626,7 +626,7 @@ delete()  → deleteById()       (继承来的)              → IssueServiceImp
 
 ### DemoCrudListBody — 列表查询的参数
 
-> 文件路径：`litemall-admin-api/src/main/java/org/ysling/litemall/admin/model/democrud/body/DemoCrudListBody.java`（18 行）
+> 文件路径：`shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/model/democrud/body/DemoCrudListBody.java`（18 行）
 
 ```java
 @Data                                   // 自动生成 getter/setter/toString/equals/hashCode
@@ -644,7 +644,7 @@ public class DemoCrudListBody extends PageBody {
 
 ### PageBody — 分页查询公共基类
 
-> 文件路径：`litemall-db/src/main/java/org/ysling/litemall/db/entity/PageBody.java`（101 行）
+> 文件路径：`shopflow-db/src/main/java/org/ysling/shopflow/db/entity/PageBody.java`（101 行）
 
 ```java
 @Data
@@ -730,9 +730,9 @@ PageBody（分页基类 — 5 个通用字段）
 
 ---
 
-## 6. 数据库实体：LitemallIssue.java
+## 6. 数据库实体：ShopflowIssue.java
 
-> 文件路径：`litemall-db/src/main/java/org/ysling/litemall/db/domain/LitemallIssue.java`（111 行）
+> 文件路径：`shopflow-db/src/main/java/org/ysling/shopflow/db/domain/ShopflowIssue.java`（111 行）
 
 这个类 = 一张数据库表的 Java 映射。
 
@@ -740,11 +740,11 @@ PageBody（分页基类 — 5 个通用字段）
 
 ```java
 @Data                              // getter/setter/toString
-@Builder                           // 提供建造者模式：LitemallIssue.builder().question("xx").build()
+@Builder                           // 提供建造者模式：ShopflowIssue.builder().question("xx").build()
 @AllArgsConstructor                // 全参数构造函数
 @NoArgsConstructor                 // 无参数构造函数
-@TableName("litemall_issue")       // ← 关键：对应数据库中的 litemall_issue 表
-public class LitemallIssue implements Serializable {
+@TableName("shopflow_issue")       // ← 关键：对应数据库中的 shopflow_issue 表
+public class ShopflowIssue implements Serializable {
 ```
 
 ### 字段 ↔ 数据库列对应关系
@@ -791,8 +791,8 @@ private Boolean deleted;
 
 | 操作 | 没有 @TableLogic 时的 SQL | 有 @TableLogic 时的 SQL |
 |------|--------------------------|------------------------|
-| 删除 | `DELETE FROM litemall_issue WHERE id = ?` | `UPDATE litemall_issue SET deleted = 1 WHERE id = ?` |
-| 查询 | `SELECT * FROM litemall_issue` | `SELECT * FROM litemall_issue WHERE deleted = 0` |
+| 删除 | `DELETE FROM shopflow_issue WHERE id = ?` | `UPDATE shopflow_issue SET deleted = 1 WHERE id = ?` |
+| 查询 | `SELECT * FROM shopflow_issue` | `SELECT * FROM shopflow_issue WHERE deleted = 0` |
 
 **一句话**：删除不是真删，只是标记为"已删除"。查询时自动过滤掉已删除的记录。
 
@@ -807,7 +807,7 @@ private Integer version;
 
 ```sql
 -- 实际执行的 SQL：
-UPDATE litemall_issue
+UPDATE shopflow_issue
 SET question = '新值', version = version + 1
 WHERE id = '123' AND version = 2     -- 只有版本号匹配才能更新成功
 
@@ -843,7 +843,7 @@ public static final String ANSWER = "`answer`";
 这些常量在 Service 里构建查询条件时使用：
 
 ```java
-wrapper.like(LitemallIssue.QUESTION, body.getQuestion());
+wrapper.like(ShopflowIssue.QUESTION, body.getQuestion());
 // 等价于
 wrapper.like("`question`", body.getQuestion());
 ```
@@ -854,20 +854,20 @@ wrapper.like("`question`", body.getQuestion());
 
 ## 7. 数据库服务层：IssueServiceImpl.java
 
-> 文件路径：`litemall-db/src/main/java/org/ysling/litemall/db/service/impl/IssueServiceImpl.java`（240 行）
+> 文件路径：`shopflow-db/src/main/java/org/ysling/shopflow/db/service/impl/IssueServiceImpl.java`（240 行）
 
 ### 它的角色
 
-这是 **db 模块**（数据层）的一部分，专门负责和 `litemall_issue` 数据库表打交道。它是 `AdminDemoCrudService` 的**父类**。
+这是 **db 模块**（数据层）的一部分，专门负责和 `shopflow_issue` 数据库表打交道。它是 `AdminDemoCrudService` 的**父类**。
 
 ### 类定义
 
 ```java
 @Service                                        // 注册为 Spring 服务
 @Primary                                        // 优先注入（多个同类型 Bean 时）
-@CacheConfig(cacheNames = "litemall_issue")     // 缓存命名空间
+@CacheConfig(cacheNames = "shopflow_issue")     // 缓存命名空间
 public class IssueServiceImpl
-    extends IBaseServiceImpl<IssueMapper, LitemallIssue>   // 泛型：Mapper 和 实体类
+    extends IBaseServiceImpl<IssueMapper, ShopflowIssue>   // 泛型：Mapper 和 实体类
     implements IIssueService {                              // 实现接口
 ```
 
@@ -875,8 +875,8 @@ public class IssueServiceImpl
 |------------|------|
 | `@Service` | 注册为 Spring 服务组件 |
 | `@Primary` | 当有多个同类型的 Bean 时，优先使用这个。因为 `AdminDemoCrudService` 也继承了它，加 `@Primary` 避免注入歧义 |
-| `@CacheConfig(cacheNames = "litemall_issue")` | 这个类的缓存命名空间是 `litemall_issue` |
-| `IBaseServiceImpl<IssueMapper, LitemallIssue>` | 泛型参数：`IssueMapper` 是 Mapper 接口，`LitemallIssue` 是实体类 |
+| `@CacheConfig(cacheNames = "shopflow_issue")` | 这个类的缓存命名空间是 `shopflow_issue` |
+| `IBaseServiceImpl<IssueMapper, ShopflowIssue>` | 泛型参数：`IssueMapper` 是 Mapper 接口，`ShopflowIssue` 是实体类 |
 | `implements IIssueService` | 实现 `IIssueService` 接口（方法签名的契约） |
 
 ### 方法分类
@@ -887,26 +887,26 @@ public class IssueServiceImpl
 
 ```java
 @Cacheable(sync = true)
-public LitemallIssue findById(Serializable id) {       // 按 ID 查一条
+public ShopflowIssue findById(Serializable id) {       // 按 ID 查一条
     return getBaseMapper().selectById(id);
 }
 
 @Cacheable(sync = true)
-public List<LitemallIssue> queryAll(Wrapper wrapper) {  // 按条件查列表
+public List<ShopflowIssue> queryAll(Wrapper wrapper) {  // 按条件查列表
     return getBaseMapper().selectList(wrapper);
 }
 
 @Cacheable(sync = true)
-public LitemallIssue getById(Serializable id) { ... }   // 按 ID 查
+public ShopflowIssue getById(Serializable id) { ... }   // 按 ID 查
 
 @Cacheable(sync = true)
 public long count() { ... }                              // 总记录数
 
 @Cacheable(sync = true)
-public List<LitemallIssue> list() { ... }                // 查全部
+public List<ShopflowIssue> list() { ... }                // 查全部
 
 @Cacheable(sync = true)
-public List<LitemallIssue> listByIds(...) { ... }        // 按 ID 批量查
+public List<ShopflowIssue> listByIds(...) { ... }        // 按 ID 批量查
 ```
 
 `@Cacheable(sync = true)` 的执行流程：
@@ -928,12 +928,12 @@ public List<LitemallIssue> listByIds(...) { ... }        // 按 ID 批量查
 
 ```java
 @CacheEvict(allEntries = true)
-public int add(LitemallIssue record) {                  // 新增
+public int add(ShopflowIssue record) {                  // 新增
     return getBaseMapper().insert(record);
 }
 
 @CacheEvict(allEntries = true)
-public int updateVersionSelective(LitemallIssue record) { // 更新
+public int updateVersionSelective(ShopflowIssue record) { // 更新
     return getBaseMapper().updateById(record);
 }
 
@@ -948,7 +948,7 @@ public int actualDeleteById(Serializable id) {          // 物理删除（真删
 }
 
 @CacheEvict(allEntries = true)
-public boolean batchAdd(List<LitemallIssue> list) { ... }  // 批量新增
+public boolean batchAdd(List<ShopflowIssue> list) { ... }  // 批量新增
 
 // ... 更多写操作（save、saveOrUpdate、remove、update 等）
 ```
@@ -960,7 +960,7 @@ public boolean batchAdd(List<LitemallIssue> list) { ... }  // 批量新增
   │
   ├── 执行数据库操作（INSERT / UPDATE / DELETE）
   │
-  └── 执行完毕后 → 清空 litemall_issue 命名空间下的所有缓存
+  └── 执行完毕后 → 清空 shopflow_issue 命名空间下的所有缓存
         │
         └── 下次读操作发现缓存为空 → 重新查数据库 → 存入缓存
 ```
@@ -981,13 +981,13 @@ getBaseMapper().selectList(wrapper); // 条件查询
 
 ```
 getBaseMapper().selectById("123")
-  → SELECT * FROM litemall_issue WHERE id = '123' AND deleted = 0
+  → SELECT * FROM shopflow_issue WHERE id = '123' AND deleted = 0
 
 getBaseMapper().insert(record)
-  → INSERT INTO litemall_issue (id, question, answer, ...) VALUES (...)
+  → INSERT INTO shopflow_issue (id, question, answer, ...) VALUES (...)
 
 getBaseMapper().deleteById("123")
-  → UPDATE litemall_issue SET deleted = 1 WHERE id = '123'  (逻辑删除)
+  → UPDATE shopflow_issue SET deleted = 1 WHERE id = '123'  (逻辑删除)
 ```
 
 **前端类比**：`getBaseMapper()` 就像拿到了一个预配置好的 `axios` 实例，它知道要操作哪张表、表有哪些字段，你只需要调 `selectById` / `insert` 这些方法就行。
@@ -1004,7 +1004,7 @@ MyBatis Plus 框架层
         │
         └── IBaseServiceImpl<M, T>   ← 项目自定义基类（目前为空壳，预留项目级公共逻辑）
               │
-              └── IssueServiceImpl   ← litemall_issue 表专用，30+ 个方法 + 缓存策略
+              └── IssueServiceImpl   ← shopflow_issue 表专用，30+ 个方法 + 缓存策略
                     │
                     └── AdminDemoCrudService  ← 只写了 validate + querySelective（30 行）
 ```
@@ -1057,7 +1057,7 @@ demoCrud.vue                            AdminDemoCrudController
   │                                         │ → getBaseMapper().selectList()
   │                                         │
   │                                     MySQL
-  │                                         │ SELECT * FROM litemall_issue
+  │                                         │ SELECT * FROM shopflow_issue
   │                                         │ WHERE deleted=0 AND question LIKE '%测试%'
   │                                         │ ORDER BY add_time DESC LIMIT 0,10
   │                                         │
@@ -1075,7 +1075,7 @@ readDemoCrud(id)
   GET /demo-crud/read?id=xxx  ───→  read(@JsonBody String id)
                                       → findById(id)
                                       → @Cacheable → selectById(id)
-                                      → SELECT * FROM litemall_issue WHERE id = ?
+                                      → SELECT * FROM shopflow_issue WHERE id = ?
   ←──────────────────────────────  { errno:"success", data: { 单条记录 } }
 ```
 
@@ -1083,13 +1083,13 @@ readDemoCrud(id)
 
 ```
 createDemoCrud({ question, answer })
-  POST /demo-crud/create      ───→  create(@RequestBody LitemallIssue issue)
+  POST /demo-crud/create      ───→  create(@RequestBody ShopflowIssue issue)
   body: { question, answer }          │
                                       ├── validate(issue) → question 和 answer 非空检查
                                       ├── add(issue)
                                       │     → @CacheEvict → 清空缓存
                                       │     → getBaseMapper().insert(issue)
-                                      │     → INSERT INTO litemall_issue (...) VALUES (...)
+                                      │     → INSERT INTO shopflow_issue (...) VALUES (...)
                                       │     → 自动填充 add_time、update_time
                                       │
   ←──────────────────────────────  { errno:"success" }
@@ -1101,13 +1101,13 @@ createDemoCrud({ question, answer })
 
 ```
 updateDemoCrud({ id, question, answer })
-  POST /demo-crud/update      ───→  update(@RequestBody LitemallIssue issue)
+  POST /demo-crud/update      ───→  update(@RequestBody ShopflowIssue issue)
   body: { id, question, answer }      │
                                       ├── validate(issue) → 同上
                                       ├── updateVersionSelective(issue)
                                       │     → @CacheEvict → 清空缓存
                                       │     → getBaseMapper().updateById(issue)
-                                      │     → UPDATE litemall_issue
+                                      │     → UPDATE shopflow_issue
                                       │       SET question=?, answer=?, version=version+1
                                       │       WHERE id=? AND version=?  (乐观锁)
                                       │     → 自动更新 update_time
@@ -1125,7 +1125,7 @@ deleteDemoCrud(id)
                                        ├── deleteById(id)
                                        │     → @CacheEvict → 清空缓存
                                        │     → getBaseMapper().deleteById(id)
-                                       │     → UPDATE litemall_issue SET deleted=1
+                                       │     → UPDATE shopflow_issue SET deleted=1
                                        │       WHERE id=?  (逻辑删除，不是真删)
                                        │
   ←──────────────────────────────  { errno:"success" }
@@ -1173,12 +1173,12 @@ deleteDemoCrud(id)
 
 ```java
 // IssueServiceImpl
-@CacheConfig(cacheNames = "litemall_issue")
-// 缓存 key 格式：litemall_issue::方法名::参数哈希
+@CacheConfig(cacheNames = "shopflow_issue")
+// 缓存 key 格式：shopflow_issue::方法名::参数哈希
 
 // AdminDemoCrudService
-@CacheConfig(cacheNames = "litemall_demo_crud")
-// 缓存 key 格式：litemall_demo_crud::方法名::参数哈希
+@CacheConfig(cacheNames = "shopflow_demo_crud")
+// 缓存 key 格式：shopflow_demo_crud::方法名::参数哈希
 ```
 
 子类覆盖了父类的缓存命名空间，所以 `AdminDemoCrudService.querySelective()` 的缓存和 `IssueServiceImpl.findById()` 的缓存是隔离的。
@@ -1188,7 +1188,7 @@ deleteDemoCrud(id)
 ```
 时刻 1：用户第一次查列表
   → querySelective() → @Cacheable → 缓存未命中
-  → 查数据库 → 结果存入 Redis（key = litemall_demo_crud::querySelective::xxhash）
+  → 查数据库 → 结果存入 Redis（key = shopflow_demo_crud::querySelective::xxhash）
   → 返回结果
 
 时刻 2：用户第二次查列表（相同参数）
@@ -1197,7 +1197,7 @@ deleteDemoCrud(id)
 
 时刻 3：用户新增了一条数据
   → add() → @CacheEvict(allEntries = true)
-  → 执行 INSERT → 清空 litemall_issue 下所有缓存
+  → 执行 INSERT → 清空 shopflow_issue 下所有缓存
 
 时刻 4：用户再次查列表
   → querySelective() → @Cacheable → 缓存未命中（刚被清空）
@@ -1229,7 +1229,7 @@ deleteDemoCrud(id)
 - [ ] `AdminDemoCrudService` 为什么只有 2 个方法，但 Controller 调了 5 个不同的方法？
 - [ ] `validate()` 返回 `null` 代表什么？返回非 `null` 代表什么？
 - [ ] `querySelective()` 里的 `startPage(body)` 做了什么？
-- [ ] `wrapper.like(LitemallIssue.QUESTION, body.getQuestion())` 对应什么 SQL？
+- [ ] `wrapper.like(ShopflowIssue.QUESTION, body.getQuestion())` 对应什么 SQL？
 
 ### 数据库层
 

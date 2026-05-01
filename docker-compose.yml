@@ -44,17 +44,17 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-rootpassword}"
-      MYSQL_DATABASE: litemall2
-      MYSQL_USER: litemall2
+      MYSQL_DATABASE: shopflow
+      MYSQL_USER: shopflow
       MYSQL_PASSWORD: "${MYSQL_PASSWORD:-SNmH5r48ZYedtmJz}"
       TZ: Asia/Shanghai
     ports:
       - "3306:3306"
     volumes:
       - shopflow-mysql-data:/var/lib/mysql
-      - ./litemall-db/sql/litemall_plus.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./shopflow-db/sql/shopflow.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "litemall2", "-pSNmH5r48ZYedtmJz"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "shopflow", "-pSNmH5r48ZYedtmJz"]
       interval: 10s
       timeout: 5s
       retries: 10

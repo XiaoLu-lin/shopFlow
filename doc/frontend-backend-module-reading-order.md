@@ -25,12 +25,12 @@
 
 如果你现在是前端，学习顺序建议固定为：
 
-1. litemall-admin
-2. litemall-admin-api
-3. litemall-core
-4. litemall-db
-5. litemall-all
-6. litemall-wx-api
+1. shopflow-admin
+2. shopflow-admin-api
+3. shopflow-core
+4. shopflow-db
+5. shopflow-all
+6. shopflow-wx-api
 
 这不是按“技术底层深度”排的，而是按“学习效率”排的。
 
@@ -52,7 +52,7 @@
 
 ---
 
-## 3. 为什么第一个看 litemall-admin
+## 3. 为什么第一个看 shopflow-admin
 
 很多人会问：
 
@@ -72,10 +72,10 @@
 
 第一优先级：
 
-1. [litemall-admin/src/api](litemall-admin/src/api)
-2. [litemall-admin/src/utils/request.js](litemall-admin/src/utils/request.js)
-3. [litemall-admin/src/views](litemall-admin/src/views)
-4. [litemall-admin/src/router/index.js](litemall-admin/src/router/index.js)
+1. [shopflow-admin/src/api](shopflow-admin/src/api)
+2. [shopflow-admin/src/utils/request.js](shopflow-admin/src/utils/request.js)
+3. [shopflow-admin/src/views](shopflow-admin/src/views)
+4. [shopflow-admin/src/router/index.js](shopflow-admin/src/router/index.js)
 
 ### 3.2 你要搞明白什么
 
@@ -89,14 +89,14 @@
 
 先看登录链路：
 
-1. [litemall-admin/src/api/login.js](litemall-admin/src/api/login.js)
-2. [litemall-admin/src/utils/request.js](litemall-admin/src/utils/request.js)
-3. [litemall-admin/src/views/login/index.vue](litemall-admin/src/views/login/index.vue)
+1. [shopflow-admin/src/api/login.js](shopflow-admin/src/api/login.js)
+2. [shopflow-admin/src/utils/request.js](shopflow-admin/src/utils/request.js)
+3. [shopflow-admin/src/views/login/index.vue](shopflow-admin/src/views/login/index.vue)
 
 然后再看一个最简单的 CRUD 列表页，比如：
 
-1. [litemall-admin/src/api/demoCrud.js](litemall-admin/src/api/demoCrud.js)
-2. [litemall-admin/src/views/mall/demoCrud.vue](litemall-admin/src/views/mall/demoCrud.vue)
+1. [shopflow-admin/src/api/demoCrud.js](shopflow-admin/src/api/demoCrud.js)
+2. [shopflow-admin/src/views/mall/demoCrud.vue](shopflow-admin/src/views/mall/demoCrud.vue)
 
 你先从这里建立一个直觉：
 
@@ -104,7 +104,7 @@
 
 ---
 
-## 4. 第二个看 litemall-admin-api
+## 4. 第二个看 shopflow-admin-api
 
 这是你真正开始学后端的第一站。
 
@@ -116,9 +116,9 @@
 
 ### 4.1 这个模块你最该先看的目录
 
-1. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/web](litemall-admin-api/src/main/java/org/ysling/litemall/admin/web)
-2. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/service](litemall-admin-api/src/main/java/org/ysling/litemall/admin/service)
-3. [litemall-admin-api/src/main/resources/application.yml](litemall-admin-api/src/main/resources/application.yml)
+1. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web](shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web)
+2. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/service](shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/service)
+3. [shopflow-admin-api/src/main/resources/application.yml](shopflow-admin-api/src/main/resources/application.yml)
 
 ### 4.2 为什么先看 web 再看 service
 
@@ -142,19 +142,19 @@
 
 第一组：登录与权限入口
 
-1. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminAuthController.java](litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminAuthController.java)
-2. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/model/auth/body/LoginBody.java](litemall-admin-api/src/main/java/org/ysling/litemall/admin/model/auth/body/LoginBody.java)
+1. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminAuthController.java](shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminAuthController.java)
+2. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/model/auth/body/LoginBody.java](shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/model/auth/body/LoginBody.java)
 
 第二组：标准 CRUD 入口
 
-1. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminIssueController.java](litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminIssueController.java)
-2. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/service/AdminIssueService.java](litemall-admin-api/src/main/java/org/ysling/litemall/admin/service/AdminIssueService.java)
+1. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminIssueController.java](shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminIssueController.java)
+2. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/service/AdminIssueService.java](shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/service/AdminIssueService.java)
 
 第三组：你刚刚新增的教学 CRUD
 
-1. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminDemoCrudController.java](litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminDemoCrudController.java)
-2. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/service/AdminDemoCrudService.java](litemall-admin-api/src/main/java/org/ysling/litemall/admin/service/AdminDemoCrudService.java)
-3. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/model/democrud/body/DemoCrudListBody.java](litemall-admin-api/src/main/java/org/ysling/litemall/admin/model/democrud/body/DemoCrudListBody.java)
+1. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminDemoCrudController.java](shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminDemoCrudController.java)
+2. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/service/AdminDemoCrudService.java](shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/service/AdminDemoCrudService.java)
+3. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/model/democrud/body/DemoCrudListBody.java](shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/model/democrud/body/DemoCrudListBody.java)
 
 ### 4.4 你要在这个模块里重点学会什么
 
@@ -166,7 +166,7 @@
 
 ---
 
-## 5. 第三个看 litemall-core
+## 5. 第三个看 shopflow-core
 
 当前端第一次开始学后端时，最容易忽略公共模块。
 
@@ -181,15 +181,15 @@
 
 ### 5.1 重点目录
 
-1. [litemall-core/src/main/java/org/ysling/litemall/core/utils/response](litemall-core/src/main/java/org/ysling/litemall/core/utils/response)
-2. [litemall-core/src/main/java/org/ysling/litemall/core/satoken](litemall-core/src/main/java/org/ysling/litemall/core/satoken)
-3. [litemall-core/src/main/java/org/ysling/litemall/core/annotation](litemall-core/src/main/java/org/ysling/litemall/core/annotation)
+1. [shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response](shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response)
+2. [shopflow-core/src/main/java/org/ysling/shopflow/core/satoken](shopflow-core/src/main/java/org/ysling/shopflow/core/satoken)
+3. [shopflow-core/src/main/java/org/ysling/shopflow/core/annotation](shopflow-core/src/main/java/org/ysling/shopflow/core/annotation)
 
 ### 5.2 最建议先看的文件
 
-1. [litemall-core/src/main/java/org/ysling/litemall/core/utils/response/ResponseUtil.java](litemall-core/src/main/java/org/ysling/litemall/core/utils/response/ResponseUtil.java)
-2. [litemall-core/src/main/java/org/ysling/litemall/core/satoken/config/SaTokenConfigure.java](litemall-core/src/main/java/org/ysling/litemall/core/satoken/config/SaTokenConfigure.java)
-3. [litemall-core/src/main/java/org/ysling/litemall/core/annotation/JsonBody.java](litemall-core/src/main/java/org/ysling/litemall/core/annotation/JsonBody.java)
+1. [shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response/ResponseUtil.java](shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response/ResponseUtil.java)
+2. [shopflow-core/src/main/java/org/ysling/shopflow/core/satoken/config/SaTokenConfigure.java](shopflow-core/src/main/java/org/ysling/shopflow/core/satoken/config/SaTokenConfigure.java)
+3. [shopflow-core/src/main/java/org/ysling/shopflow/core/annotation/JsonBody.java](shopflow-core/src/main/java/org/ysling/shopflow/core/annotation/JsonBody.java)
 
 ### 5.3 这个模块你不要一开始就全看
 
@@ -205,7 +205,7 @@ core 模块不是第一阶段全读的。
 
 ---
 
-## 6. 第四个看 litemall-db
+## 6. 第四个看 shopflow-db
 
 这是你真正理解“后端数据层”的地方。
 
@@ -228,16 +228,16 @@ core 模块不是第一阶段全读的。
 
 ### 6.2 重点路径
 
-1. [litemall-db/src/main/java/org/ysling/litemall/db/domain](litemall-db/src/main/java/org/ysling/litemall/db/domain)
-2. [litemall-db/src/main/java/org/ysling/litemall/db/mapper](litemall-db/src/main/java/org/ysling/litemall/db/mapper)
-3. [litemall-db/src/main/java/org/ysling/litemall/db/service/impl](litemall-db/src/main/java/org/ysling/litemall/db/service/impl)
-4. [litemall-db/src/main/resources/application-db.yml](litemall-db/src/main/resources/application-db.yml)
+1. [shopflow-db/src/main/java/org/ysling/shopflow/db/domain](shopflow-db/src/main/java/org/ysling/shopflow/db/domain)
+2. [shopflow-db/src/main/java/org/ysling/shopflow/db/mapper](shopflow-db/src/main/java/org/ysling/shopflow/db/mapper)
+3. [shopflow-db/src/main/java/org/ysling/shopflow/db/service/impl](shopflow-db/src/main/java/org/ysling/shopflow/db/service/impl)
+4. [shopflow-db/src/main/resources/application-db.yml](shopflow-db/src/main/resources/application-db.yml)
 
 ### 6.3 建议你先看哪几个文件
 
-1. [litemall-db/src/main/java/org/ysling/litemall/db/domain/LitemallIssue.java](litemall-db/src/main/java/org/ysling/litemall/db/domain/LitemallIssue.java)
-2. [litemall-db/src/main/java/org/ysling/litemall/db/mapper/IssueMapper.java](litemall-db/src/main/java/org/ysling/litemall/db/mapper/IssueMapper.java)
-3. [litemall-db/src/main/java/org/ysling/litemall/db/service/impl/IssueServiceImpl.java](litemall-db/src/main/java/org/ysling/litemall/db/service/impl/IssueServiceImpl.java)
+1. [shopflow-db/src/main/java/org/ysling/shopflow/db/domain/ShopflowIssue.java](shopflow-db/src/main/java/org/ysling/shopflow/db/domain/ShopflowIssue.java)
+2. [shopflow-db/src/main/java/org/ysling/shopflow/db/mapper/IssueMapper.java](shopflow-db/src/main/java/org/ysling/shopflow/db/mapper/IssueMapper.java)
+3. [shopflow-db/src/main/java/org/ysling/shopflow/db/service/impl/IssueServiceImpl.java](shopflow-db/src/main/java/org/ysling/shopflow/db/service/impl/IssueServiceImpl.java)
 
 ### 6.4 你在 db 模块要搞懂什么
 
@@ -248,7 +248,7 @@ core 模块不是第一阶段全读的。
 
 ---
 
-## 7. 第五个看 litemall-all
+## 7. 第五个看 shopflow-all
 
 这个模块不是前端转后端的第一学习重点。
 
@@ -262,14 +262,14 @@ core 模块不是第一阶段全读的。
 2. admin-api 怎么调 core
 3. admin-api 怎么调 db
 
-再来看 litemall-all，就会很清楚它的意义：
+再来看 shopflow-all，就会很清楚它的意义：
 
 它不是业务实现层，而是装配层。
 
 ### 7.2 重点看什么
 
-1. [litemall-all/pom.xml](litemall-all/pom.xml)
-2. [litemall-all/src/main/resources/application.yml](litemall-all/src/main/resources/application.yml)
+1. [shopflow-all/pom.xml](shopflow-all/pom.xml)
+2. [shopflow-all/src/main/resources/application.yml](shopflow-all/src/main/resources/application.yml)
 
 ### 7.3 你要明白什么
 
@@ -279,7 +279,7 @@ core 模块不是第一阶段全读的。
 
 ---
 
-## 8. 第六个看 litemall-wx-api
+## 8. 第六个看 shopflow-wx-api
 
 它不是你入门后端的第一目标。
 
@@ -309,9 +309,9 @@ core 模块不是第一阶段全读的。
 
 看：
 
-1. [litemall-admin/src/api/login.js](litemall-admin/src/api/login.js)
-2. [litemall-admin/src/utils/request.js](litemall-admin/src/utils/request.js)
-3. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminAuthController.java](litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminAuthController.java)
+1. [shopflow-admin/src/api/login.js](shopflow-admin/src/api/login.js)
+2. [shopflow-admin/src/utils/request.js](shopflow-admin/src/utils/request.js)
+3. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminAuthController.java](shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminAuthController.java)
 
 目标：
 
@@ -321,10 +321,10 @@ core 模块不是第一阶段全读的。
 
 看：
 
-1. [litemall-admin/src/api/demoCrud.js](litemall-admin/src/api/demoCrud.js)
-2. [litemall-admin/src/views/mall/demoCrud.vue](litemall-admin/src/views/mall/demoCrud.vue)
-3. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminDemoCrudController.java](litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminDemoCrudController.java)
-4. [litemall-admin-api/src/main/java/org/ysling/litemall/admin/service/AdminDemoCrudService.java](litemall-admin-api/src/main/java/org/ysling/litemall/admin/service/AdminDemoCrudService.java)
+1. [shopflow-admin/src/api/demoCrud.js](shopflow-admin/src/api/demoCrud.js)
+2. [shopflow-admin/src/views/mall/demoCrud.vue](shopflow-admin/src/views/mall/demoCrud.vue)
+3. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminDemoCrudController.java](shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminDemoCrudController.java)
+4. [shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/service/AdminDemoCrudService.java](shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/service/AdminDemoCrudService.java)
 
 目标：
 
@@ -338,7 +338,7 @@ core 模块不是第一阶段全读的。
 
 #### 第一步：先看前端 API 怎么发请求
 
-文件：`litemall-admin/src/api/demoCrud.js`
+文件：`shopflow-admin/src/api/demoCrud.js`
 
 ```js
 import request from '@/utils/request'
@@ -372,7 +372,7 @@ export function createDemoCrud(data) {
 
 #### 第二步：看后端 Controller 怎么接请求
 
-文件：`litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminDemoCrudController.java`
+文件：`shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminDemoCrudController.java`
 
 ```java
 @RestController
@@ -389,7 +389,7 @@ public class AdminDemoCrudController {
 	}
 
 	@PostMapping("/create")
-	public Object create(@Valid @RequestBody LitemallIssue issue) {
+	public Object create(@Valid @RequestBody ShopflowIssue issue) {
 		Object error = demoCrudService.validate(issue);
 		if (error != null) {
 			return error;
@@ -412,14 +412,14 @@ public class AdminDemoCrudController {
 
 #### 第三步：看 Service 怎么做业务处理
 
-文件：`litemall-admin-api/src/main/java/org/ysling/litemall/admin/service/AdminDemoCrudService.java`
+文件：`shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/service/AdminDemoCrudService.java`
 
 ```java
 @Service
-@CacheConfig(cacheNames = "litemall_demo_crud")
+@CacheConfig(cacheNames = "shopflow_demo_crud")
 public class AdminDemoCrudService extends IssueServiceImpl {
 
-	public Object validate(LitemallIssue issue) {
+	public Object validate(ShopflowIssue issue) {
 		String question = issue.getQuestion();
 		if (Objects.isNull(question)) {
 			return ResponseUtil.badArgument();
@@ -431,10 +431,10 @@ public class AdminDemoCrudService extends IssueServiceImpl {
 		return null;
 	}
 
-	public List<LitemallIssue> querySelective(DemoCrudListBody body) {
-		QueryWrapper<LitemallIssue> wrapper = startPage(body);
+	public List<ShopflowIssue> querySelective(DemoCrudListBody body) {
+		QueryWrapper<ShopflowIssue> wrapper = startPage(body);
 		if (StringUtils.hasText(body.getQuestion())) {
-			wrapper.like(LitemallIssue.QUESTION, body.getQuestion());
+			wrapper.like(ShopflowIssue.QUESTION, body.getQuestion());
 		}
 		return queryAll(wrapper);
 	}
@@ -467,9 +467,9 @@ public class AdminDemoCrudService extends IssueServiceImpl {
 
 看：
 
-1. [litemall-db/src/main/java/org/ysling/litemall/db/domain/LitemallIssue.java](litemall-db/src/main/java/org/ysling/litemall/db/domain/LitemallIssue.java)
-2. [litemall-db/src/main/java/org/ysling/litemall/db/service/impl/IssueServiceImpl.java](litemall-db/src/main/java/org/ysling/litemall/db/service/impl/IssueServiceImpl.java)
-3. [litemall-db/src/main/java/org/ysling/litemall/db/mapper/IssueMapper.java](litemall-db/src/main/java/org/ysling/litemall/db/mapper/IssueMapper.java)
+1. [shopflow-db/src/main/java/org/ysling/shopflow/db/domain/ShopflowIssue.java](shopflow-db/src/main/java/org/ysling/shopflow/db/domain/ShopflowIssue.java)
+2. [shopflow-db/src/main/java/org/ysling/shopflow/db/service/impl/IssueServiceImpl.java](shopflow-db/src/main/java/org/ysling/shopflow/db/service/impl/IssueServiceImpl.java)
+3. [shopflow-db/src/main/java/org/ysling/shopflow/db/mapper/IssueMapper.java](shopflow-db/src/main/java/org/ysling/shopflow/db/mapper/IssueMapper.java)
 
 目标：
 
@@ -479,8 +479,8 @@ public class AdminDemoCrudService extends IssueServiceImpl {
 
 看：
 
-1. [litemall-core/src/main/java/org/ysling/litemall/core/utils/response/ResponseUtil.java](litemall-core/src/main/java/org/ysling/litemall/core/utils/response/ResponseUtil.java)
-2. [litemall-core/src/main/java/org/ysling/litemall/core/satoken/config/SaTokenConfigure.java](litemall-core/src/main/java/org/ysling/litemall/core/satoken/config/SaTokenConfigure.java)
+1. [shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response/ResponseUtil.java](shopflow-core/src/main/java/org/ysling/shopflow/core/utils/response/ResponseUtil.java)
+2. [shopflow-core/src/main/java/org/ysling/shopflow/core/satoken/config/SaTokenConfigure.java](shopflow-core/src/main/java/org/ysling/shopflow/core/satoken/config/SaTokenConfigure.java)
 
 目标：
 
@@ -490,9 +490,9 @@ public class AdminDemoCrudService extends IssueServiceImpl {
 
 看：
 
-1. [litemall-admin-api/src/main/resources/application.yml](litemall-admin-api/src/main/resources/application.yml)
-2. [litemall-db/src/main/resources/application-db.yml](litemall-db/src/main/resources/application-db.yml)
-3. [litemall-all/src/main/resources/application.yml](litemall-all/src/main/resources/application.yml)
+1. [shopflow-admin-api/src/main/resources/application.yml](shopflow-admin-api/src/main/resources/application.yml)
+2. [shopflow-db/src/main/resources/application-db.yml](shopflow-db/src/main/resources/application-db.yml)
+3. [shopflow-all/src/main/resources/application.yml](shopflow-all/src/main/resources/application.yml)
 
 目标：
 
@@ -522,7 +522,7 @@ core 里公共能力很多，第一次看容易信息过载。
 
 遇到统一返回、鉴权、注解时再按问题回查。
 
-### 10.3 一上来就看 litemall-all
+### 10.3 一上来就看 shopflow-all
 
 问题：
 
@@ -550,7 +550,7 @@ core 里公共能力很多，第一次看容易信息过载。
 
 你现在最应该吃透的第一个模块，不是整个项目，而是：
 
-1. litemall-admin-api 里的一个完整 CRUD 模块
+1. shopflow-admin-api 里的一个完整 CRUD 模块
 2. 配套前端页面
 3. 对应 db 层实现
 
@@ -562,13 +562,13 @@ core 里公共能力很多，第一次看容易信息过载。
 
 如果你只能选一个模块先学，答案就是：
 
-1. 先从 litemall-admin 对应的调用入口开始看
-2. 立刻切到 litemall-admin-api
-3. 然后按需进入 litemall-core 和 litemall-db
+1. 先从 shopflow-admin 对应的调用入口开始看
+2. 立刻切到 shopflow-admin-api
+3. 然后按需进入 shopflow-core 和 shopflow-db
 
 如果你只能选一个“后端模块”先学，答案就是：
 
-1. litemall-admin-api
+1. shopflow-admin-api
 
 因为它最接近你当前前端工作的真实联调场景，也最容易让你建立后端开发的核心直觉。
 
@@ -576,4 +576,4 @@ core 里公共能力很多，第一次看容易信息过载。
 
 ## 13. 一句话版本
 
-前端学习这个项目的最佳起点不是 db，也不是 all，而是先从前端请求找到管理端接口，再重点吃透 litemall-admin-api，然后带着问题去看 core 和 db。
+前端学习这个项目的最佳起点不是 db，也不是 all，而是先从前端请求找到管理端接口，再重点吃透 shopflow-admin-api，然后带着问题去看 core 和 db。

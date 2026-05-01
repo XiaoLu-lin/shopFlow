@@ -8,7 +8,7 @@
 2. 我们已经在项目里补齐了独立后端接口 `/admin/demo-crud/*`。
 3. 你可以按本文一步步理解并复刻同类后端模块。
 
-本次实现为了教学效率，复用了现有数据表 `litemall_issue`（字段简单、链路稳定），但接口路径是独立的 `demo-crud`，所以从前端视角看，它已经是一套完整的“你自己写的后端 CRUD 模块”。
+本次实现为了教学效率，复用了现有数据表 `shopflow_issue`（字段简单、链路稳定），但接口路径是独立的 `demo-crud`，所以从前端视角看，它已经是一套完整的“你自己写的后端 CRUD 模块”。
 
 ---
 
@@ -16,14 +16,14 @@
 
 ### 2.1 新增后端文件
 
-1. `litemall-admin-api/src/main/java/org/ysling/litemall/admin/model/democrud/body/DemoCrudListBody.java`
-2. `litemall-admin-api/src/main/java/org/ysling/litemall/admin/service/AdminDemoCrudService.java`
-3. `litemall-admin-api/src/main/java/org/ysling/litemall/admin/web/AdminDemoCrudController.java`
+1. `shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/model/democrud/body/DemoCrudListBody.java`
+2. `shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/service/AdminDemoCrudService.java`
+3. `shopflow-admin-api/src/main/java/org/ysling/shopflow/admin/web/AdminDemoCrudController.java`
 
 ### 2.2 修改前端对接文件
 
-1. `litemall-admin/src/api/demoCrud.js`
-2. `litemall-admin/src/router/index.js`
+1. `shopflow-admin/src/api/demoCrud.js`
+2. `shopflow-admin/src/router/index.js`
 
 ---
 
@@ -40,11 +40,11 @@
 2. 业务类独立：`AdminDemoCrudService`
 3. 列表查询参数独立：`DemoCrudListBody`
 
-### 3.2 为什么暂时复用 `litemall_issue` 表
+### 3.2 为什么暂时复用 `shopflow_issue` 表
 
 你当前目标是“先学后端 CRUD 方法论”，不是先做复杂建模。
 
-复用 `IssueServiceImpl + LitemallIssue` 的好处：
+复用 `IssueServiceImpl + ShopflowIssue` 的好处：
 
 1. 少踩数据库/Mapper 层坑。
 2. 快速聚焦 Controller 与 Service 的写法。
@@ -111,7 +111,7 @@
 ### 5.2.1 validate 方法
 
 ```java
-public Object validate(LitemallIssue issue) {
+public Object validate(ShopflowIssue issue) {
     String question = issue.getQuestion();
     if (Objects.isNull(question)) {
         return ResponseUtil.badArgument();
@@ -134,10 +134,10 @@ public Object validate(LitemallIssue issue) {
 
 ```java
 @Cacheable(sync = true)
-public List<LitemallIssue> querySelective(DemoCrudListBody body) {
-    QueryWrapper<LitemallIssue> wrapper = startPage(body);
+public List<ShopflowIssue> querySelective(DemoCrudListBody body) {
+    QueryWrapper<ShopflowIssue> wrapper = startPage(body);
     if (StringUtils.hasText(body.getQuestion())) {
-        wrapper.like(LitemallIssue.QUESTION, body.getQuestion());
+        wrapper.like(ShopflowIssue.QUESTION, body.getQuestion());
     }
     return queryAll(wrapper);
 }
@@ -202,7 +202,7 @@ public Object read(@JsonBody String id) {
 
 ```java
 @PostMapping("/create")
-public Object create(@Valid @RequestBody LitemallIssue issue) {
+public Object create(@Valid @RequestBody ShopflowIssue issue) {
     Object error = demoCrudService.validate(issue);
     if (error != null) {
         return error;
@@ -224,7 +224,7 @@ public Object create(@Valid @RequestBody LitemallIssue issue) {
 
 ```java
 @PostMapping("/update")
-public Object update(@Valid @RequestBody LitemallIssue issue) {
+public Object update(@Valid @RequestBody ShopflowIssue issue) {
     Object error = demoCrudService.validate(issue);
     if (error != null) {
         return error;
@@ -287,7 +287,7 @@ public Object delete(@JsonBody String id) {
 
 ## 7. 前端如何对接新后端
 
-文件：`litemall-admin/src/api/demoCrud.js`
+文件：`shopflow-admin/src/api/demoCrud.js`
 
 你现在调用的已经是独立后端：
 
@@ -299,7 +299,7 @@ public Object delete(@JsonBody String id) {
 
 配合前端代理后，真实到达后端是 `/admin/demo-crud/*`。
 
-文件：`litemall-admin/src/router/index.js`
+文件：`shopflow-admin/src/router/index.js`
 
 `demo-crud` 路由权限元数据已改为：
 
@@ -318,15 +318,15 @@ IDE 问题检查：新增和修改文件无报错。
 执行命令（JDK8 环境）：
 
 ```bash
-cd /Users/user/Desktop/demo/test/react/litemall-plus-master
+cd /Users/user/Desktop/demo/test/react/shopflow-master
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 export PATH="$JAVA_HOME/bin:$PATH"
-mvn -pl litemall-admin-api -am -DskipTests compile
+mvn -pl shopflow-admin-api -am -DskipTests compile
 ```
 
 结果：
 
-1. `litemall-admin-api` 编译成功。
+1. `shopflow-admin-api` 编译成功。
 2. 整体 `BUILD SUCCESS`。
 
 ---
@@ -342,7 +342,7 @@ curl -G 'http://127.0.0.1:6914/admin/demo-crud/list' \
   --data-urlencode 'page=1' \
   --data-urlencode 'limit=10' \
   --data-urlencode 'question=测试' \
-  -H 'X-Litemall-Admin-Token: 你的token'
+  -H 'X-ShopFlow-Admin-Token: 你的token'
 ```
 
 ### 9.2 新增
@@ -350,7 +350,7 @@ curl -G 'http://127.0.0.1:6914/admin/demo-crud/list' \
 ```bash
 curl -X POST 'http://127.0.0.1:6914/admin/demo-crud/create' \
   -H 'Content-Type: application/json' \
-  -H 'X-Litemall-Admin-Token: 你的token' \
+  -H 'X-ShopFlow-Admin-Token: 你的token' \
   -d '{
     "question": "演示问题",
     "answer": "演示答案"
@@ -362,7 +362,7 @@ curl -X POST 'http://127.0.0.1:6914/admin/demo-crud/create' \
 ```bash
 curl -G 'http://127.0.0.1:6914/admin/demo-crud/read' \
   --data-urlencode 'id=刚创建返回的id' \
-  -H 'X-Litemall-Admin-Token: 你的token'
+  -H 'X-ShopFlow-Admin-Token: 你的token'
 ```
 
 ### 9.4 更新
@@ -370,7 +370,7 @@ curl -G 'http://127.0.0.1:6914/admin/demo-crud/read' \
 ```bash
 curl -X POST 'http://127.0.0.1:6914/admin/demo-crud/update' \
   -H 'Content-Type: application/json' \
-  -H 'X-Litemall-Admin-Token: 你的token' \
+  -H 'X-ShopFlow-Admin-Token: 你的token' \
   -d '{
     "id": "要更新的id",
     "question": "演示问题-已更新",
@@ -383,7 +383,7 @@ curl -X POST 'http://127.0.0.1:6914/admin/demo-crud/update' \
 ```bash
 curl -X POST 'http://127.0.0.1:6914/admin/demo-crud/delete' \
   -H 'Content-Type: application/json' \
-  -H 'X-Litemall-Admin-Token: 你的token' \
+  -H 'X-ShopFlow-Admin-Token: 你的token' \
   -d '{"id":"要删除的id"}'
 ```
 
@@ -446,7 +446,7 @@ curl -X POST 'http://127.0.0.1:6914/admin/demo-crud/delete' \
 如果你准备进入真实业务开发，建议按这个顺序升级：
 
 1. 新建业务表 `demo_crud`。
-2. 在 `litemall-db` 新建 `LitemallDemoCrud`、`DemoCrudMapper`、`DemoCrudServiceImpl`。
+2. 在 `shopflow-db` 新建 `ShopflowDemoCrud`、`DemoCrudMapper`、`DemoCrudServiceImpl`。
 3. 把 `AdminDemoCrudService` 从 `IssueServiceImpl` 切到 `DemoCrudServiceImpl`。
 4. 新建独立权限点 `admin:demo-crud:*`。
 5. 补充单元测试和接口测试。
