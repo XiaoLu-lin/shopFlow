@@ -175,5 +175,5 @@ Spring Boot后端 + Vue管理员前端 + 微信小程序用户前端 + Vue用户
 
 ## License
 
-[MulanPSL-2.0](https://gitee.com/JoyAtMeeting/shopflow/blob/master/LICENSE)
+[MIT License](https://github.com/XiaoLu-lin/shopFlow/blob/main/LICENSE)
 Copyright (c) 2022-present ysling
