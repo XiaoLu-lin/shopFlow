@@ -9,21 +9,29 @@ function getEnvVersion() {
   return 'develop';
 }
 
+const LOCAL_DEV_HOST = 'http://127.0.0.1:6914';
+const LOCAL_DEV_WS_HOST = 'ws://127.0.0.1:6914';
+const ONLINE_HOST = 'https://manager.enshipeixue.com';
+const ONLINE_WS_HOST = 'wss://manager.enshipeixue.com';
+
 const ENV_CONFIG = {
   develop: {
-    apiRoot: 'https://manager.enshipeixue.com/wx/',
-    wsRoot: 'wss://manager.enshipeixue.com/websocket',
+    apiRoot: LOCAL_DEV_HOST + '/wx/',
+    wsRoot: LOCAL_DEV_WS_HOST + '/websocket',
     useWxLoginForAccountLogin: false,
+    adminUrl: LOCAL_DEV_HOST + '/#/login',
   },
   trial: {
-    apiRoot: 'https://manager.enshipeixue.com/wx/',
-    wsRoot: 'wss://manager.enshipeixue.com/websocket',
+    apiRoot: ONLINE_HOST + '/wx/',
+    wsRoot: ONLINE_WS_HOST + '/websocket',
     useWxLoginForAccountLogin: true,
+    adminUrl: ONLINE_HOST + '/#/login',
   },
   release: {
-    apiRoot: 'https://manager.enshipeixue.com/wx/',
-    wsRoot: 'wss://manager.enshipeixue.com/websocket',
+    apiRoot: ONLINE_HOST + '/wx/',
+    wsRoot: ONLINE_WS_HOST + '/websocket',
     useWxLoginForAccountLogin: true,
+    adminUrl: ONLINE_HOST + '/#/login',
   },
 };
 
@@ -38,7 +46,7 @@ module.exports = {
   // Socket链接
   WSS_SERVER_URL: currentEnvConfig.wsRoot,
 
-  adminUrl: 'https://manager.enshipeixue.com/#/login',//管理后台地址
+  adminUrl: currentEnvConfig.adminUrl,//管理后台地址
   ShipTmplIds: 'Uy7q5hPRyiL2IRZo22HQ5Je8quwKoL7kzpX3S0SC5q4',//发货订阅模板id
   RefundTmplIds: 'vjTL2TZURvShCeFnjo7Shu0v6D_r9kS3GsvBHcd4tJM',//退款订阅模板id
   NewOrderTmplIds: '9cgvWe9phZfc4_AgAfFGBJWie0FfrVe3Rae-puLzL2s',//新订单订阅模板id
