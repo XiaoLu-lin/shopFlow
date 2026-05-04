@@ -1,0 +1,75 @@
+schema: spec-driven
+
+context: |
+  项目名称：ShopFlow / litemall-plus-master
+  项目类型：多模块电商系统（Spring Boot 后端 + Vue 管理端 + 微信小程序）
+  默认输出语言：中文
+  技术栈：
+    - Java 8
+    - Spring Boot 2.6.x
+    - Maven 多模块
+    - MyBatis / MyBatis Plus
+    - MySQL
+    - Redis / Redisson
+    - Sa-Token
+    - Vue 2 + Element UI
+    - 微信小程序原生工程
+  主入口或主流程：
+    - 后端聚合启动：`shopflow-all`
+    - 管理端前端：`shopflow-admin`
+    - 小程序前端：`shopflow-wx`
+  关键目录职责：
+    - `shopflow-admin-api`：管理后台后端接口、权限与运营类业务
+    - `shopflow-wx-api`：小程序后端接口与 C 端业务流程
+    - `shopflow-core`：基础设施、通用配置、租户、鉴权、存储、通知、任务等支撑能力
+    - `shopflow-db`：实体、领域对象、mapper、service 与 SQL 映射
+    - `shopflow-all`：聚合启动与整体装配
+    - `shopflow-admin`：Vue 管理端页面、路由、状态和接口封装
+    - `shopflow-wx`：微信小程序页面、组件、配置与工具方法
+    - `doc`：文档、FAQ、部署与说明材料
+  复用优先入口：
+    - 优先复用 `shopflow-core` 中已有的配置、鉴权、租户、存储、任务和通知封装
+    - 优先复用 `shopflow-db` 中已有的 service、mapper、validator 与领域对象
+    - 管理端优先复用 `shopflow-admin/src/api`、`src/components`、`src/utils` 中已有封装
+    - 小程序优先复用 `shopflow-wx/utils`、`lib`、既有页面流程和通用组件
+  长期边界：
+    - 先复用现有封装，再新增实现
+    - 影响主流程、鉴权、支付、租户、存储、消息推送的改动必须先明确兼容约束
+    - 输入边界必须显式校验
+    - 异常处理不能静默吞错
+    - 数据结构、接口返回和 SQL 变更必须同时检查上下游影响
+  验证要求：
+    - 纯逻辑优先补单元测试
+    - 跨模块改动至少做集成验证
+    - 管理端改动至少验证页面联调、权限与异常提示
+    - 小程序改动至少验证页面流程、授权链路和关键用户路径
+    - 高风险交易链路需要补端到端或人工验证步骤
+
+rules:
+  proposal:
+    - 先讲清 why、what、impact，不把实现细节塞进 proposal
+    - 变更范围、受影响模块、主要风险必须可读
+    - 明确区分管理端、小程序端、后台接口和数据层影响
+  specs:
+    - requirement 必须描述行为，不写实现细节
+    - 只有行为变化时才修改已有 capability
+    - 每个 requirement 都要能映射到可验证场景
+  design:
+    - 涉及主流程、跨模块、接口兼容、权限、租户、支付、存储、消息通知、迁移、安全、性能时必须补 design
+    - design 重点讲决策和权衡，不写逐行实现
+  tasks:
+    - 任务按依赖顺序拆分
+    - 单项任务应能在一次会话内完成
+    - tasks 要能直接驱动 apply
+    - 跨前后端改动要显式写清联调与验证任务
+  apply:
+    - 实现前先确认 proposal、specs、design、tasks 与当前理解一致
+    - coding 阶段显式使用 `superpowers:test-driven-development`
+    - 任务之间或阶段性完成后显式使用 `superpowers:requesting-code-review`
+    - 在宣称完成前显式使用 `superpowers:verification-before-completion`
+    - 实现完成后自动进入 review
+    - review 完成后先停止并等待用户确认，再决定是否 archive
+    - 修改应尽量最小化，避免顺手大重构
+  archive:
+    - archive 前先确认 specs 与实际代码状态一致
+    - archive 前先沉淀长期有效规则到合适文档

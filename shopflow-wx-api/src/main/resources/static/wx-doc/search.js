@@ -15,31 +15,31 @@ api[0].list.push({
 api[0].list[0].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/coupon/list',
+    url: 'https://manager.enshipeixue.com/wx/coupon/list',
     desc: '优惠券列表',
 });
 api[0].list[0].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/coupon/user',
+    url: 'https://manager.enshipeixue.com/wx/coupon/user',
     desc: '个人优惠券列表',
 });
 api[0].list[0].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/coupon/select',
+    url: 'https://manager.enshipeixue.com/wx/coupon/select',
     desc: '当前购物车下单商品订单可用优惠券',
 });
 api[0].list[0].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/coupon/receive',
+    url: 'https://manager.enshipeixue.com/wx/coupon/receive',
     desc: '优惠券领取',
 });
 api[0].list[0].list.push({
     order: '5',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/coupon/exchange',
+    url: 'https://manager.enshipeixue.com/wx/coupon/exchange',
     desc: '优惠券兑换',
 });
 api[0].list.push({
@@ -52,19 +52,19 @@ api[0].list.push({
 api[0].list[1].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/search/index',
+    url: 'https://manager.enshipeixue.com/wx/search/index',
     desc: '搜索页面信息',
 });
 api[0].list[1].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/search/helper',
+    url: 'https://manager.enshipeixue.com/wx/search/helper',
     desc: '关键字提醒 &lt;p&gt; 当用户输入关键字一部分时，可以推荐系统中合适的关键字。',
 });
 api[0].list[1].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/search/clear/history',
+    url: 'https://manager.enshipeixue.com/wx/search/clear/history',
     desc: '清除用户搜索历史',
 });
 api[0].list.push({
@@ -77,43 +77,43 @@ api[0].list.push({
 api[0].list[2].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/aftersale/list',
+    url: 'https://manager.enshipeixue.com/wx/aftersale/list',
     desc: '售后列表',
 });
 api[0].list[2].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/aftersale/detail',
+    url: 'https://manager.enshipeixue.com/wx/aftersale/detail',
     desc: '售后详情',
 });
 api[0].list[2].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/aftersale/submit',
+    url: 'https://manager.enshipeixue.com/wx/aftersale/submit',
     desc: '申请售后',
 });
 api[0].list[2].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/aftersale/cancel',
+    url: 'https://manager.enshipeixue.com/wx/aftersale/cancel',
     desc: '取消售后',
 });
 api[0].list[2].list.push({
     order: '5',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/aftersale/recept',
+    url: 'https://manager.enshipeixue.com/wx/aftersale/recept',
     desc: '审核通过',
 });
 api[0].list[2].list.push({
     order: '6',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/aftersale/reject',
+    url: 'https://manager.enshipeixue.com/wx/aftersale/reject',
     desc: '审核驳回',
 });
 api[0].list[2].list.push({
     order: '7',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/aftersale/refund',
+    url: 'https://manager.enshipeixue.com/wx/aftersale/refund',
     desc: '售后退款',
 });
 api[0].list.push({
@@ -126,67 +126,67 @@ api[0].list.push({
 api[0].list[3].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/auth/login_by_qr',
+    url: 'https://manager.enshipeixue.com/wx/auth/login_by_qr',
     desc: '扫码授权登陆',
 });
 api[0].list[3].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/auth/login',
+    url: 'https://manager.enshipeixue.com/wx/auth/login',
     desc: '账号登录',
 });
 api[0].list[3].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/auth/captcha/mobile',
+    url: 'https://manager.enshipeixue.com/wx/auth/captcha/mobile',
     desc: '请求手机验证码 TODO 这里需要一定机制防止短信验证码被滥用',
 });
 api[0].list[3].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/auth/captcha/mail',
+    url: 'https://manager.enshipeixue.com/wx/auth/captcha/mail',
     desc: '请求邮箱验证码 TODO 这里需要一定机制防止短信验证码被滥用',
 });
 api[0].list[3].list.push({
     order: '5',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/auth/login_by_weixin',
+    url: 'https://manager.enshipeixue.com/wx/auth/login_by_weixin',
     desc: '微信登录',
 });
 api[0].list[3].list.push({
     order: '6',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/auth/register',
+    url: 'https://manager.enshipeixue.com/wx/auth/register',
     desc: '账号注册',
 });
 api[0].list[3].list.push({
     order: '7',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/auth/reset',
+    url: 'https://manager.enshipeixue.com/wx/auth/reset',
     desc: '账号密码重置',
 });
 api[0].list[3].list.push({
     order: '8',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/auth/resetPhone',
+    url: 'https://manager.enshipeixue.com/wx/auth/resetPhone',
     desc: '账号手机号码重置',
 });
 api[0].list[3].list.push({
     order: '9',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/auth/profile',
+    url: 'https://manager.enshipeixue.com/wx/auth/profile',
     desc: '账号信息更新',
 });
 api[0].list[3].list.push({
     order: '10',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/auth/bindPhone',
+    url: 'https://manager.enshipeixue.com/wx/auth/bindPhone',
     desc: '微信手机号码绑定',
 });
 api[0].list[3].list.push({
     order: '11',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/auth/logout',
+    url: 'https://manager.enshipeixue.com/wx/auth/logout',
     desc: '退出登陆',
 });
 api[0].list.push({
@@ -199,85 +199,85 @@ api[0].list.push({
 api[0].list[4].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/order/list',
+    url: 'https://manager.enshipeixue.com/wx/order/list',
     desc: '订单列表',
 });
 api[0].list[4].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/order/detail',
+    url: 'https://manager.enshipeixue.com/wx/order/detail',
     desc: '订单详情',
 });
 api[0].list[4].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/order/submit',
+    url: 'https://manager.enshipeixue.com/wx/order/submit',
     desc: '提交订单',
 });
 api[0].list[4].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/order/cancel',
+    url: 'https://manager.enshipeixue.com/wx/order/cancel',
     desc: '取消订单',
 });
 api[0].list[4].list.push({
     order: '5',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/order/prepay',
+    url: 'https://manager.enshipeixue.com/wx/order/prepay',
     desc: '付款订单的预支付会话标识',
 });
 api[0].list[4].list.push({
     order: '6',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/order/pay-notify',
+    url: 'https://manager.enshipeixue.com/wx/order/pay-notify',
     desc: '微信付款成功或失败回调接口 &lt;p&gt;  TODO  注意，这里pay-notify是示例地址，建议开发者应该设立一个隐蔽的回调地址',
 });
 api[0].list[4].list.push({
     order: '7',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/order/refund',
+    url: 'https://manager.enshipeixue.com/wx/order/refund',
     desc: '订单申请退款',
 });
 api[0].list[4].list.push({
     order: '8',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/order/confirm',
+    url: 'https://manager.enshipeixue.com/wx/order/confirm',
     desc: '确认收货',
 });
 api[0].list[4].list.push({
     order: '9',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/order/delete',
+    url: 'https://manager.enshipeixue.com/wx/order/delete',
     desc: '删除订单',
 });
 api[0].list[4].list.push({
     order: '10',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/order/goods',
+    url: 'https://manager.enshipeixue.com/wx/order/goods',
     desc: '待评价订单商品信息',
 });
 api[0].list[4].list.push({
     order: '11',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/order/comment',
+    url: 'https://manager.enshipeixue.com/wx/order/comment',
     desc: '评价订单商品',
 });
 api[0].list[4].list.push({
     order: '12',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/order/admin/refund',
+    url: 'https://manager.enshipeixue.com/wx/order/admin/refund',
     desc: '订单退款',
 });
 api[0].list[4].list.push({
     order: '13',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/order/admin/cancel',
+    url: 'https://manager.enshipeixue.com/wx/order/admin/cancel',
     desc: '商家取消订单',
 });
 api[0].list[4].list.push({
     order: '14',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/order/admin/ship',
+    url: 'https://manager.enshipeixue.com/wx/order/admin/ship',
     desc: '发货',
 });
 api[0].list.push({
@@ -290,31 +290,31 @@ api[0].list.push({
 api[0].list[5].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/catalog/index',
+    url: 'https://manager.enshipeixue.com/wx/catalog/index',
     desc: '分类详情',
 });
 api[0].list[5].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/catalog/all',
+    url: 'https://manager.enshipeixue.com/wx/catalog/all',
     desc: '所有分类数据',
 });
 api[0].list[5].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/catalog/current',
+    url: 'https://manager.enshipeixue.com/wx/catalog/current',
     desc: '当前分类栏目',
 });
 api[0].list[5].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/catalog/first',
+    url: 'https://manager.enshipeixue.com/wx/catalog/first',
     desc: '所有一级分类目录',
 });
 api[0].list[5].list.push({
     order: '5',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/catalog/second',
+    url: 'https://manager.enshipeixue.com/wx/catalog/second',
     desc: '所有二级分类目录',
 });
 api[0].list.push({
@@ -327,73 +327,73 @@ api[0].list.push({
 api[0].list[6].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/brand/list',
+    url: 'https://manager.enshipeixue.com/wx/brand/list',
     desc: '店铺列表',
 });
 api[0].list[6].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/brand/read',
+    url: 'https://manager.enshipeixue.com/wx/brand/read',
     desc: '店铺详情',
 });
 api[0].list[6].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/brand/detail',
+    url: 'https://manager.enshipeixue.com/wx/brand/detail',
     desc: '店铺详情',
 });
 api[0].list[6].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/brand/save',
+    url: 'https://manager.enshipeixue.com/wx/brand/save',
     desc: '添加或修改店铺',
 });
 api[0].list[6].list.push({
     order: '5',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/brand/order',
+    url: 'https://manager.enshipeixue.com/wx/brand/order',
     desc: '店铺订单列表',
 });
 api[0].list[6].list.push({
     order: '6',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/brand/goods/init',
+    url: 'https://manager.enshipeixue.com/wx/brand/goods/init',
     desc: '商品上传参数初始化',
 });
 api[0].list[6].list.push({
     order: '7',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/brand/goods/category',
+    url: 'https://manager.enshipeixue.com/wx/brand/goods/category',
     desc: '分类列表',
 });
 api[0].list[6].list.push({
     order: '8',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/brand/goods/list',
+    url: 'https://manager.enshipeixue.com/wx/brand/goods/list',
     desc: '店铺商品列表',
 });
 api[0].list[6].list.push({
     order: '9',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/brand/goods/detail',
+    url: 'https://manager.enshipeixue.com/wx/brand/goods/detail',
     desc: '店铺商品详情',
 });
 api[0].list[6].list.push({
     order: '10',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/brand/goods/update',
+    url: 'https://manager.enshipeixue.com/wx/brand/goods/update',
     desc: '编辑店铺商品',
 });
 api[0].list[6].list.push({
     order: '11',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/brand/goods/delete',
+    url: 'https://manager.enshipeixue.com/wx/brand/goods/delete',
     desc: '删除店铺商品',
 });
 api[0].list[6].list.push({
     order: '12',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/brand/goods/create',
+    url: 'https://manager.enshipeixue.com/wx/brand/goods/create',
     desc: '添加店铺商品',
 });
 api[0].list.push({
@@ -406,25 +406,25 @@ api[0].list.push({
 api[0].list[7].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/home/auth',
+    url: 'https://manager.enshipeixue.com/wx/home/auth',
     desc: '小程序授权',
 });
 api[0].list[7].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/home/index',
+    url: 'https://manager.enshipeixue.com/wx/home/index',
     desc: '首页数据',
 });
 api[0].list[7].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/home/navigate',
+    url: 'https://manager.enshipeixue.com/wx/home/navigate',
     desc: '判断首页初始化参数是否支持跳转',
 });
 api[0].list[7].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/home/about',
+    url: 'https://manager.enshipeixue.com/wx/home/about',
     desc: '商城介绍信息',
 });
 api[0].list.push({
@@ -437,43 +437,43 @@ api[0].list.push({
 api[0].list[8].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/goods/detail',
+    url: 'https://manager.enshipeixue.com/wx/goods/detail',
     desc: '商品详情',
 });
 api[0].list[8].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/goods/category',
+    url: 'https://manager.enshipeixue.com/wx/goods/category',
     desc: '商品分类类目',
 });
 api[0].list[8].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/goods/list',
+    url: 'https://manager.enshipeixue.com/wx/goods/list',
     desc: '根据条件搜素商品',
 });
 api[0].list[8].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/goods/related',
+    url: 'https://manager.enshipeixue.com/wx/goods/related',
     desc: '商品详情页面“大家都在看”推荐商品',
 });
 api[0].list[8].list.push({
     order: '5',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/goods/count',
+    url: 'https://manager.enshipeixue.com/wx/goods/count',
     desc: '在售的商品总数',
 });
 api[0].list[8].list.push({
     order: '6',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/goods/comment/count',
+    url: 'https://manager.enshipeixue.com/wx/goods/comment/count',
     desc: '评论数量',
 });
 api[0].list[8].list.push({
     order: '7',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/goods/comment/list',
+    url: 'https://manager.enshipeixue.com/wx/goods/comment/list',
     desc: '评论列表',
 });
 api[0].list.push({
@@ -486,37 +486,37 @@ api[0].list.push({
 api[0].list[9].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/user/index',
+    url: 'https://manager.enshipeixue.com/wx/user/index',
     desc: '用户个人页面数据',
 });
 api[0].list[9].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/user/info',
+    url: 'https://manager.enshipeixue.com/wx/user/info',
     desc: '用户基本信息',
 });
 api[0].list[9].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/user/share',
+    url: 'https://manager.enshipeixue.com/wx/user/share',
     desc: '用户个人分享记录',
 });
 api[0].list[9].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/user/integral',
+    url: 'https://manager.enshipeixue.com/wx/user/integral',
     desc: '获取用户余额',
 });
 api[0].list[9].list.push({
     order: '5',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/user/trading-record',
+    url: 'https://manager.enshipeixue.com/wx/user/trading-record',
     desc: '获取用户交易记录',
 });
 api[0].list[9].list.push({
     order: '6',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/user/withdraw-deposit',
+    url: 'https://manager.enshipeixue.com/wx/user/withdraw-deposit',
     desc: '余额提现',
 });
 api[0].list.push({
@@ -529,7 +529,7 @@ api[0].list.push({
 api[0].list[10].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/index/index',
+    url: 'https://manager.enshipeixue.com/wx/index/index',
     desc: '测试数据',
 });
 api[0].list.push({
@@ -542,13 +542,13 @@ api[0].list.push({
 api[0].list[11].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/msg/welcome',
+    url: 'https://manager.enshipeixue.com/wx/msg/welcome',
     desc: '消息校验，确定是微信发送的消息',
 });
 api[0].list[11].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/msg/welcome',
+    url: 'https://manager.enshipeixue.com/wx/msg/welcome',
     desc: '微信小程序事件推送',
 });
 api[0].list.push({
@@ -561,13 +561,13 @@ api[0].list.push({
 api[0].list[12].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/groupon/list',
+    url: 'https://manager.enshipeixue.com/wx/groupon/list',
     desc: '团购规则列表',
 });
 api[0].list[12].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/groupon/join',
+    url: 'https://manager.enshipeixue.com/wx/groupon/join',
     desc: '参加团购',
 });
 api[0].list.push({
@@ -580,7 +580,7 @@ api[0].list.push({
 api[0].list[13].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/like/submit',
+    url: 'https://manager.enshipeixue.com/wx/like/submit',
     desc: '点赞',
 });
 api[0].list.push({
@@ -593,19 +593,19 @@ api[0].list.push({
 api[0].list[14].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/topic/list',
+    url: 'https://manager.enshipeixue.com/wx/topic/list',
     desc: '专题列表',
 });
 api[0].list[14].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/topic/detail',
+    url: 'https://manager.enshipeixue.com/wx/topic/detail',
     desc: '专题详情',
 });
 api[0].list[14].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/topic/related',
+    url: 'https://manager.enshipeixue.com/wx/topic/related',
     desc: '相关专题',
 });
 api[0].list.push({
@@ -618,31 +618,31 @@ api[0].list.push({
 api[0].list[15].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/address/list',
+    url: 'https://manager.enshipeixue.com/wx/address/list',
     desc: '用户收货地址列表',
 });
 api[0].list[15].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/address/tenant',
+    url: 'https://manager.enshipeixue.com/wx/address/tenant',
     desc: '获取租户地址',
 });
 api[0].list[15].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/address/detail',
+    url: 'https://manager.enshipeixue.com/wx/address/detail',
     desc: '收货地址详情',
 });
 api[0].list[15].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/address/save',
+    url: 'https://manager.enshipeixue.com/wx/address/save',
     desc: '添加或更新收货地址',
 });
 api[0].list[15].list.push({
     order: '5',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/address/delete',
+    url: 'https://manager.enshipeixue.com/wx/address/delete',
     desc: '删除收货地址',
 });
 api[0].list.push({
@@ -655,19 +655,19 @@ api[0].list.push({
 api[0].list[16].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/express/channel',
+    url: 'https://manager.enshipeixue.com/wx/express/channel',
     desc: '查询物流公司',
 });
 api[0].list[16].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/express/api-track',
+    url: 'https://manager.enshipeixue.com/wx/express/api-track',
     desc: '通过快递鸟查询物流',
 });
 api[0].list[16].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/express/logistics',
+    url: 'https://manager.enshipeixue.com/wx/express/logistics',
     desc: '获取微信物流查询插件token',
 });
 api[0].list.push({
@@ -680,7 +680,7 @@ api[0].list.push({
 api[0].list[17].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/feedback/submit',
+    url: 'https://manager.enshipeixue.com/wx/feedback/submit',
     desc: '添加意见反馈',
 });
 api[0].list.push({
@@ -693,19 +693,19 @@ api[0].list.push({
 api[0].list[18].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/message/list',
+    url: 'https://manager.enshipeixue.com/wx/message/list',
     desc: '获取聊天记录',
 });
 api[0].list[18].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/message/history',
+    url: 'https://manager.enshipeixue.com/wx/message/history',
     desc: '获取历史聊天记录',
 });
 api[0].list[18].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/message/delete',
+    url: 'https://manager.enshipeixue.com/wx/message/delete',
     desc: '删除聊天记录',
 });
 api[0].list.push({
@@ -718,13 +718,13 @@ api[0].list.push({
 api[0].list[19].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/footprint/list',
+    url: 'https://manager.enshipeixue.com/wx/footprint/list',
     desc: '用户足迹列表',
 });
 api[0].list[19].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/footprint/delete',
+    url: 'https://manager.enshipeixue.com/wx/footprint/delete',
     desc: '删除用户足迹',
 });
 api[0].list.push({
@@ -737,25 +737,25 @@ api[0].list.push({
 api[0].list[20].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/storage/upload',
+    url: 'https://manager.enshipeixue.com/wx/storage/upload',
     desc: '获取微信小程序上传的图片',
 });
 api[0].list[20].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/storage/uploads',
+    url: 'https://manager.enshipeixue.com/wx/storage/uploads',
     desc: '获取微信小程序上传的图片',
 });
 api[0].list[20].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/storage/fetch/{key}',
+    url: 'https://manager.enshipeixue.com/wx/storage/fetch/{key}',
     desc: '访问存储对象',
 });
 api[0].list[20].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/storage/download/{key}',
+    url: 'https://manager.enshipeixue.com/wx/storage/download/{key}',
     desc: '访问存储对象',
 });
 api[0].list.push({
@@ -768,13 +768,13 @@ api[0].list.push({
 api[0].list[21].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/collect/list',
+    url: 'https://manager.enshipeixue.com/wx/collect/list',
     desc: '用户收藏列表',
 });
 api[0].list[21].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/collect/update',
+    url: 'https://manager.enshipeixue.com/wx/collect/update',
     desc: '用户收藏添加和取消',
 });
 api[0].list.push({
@@ -787,7 +787,7 @@ api[0].list.push({
 api[0].list[22].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/issue/list',
+    url: 'https://manager.enshipeixue.com/wx/issue/list',
     desc: '帮助中心',
 });
 api[0].list.push({
@@ -800,19 +800,19 @@ api[0].list.push({
 api[0].list[23].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/reward/list',
+    url: 'https://manager.enshipeixue.com/wx/reward/list',
     desc: '赏金列表',
 });
 api[0].list[23].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/reward/join',
+    url: 'https://manager.enshipeixue.com/wx/reward/join',
     desc: '参加赏金',
 });
 api[0].list[23].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/reward/create',
+    url: 'https://manager.enshipeixue.com/wx/reward/create',
     desc: '添加赏金参与信息',
 });
 api[0].list.push({
@@ -825,25 +825,25 @@ api[0].list.push({
 api[0].list[24].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/comment/list',
+    url: 'https://manager.enshipeixue.com/wx/comment/list',
     desc: '评论列表',
 });
 api[0].list[24].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/comment/reply-list',
+    url: 'https://manager.enshipeixue.com/wx/comment/reply-list',
     desc: '回复评论列表',
 });
 api[0].list[24].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/comment/count',
+    url: 'https://manager.enshipeixue.com/wx/comment/count',
     desc: '评论数量',
 });
 api[0].list[24].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/comment/submit',
+    url: 'https://manager.enshipeixue.com/wx/comment/submit',
     desc: '评论回复',
 });
 api[0].list.push({
@@ -856,19 +856,19 @@ api[0].list.push({
 api[0].list[25].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/dynamic/list',
+    url: 'https://manager.enshipeixue.com/wx/dynamic/list',
     desc: '动态列表',
 });
 api[0].list[25].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/dynamic/submit',
+    url: 'https://manager.enshipeixue.com/wx/dynamic/submit',
     desc: '发布日常',
 });
 api[0].list[25].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/dynamic/delete',
+    url: 'https://manager.enshipeixue.com/wx/dynamic/delete',
     desc: '删除日常',
 });
 api[0].list.push({
@@ -881,49 +881,49 @@ api[0].list.push({
 api[0].list[26].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/cart/index',
+    url: 'https://manager.enshipeixue.com/wx/cart/index',
     desc: '用户购物车信息',
 });
 api[0].list[26].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/cart/add',
+    url: 'https://manager.enshipeixue.com/wx/cart/add',
     desc: '加入商品到购物车 &lt;p&gt; 如果已经存在购物车货品，则增加数量； 否则添加新的购物车货品项。',
 });
 api[0].list[26].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/cart/fast/add',
+    url: 'https://manager.enshipeixue.com/wx/cart/fast/add',
     desc: '立即购买 &lt;p&gt; 和add方法的区别在于： 1. 如果购物车内已经存在购物车货品，前者的逻辑是数量添加，这里的逻辑是数量覆盖 2. 添加成功以后，前者的逻辑是返回当前购物车商品数量，这里的逻辑是返回对应购物车项的ID',
 });
 api[0].list[26].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/cart/update',
+    url: 'https://manager.enshipeixue.com/wx/cart/update',
     desc: '修改购物车商品货品数量',
 });
 api[0].list[26].list.push({
     order: '5',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/cart/checked',
+    url: 'https://manager.enshipeixue.com/wx/cart/checked',
     desc: '购物车商品货品勾选状态',
 });
 api[0].list[26].list.push({
     order: '6',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/cart/delete',
+    url: 'https://manager.enshipeixue.com/wx/cart/delete',
     desc: '购物车商品删除',
 });
 api[0].list[26].list.push({
     order: '7',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/cart/count',
+    url: 'https://manager.enshipeixue.com/wx/cart/count',
     desc: '购物车商品货品数量',
 });
 api[0].list[26].list.push({
     order: '8',
     deprecated: 'false',
-    url: 'https://www.ysling.com.cn/wx/cart/checkout',
+    url: 'https://manager.enshipeixue.com/wx/cart/checkout',
     desc: '购物车下单',
 });
 document.onkeydown = keyDownSearch;
