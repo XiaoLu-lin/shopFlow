@@ -29,6 +29,7 @@ import org.ysling.shopflow.db.enums.GoodsStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.ysling.shopflow.db.enums.GrouponRuleStatus;
+import org.ysling.shopflow.db.entity.IdsBody;
 
 import javax.validation.Valid;
 import org.ysling.shopflow.core.annotation.JsonBody;
@@ -136,6 +137,25 @@ public class AdminGoodsController {
     @PostMapping("/delete")
     public Object delete(@JsonBody String id) {
         return goodsCoreService.goodsDelete(id);
+    }
+
+    /**
+     * 批量删除商品
+     */
+    @SaCheckPermission("admin:goods:batch-delete")
+    @RequiresPermissionsDesc(menu = {"商场管理", "商品管理"}, button = "批量删除")
+    @PostMapping("/batch-delete")
+    public Object batchDelete(@Valid @RequestBody IdsBody body) {
+        for (String id : body.getIds()) {
+            if (goodsService.findById(id) == null) {
+                continue;
+            }
+            Object result = goodsCoreService.goodsDelete(id);
+            if (!(result instanceof ResponseUtil) || !"success".equals(((ResponseUtil<?>) result).getErrno())) {
+                return ResponseUtil.deletedDataFailed();
+            }
+        }
+        return ResponseUtil.ok();
     }
 
     /**

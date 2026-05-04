@@ -49,6 +49,17 @@
         </el-col>
         <el-col :span="1.5">
           <el-button
+            type="danger"
+            plain
+            icon="el-icon-delete"
+            size="mini"
+            :disabled="multiple"
+            @click="handleBatchDelete"
+            v-permission="['POST /admin/goods/batch-delete']"
+          >批量删除</el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button
             :loading="downloadLoading"
             type="warning"
             plain
@@ -61,7 +72,9 @@
     </div>
 
     <!-- 查询结果 -->
-    <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
+    <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row @selection-change="handleSelectionChange">
+
+      <el-table-column type="selection" width="55" align="center" />
 
       <el-table-column type="expand">
         <template slot-scope="props">
@@ -201,9 +214,10 @@
 
 <script>
 
-import { listGoods, deleteGoods , updateOnSale} from '@/api/goods'
+import { listGoods, deleteGoods, batchDeleteGoods, updateOnSale } from '@/api/goods'
 import BackToTop from '@/components/BackToTop'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import _ from 'lodash'
 
 const defaultStatusOptions = [
   {
@@ -246,6 +260,8 @@ export default {
       list: [],
       total: 0,
       listLoading: true,
+      multiple: true,
+      multipleSelection: [],
       listQuery: {
         page: 1,
         limit: 20,
@@ -332,6 +348,38 @@ export default {
             title: '成功',
             message: '删除成功'
           })
+          this.getList()
+        })
+      }).catch(() => {})
+    },
+
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+      this.multiple = !val.length
+    },
+
+    handleBatchDelete() {
+      if (this.multipleSelection.length === 0) {
+        this.$message.error('请选择至少一条记录')
+        return
+      }
+      const ids = []
+      _.forEach(this.multipleSelection, function(item) {
+        ids.push(item.id)
+      })
+      this.$confirm('确定批量删除选中的商品?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        batchDeleteGoods({ ids: ids }).then(() => {
+          this.$notify.success({
+            title: '成功',
+            message: '批量删除商品成功'
+          })
+          this.multipleSelection = []
+          this.multiple = true
           this.getList()
         })
       }).catch(() => {})

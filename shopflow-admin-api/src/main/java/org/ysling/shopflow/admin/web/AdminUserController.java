@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.ysling.shopflow.db.enums.DealType;
+import org.ysling.shopflow.db.enums.UserStatus;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +93,24 @@ public class AdminUserController {
         user.setIntegral(null);
         if (userService.updateVersionSelective(user) <= 0){
             throw new RuntimeException("用户余额更新失败,请重试");
+        }
+        return ResponseUtil.ok();
+    }
+
+    /**
+     * 删除用户
+     */
+    @SaCheckPermission("admin:user:delete")
+    @RequiresPermissionsDesc(menu = {"用户管理", "会员管理"}, button = "删除")
+    @PostMapping("/delete")
+    public Object delete(@JsonBody String id) {
+        ShopflowUser user = userService.findById(id);
+        if (user == null) {
+            return ResponseUtil.deletedDataFailed();
+        }
+        user.setStatus(UserStatus.STATUS_OUT.getStatus());
+        if (userService.updateVersionSelective(user) == 0) {
+            return ResponseUtil.deletedDataFailed();
         }
         return ResponseUtil.ok();
     }

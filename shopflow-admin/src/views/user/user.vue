@@ -80,6 +80,7 @@
           <el-button type="primary" size="mini" @click="handleDetail(scope.row)">编辑</el-button>
           <el-button type="success" size="mini" @click="handleShare(scope.row)">分享</el-button>
           <el-button type="warning" size="mini" @click="handleDeal(scope.row)">余额</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope.row)">注销</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -123,7 +124,7 @@
 </template>
 
 <script>
-import { fetchList ,userDetail ,updateUser } from '@/api/user'
+import { fetchList ,userDetail ,updateUser, deleteUser } from '@/api/user'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 
@@ -240,6 +241,23 @@ export default {
         })
         this.getList()
       })
+    },
+
+    handleDelete(row) {
+      this.$confirm('确定注销该会员?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        deleteUser(row.id).then(() => {
+          this.$notify.success({
+            title: '成功',
+            message: '注销会员成功'
+          })
+          this.getList()
+        })
+      }).catch(() => {})
     }
   }
 }
