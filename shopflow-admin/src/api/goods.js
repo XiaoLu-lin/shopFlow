@@ -16,6 +16,14 @@ export function deleteGoods(id) {
   })
 }
 
+export function batchDeleteGoods(data) {
+  return request({
+    url: '/goods/batch-delete',
+    method: 'post',
+    data
+  })
+}
+
 export function publishGoods(data) {
   return request({
     url: '/goods/create',

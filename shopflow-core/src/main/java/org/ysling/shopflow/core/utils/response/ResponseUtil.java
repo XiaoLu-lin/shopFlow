@@ -179,10 +179,9 @@ public class ResponseUtil<T> implements Serializable {
 
     /**删除失败，请再尝试一次*/
     public static <T> ResponseUtil<T> deletedDataFailed() {
-        return fail(ResponseStatus.SYSTEM_ERROR_B0002);
+        return fail(ResponseStatus.SYSTEM_ERROR_B0003);
     }
 
 
 
 }
-

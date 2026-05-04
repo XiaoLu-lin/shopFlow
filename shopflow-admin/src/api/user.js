@@ -32,6 +32,14 @@ export function updateUser(data) {
   })
 }
 
+export function deleteUser(id) {
+  return request({
+    url: '/user/delete',
+    method: 'post',
+    params: { id }
+  })
+}
+
 export function listAddress(query) {
   return request({
     url: '/address/list',
