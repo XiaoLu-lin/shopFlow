@@ -57,3 +57,6 @@ Servers
 .metadata
 upload
 gen_code
+
+### wechat devtools private config ###
+/project.private.config.json
