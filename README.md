@@ -18,12 +18,12 @@ SaaS平台请进群资讯群主
 
 ### 2.管理后台演示
 
-| 管理后台首页                                                | 扫码登陆                                               | 
-|-------------------------------------------------------|----------------------------------------------------|
-| <img src="./doc/pics/admin-dashboard.png" width="344" > | <img src="doc/pics/qrcode-login.png" width="344" > | 
+| 管理后台首页                                                |
+|-------------------------------------------------------|
+| <img src="./doc/pics/admin-dashboard.png" width="720" alt="管理后台首页"> |
 
-1. 浏览器打开，输入以下网址: [https://www.ysling.cn](https://www.ysling.cn)
-2. 登录密码  用户名：`admin123`，管理员密码：`admin123` 验证码需要发到邮箱 联系管理员获取
+1. 浏览器打开，输入以下网址: [https://manager.enshipeixue.com/](https://manager.enshipeixue.com/)
+2. 登录密码  用户名：`admin123`，管理员密码：`admin123`
 > 注意：此实例只是测试管理后台。
 
 ### 系统功能

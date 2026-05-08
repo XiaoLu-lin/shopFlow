@@ -13,10 +13,6 @@
           <ShopFlow-git id="ShopFlow-git" class="right-menu-item hover-effect" />
         </el-tooltip>
 
-        <el-tooltip content="文档地址" effect="dark" placement="bottom">
-          <ShopFlow-doc id="ShopFlow-doc" class="right-menu-item hover-effect" />
-        </el-tooltip>
-
         <el-tooltip content="通知中心" effect="dark" placement="bottom">
           <notice class="right-menu-item" />
         </el-tooltip>
@@ -63,7 +59,6 @@ import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import Notice from '@/components/Notice'
 import ShopFlowGit from '@/components/ShopFlow/Git'
-import ShopFlowDoc from '@/components/ShopFlow/Doc'
 
 export default {
   components: {
@@ -74,8 +69,7 @@ export default {
     SizeSelect,
     Search,
     Notice,
-    ShopFlowGit,
-    ShopFlowDoc
+    ShopFlowGit
   },
   computed: {
     ...mapGetters([
