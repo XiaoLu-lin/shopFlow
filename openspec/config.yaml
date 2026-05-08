@@ -4,6 +4,8 @@ context: |
   项目名称：ShopFlow / litemall-plus-master
   项目类型：多模块电商系统（Spring Boot 后端 + Vue 管理端 + 微信小程序）
   默认输出语言：中文
+  协作基线：OpenSpec × Superpowers 七阶段工作流
+  推荐阶段：brainstorming -> explore -> propose -> writing-plans -> apply -> review -> verify -> archive
   技术栈：
     - Java 8
     - Spring Boot 2.6.x
@@ -38,6 +40,9 @@ context: |
     - 输入边界必须显式校验
     - 异常处理不能静默吞错
     - 数据结构、接口返回和 SQL 变更必须同时检查上下游影响
+  Superpowers 工件：
+    - brainstorming 设计稿：`doc/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
+    - writing-plans 计划：`doc/superpowers/plans/YYYY-MM-DD-<topic>-plan.md`
   验证要求：
     - 纯逻辑优先补单元测试
     - 跨模块改动至少做集成验证
@@ -46,10 +51,15 @@ context: |
     - 高风险交易链路需要补端到端或人工验证步骤
 
 rules:
+  explore:
+    - 涉及新增能力、行为变更、流程调整或非平凡重构时，先显式使用 `superpowers:brainstorming`
+    - brainstorming 阶段逐个问题确认，未确认事项不得直接带入建档
+    - 完成探索后先过第一确认闸门，再创建或更新 change 工件
   proposal:
     - 先讲清 why、what、impact，不把实现细节塞进 proposal
     - 变更范围、受影响模块、主要风险必须可读
     - 明确区分管理端、小程序端、后台接口和数据层影响
+    - 若已有 brainstorming 设计稿，proposal 应引用其路径并保持结论一致
   specs:
     - requirement 必须描述行为，不写实现细节
     - 只有行为变化时才修改已有 capability
@@ -57,19 +67,34 @@ rules:
   design:
     - 涉及主流程、跨模块、接口兼容、权限、租户、支付、存储、消息通知、迁移、安全、性能时必须补 design
     - design 重点讲决策和权衡，不写逐行实现
+    - design 应沉淀与实施直接相关的兼容约束、回滚思路、复用入口和边界判断
   tasks:
     - 任务按依赖顺序拆分
     - 单项任务应能在一次会话内完成
     - tasks 要能直接驱动 apply
     - 跨前后端改动要显式写清联调与验证任务
+    - 每个任务都应补 1 到 3 条“验收契约”，使用可验证措辞，如 `MUST`、`SHALL`、`不得`
+    - 多任务或跨模块 change 默认补 `writing-plans` 计划；仅单文件、小范围、无并行价值改动才可跳过
+  planning:
+    - "`writing-plans` 产物用于说明怎么做，不替代 tasks 的完成状态管理"
+    - plan 应标明阶段划分、可并行任务、主线串行任务、验证命令和检查点
+    - 子 agent 不直接改 tasks，统一由主线根据完成报告同步状态
   apply:
     - 实现前先确认 proposal、specs、design、tasks 与当前理解一致
+    - 实现前如存在 plan，先确认 plan 与 tasks、design 一致
     - coding 阶段显式使用 `superpowers:test-driven-development`
     - 任务之间或阶段性完成后显式使用 `superpowers:requesting-code-review`
     - 在宣称完成前显式使用 `superpowers:verification-before-completion`
     - 实现完成后自动进入 review
     - review 完成后先停止并等待用户确认，再决定是否 archive
     - 修改应尽量最小化，避免顺手大重构
+    - 独立任务可以并行，但共享同一个 change 上下文和兼容约束
+  review:
+    - review 至少检查需求覆盖、行为回归、边界遗漏、残余风险、验证充分性和验收契约兑现情况
+    - review 结果建议落入 `openspec/changes/<change-name>/review.md`
+  verify:
+    - archive 前先显式核对 tasks、specs、review、代码和验证证据是否一致
+    - 未运行最新验证命令前，不得声称完成、通过或可归档
   archive:
     - archive 前先确认 specs 与实际代码状态一致
     - archive 前先沉淀长期有效规则到合适文档
