@@ -21,7 +21,6 @@ module.exports = {
         "allowFirstLine": false
       }
     }],
-    "eslint space-before-function-paren": ["error", "never"],
     "vue/singleline-html-element-content-newline": "off",
     "vue/multiline-html-element-content-newline":"off",
     "vue/name-property-casing": ["error", "PascalCase"],

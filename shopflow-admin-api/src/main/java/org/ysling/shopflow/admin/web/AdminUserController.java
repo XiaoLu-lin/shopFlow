@@ -22,6 +22,7 @@ import org.ysling.shopflow.admin.annotation.RequiresPermissionsDesc;
 import org.ysling.shopflow.admin.model.user.body.DealingSlipListBody;
 import org.ysling.shopflow.admin.model.user.body.UserListBody;
 import org.ysling.shopflow.admin.model.user.result.DealingSlipListResult;
+import org.ysling.shopflow.admin.model.user.result.UserBatchDeleteResult;
 import org.ysling.shopflow.core.annotation.JsonBody;
 import org.ysling.shopflow.core.utils.response.ResponseUtil;
 import org.ysling.shopflow.core.weixin.enums.FailReasonStatus;
@@ -30,6 +31,7 @@ import org.ysling.shopflow.db.domain.ShopflowDealingSlip;
 import org.ysling.shopflow.db.domain.ShopflowUser;
 import org.ysling.shopflow.admin.service.AdminDealingSlipService;
 import org.ysling.shopflow.admin.service.AdminUserService;
+import org.ysling.shopflow.db.entity.IdsBody;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -113,6 +115,34 @@ public class AdminUserController {
             return ResponseUtil.deletedDataFailed();
         }
         return ResponseUtil.ok();
+    }
+
+    /**
+     * 批量注销用户
+     */
+    @SaCheckPermission("admin:user:delete")
+    @RequiresPermissionsDesc(menu = {"用户管理", "会员管理"}, button = "删除")
+    @PostMapping("/batch-delete")
+    public Object batchDelete(@Valid @RequestBody IdsBody body) {
+        int successCount = 0;
+        int failCount = 0;
+        for (String id : body.getIds()) {
+            ShopflowUser user = userService.findById(id);
+            if (user == null || UserStatus.STATUS_OUT.getStatus().equals(user.getStatus())) {
+                failCount++;
+                continue;
+            }
+            user.setStatus(UserStatus.STATUS_OUT.getStatus());
+            if (userService.updateVersionSelective(user) > 0) {
+                successCount++;
+            } else {
+                failCount++;
+            }
+        }
+        UserBatchDeleteResult result = new UserBatchDeleteResult();
+        result.setSuccessCount(successCount);
+        result.setFailCount(failCount);
+        return ResponseUtil.ok(result);
     }
 
     /**

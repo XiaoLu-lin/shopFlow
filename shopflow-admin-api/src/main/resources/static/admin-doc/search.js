@@ -1321,11 +1321,17 @@ api[0].list[34].list.push({
 api[0].list[34].list.push({
     order: '5',
     deprecated: 'false',
+    url: 'https://manager.enshipeixue.com/admin/user/batch-delete',
+    desc: '批量注销用户',
+});
+api[0].list[34].list.push({
+    order: '6',
+    deprecated: 'false',
     url: 'https://manager.enshipeixue.com/admin/user/upload',
     desc: '用户批量上传',
 });
 api[0].list[34].list.push({
-    order: '6',
+    order: '7',
     deprecated: 'false',
     url: 'https://manager.enshipeixue.com/admin/user/deal-list',
     desc: '用户交易记录',
