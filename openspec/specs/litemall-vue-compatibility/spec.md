@@ -1,15 +1,15 @@
-# litemall-vue-compatibility Specification
+# shopflow-h5 Legacy Compatibility Specification
 
 ## Purpose
-TBD - created by archiving change align-litemall-vue-tenant-user-headers. Update Purpose after archive.
+Define the compatibility contract that lets the `shopflow-h5` frontend, imported from the legacy `litemall-vue` H5 project, work with the current ShopFlow wx APIs.
 ## Requirements
-### Requirement: Legacy litemall-vue frontend must bootstrap a ShopFlow tenant context before protected wx requests
+### Requirement: ShopFlow H5 frontend must bootstrap a ShopFlow tenant context before protected wx requests
 
-导入的旧 `litemall-vue` 前台在访问当前 ShopFlow 用户侧接口时，MUST 先基于 `appid` 建立可用的租户上下文，不能继续假设所有 `/wx/*` 请求只依赖单一登录 token。
+由旧 `litemall-vue` 导入并更名后的 `shopflow-h5` 前台在访问当前 ShopFlow 用户侧接口时，MUST 先基于 `appid` 建立可用的租户上下文，不能继续假设所有 `/wx/*` 请求只依赖单一登录 token。
 
 #### Scenario: homepage bootstrap carries appid and receives tenant token
 
-- **Given** 旧 `litemall-vue` 前台首次进入首页且本地尚未保存租户 token
+- **Given** `shopflow-h5` 前台首次进入首页且本地尚未保存租户 token
 - **When** 前台请求首页初始化接口
 - **Then** 请求必须显式携带当前环境可用的 `appid`
 - **And** 前台必须接收首页返回中的租户 token 并保存到本地
@@ -35,9 +35,9 @@ TBD - created by archiving change align-litemall-vue-tenant-user-headers. Update
 - **Then** 前台不应伪造或写入无效租户 token
 - **And** 初始化失败信息应保持可见，便于继续排查配置问题
 
-### Requirement: Legacy litemall-vue frontend must map stored user token to the current ShopFlow user header
+### Requirement: ShopFlow H5 frontend must map stored user token to the current ShopFlow user header
 
-旧 `litemall-vue` 前台如果本地已经保存用户 token，MUST 按当前 ShopFlow 用户侧协议发送 `X-ShopFlow-User-Token`，而不是继续默认发送 `X-Litemall-Token`。
+`shopflow-h5` 前台如果本地已经保存用户 token，MUST 按当前 ShopFlow 用户侧协议发送 `X-ShopFlow-User-Token`，而不是继续默认发送旧协议的 `X-Litemall-Token`。
 
 #### Scenario: logged-in request sends ShopFlow user token header
 
@@ -53,9 +53,9 @@ TBD - created by archiving change align-litemall-vue-tenant-user-headers. Update
 - **Then** 请求不应发送空值的 `X-ShopFlow-User-Token`
 - **And** 页面仍可按现有匿名访问路径继续运行
 
-### Requirement: Legacy litemall-vue frontend must restore ordinary user account login without changing the current admin binding flow
+### Requirement: ShopFlow H5 frontend must restore ordinary user account login without changing the current admin binding flow
 
-旧 `litemall-vue` 登录页 MUST 恢复普通用户账号密码登录能力，但不能通过改写当前 `/wx/auth/login` 的管理员绑定语义来实现。
+`shopflow-h5` 登录页 MUST 恢复普通用户账号密码登录能力，但不能通过改写当前 `/wx/auth/login` 的管理员绑定语义来实现。
 
 #### Scenario: legacy login does not call the admin binding flow
 
@@ -78,9 +78,9 @@ TBD - created by archiving change align-litemall-vue-tenant-user-headers. Update
 - **Then** 系统必须返回明确可理解的错误信息
 - **And** 不能继续落入误导性的第三方授权错误
 
-### Requirement: Legacy litemall-vue frontend must align registration, captcha, and password reset with the current wx auth APIs
+### Requirement: ShopFlow H5 frontend must align registration, captcha, and password reset with the current wx auth APIs
 
-旧 `litemall-vue` 前台的注册、短信验证码和找回密码流程 MUST 对齐当前 ShopFlow 用户侧真实可用的 `/wx/auth/*` 接口，而不是继续调用历史路径或停留在未实现状态。
+`shopflow-h5` 前台的注册、短信验证码和找回密码流程 MUST 对齐当前 ShopFlow 用户侧真实可用的 `/wx/auth/*` 接口，而不是继续调用历史路径或停留在未实现状态。
 
 #### Scenario: registration captcha uses the current mobile captcha endpoint
 
@@ -113,4 +113,3 @@ TBD - created by archiving change align-litemall-vue-tenant-user-headers. Update
 - **When** 产出 review 结论
 - **Then** review 必须分别记录已完成的首页、双 header、登录、注册、找回密码兼容项
 - **And** 仍未纳入本次范围的旧接口路径差异、历史邮箱分支或其他残余差异必须被单独标注
-
