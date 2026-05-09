@@ -138,53 +138,59 @@ api[0].list[3].list.push({
 api[0].list[3].list.push({
     order: '3',
     deprecated: 'false',
+    url: 'https://manager.enshipeixue.com/wx/auth/login_legacy',
+    desc: '旧 H5 普通用户账号登录',
+});
+api[0].list[3].list.push({
+    order: '4',
+    deprecated: 'false',
     url: 'https://manager.enshipeixue.com/wx/auth/captcha/mobile',
     desc: '请求手机验证码 TODO 这里需要一定机制防止短信验证码被滥用',
 });
 api[0].list[3].list.push({
-    order: '4',
+    order: '5',
     deprecated: 'false',
     url: 'https://manager.enshipeixue.com/wx/auth/captcha/mail',
     desc: '请求邮箱验证码 TODO 这里需要一定机制防止短信验证码被滥用',
 });
 api[0].list[3].list.push({
-    order: '5',
+    order: '6',
     deprecated: 'false',
     url: 'https://manager.enshipeixue.com/wx/auth/login_by_weixin',
     desc: '微信登录',
 });
 api[0].list[3].list.push({
-    order: '6',
+    order: '7',
     deprecated: 'false',
     url: 'https://manager.enshipeixue.com/wx/auth/register',
     desc: '账号注册',
 });
 api[0].list[3].list.push({
-    order: '7',
+    order: '8',
     deprecated: 'false',
     url: 'https://manager.enshipeixue.com/wx/auth/reset',
     desc: '账号密码重置',
 });
 api[0].list[3].list.push({
-    order: '8',
+    order: '9',
     deprecated: 'false',
     url: 'https://manager.enshipeixue.com/wx/auth/resetPhone',
     desc: '账号手机号码重置',
 });
 api[0].list[3].list.push({
-    order: '9',
+    order: '10',
     deprecated: 'false',
     url: 'https://manager.enshipeixue.com/wx/auth/profile',
     desc: '账号信息更新',
 });
 api[0].list[3].list.push({
-    order: '10',
+    order: '11',
     deprecated: 'false',
     url: 'https://manager.enshipeixue.com/wx/auth/bindPhone',
     desc: '微信手机号码绑定',
 });
 api[0].list[3].list.push({
-    order: '11',
+    order: '12',
     deprecated: 'false',
     url: 'https://manager.enshipeixue.com/wx/auth/logout',
     desc: '退出登陆',

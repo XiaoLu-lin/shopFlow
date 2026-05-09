@@ -67,3 +67,15 @@
 - 默认输出语言：中文。
 - 新增说明文档、日志文案、提示信息优先保持清晰可读。
 - 注释只写必要信息，重点说明意图、边界和副作用。
+
+## 8. 本地启动速记
+
+- 本地后端统一启动聚合模块 `shopflow-all`，默认端口为 `6914`。
+- 后端依赖本机 MySQL 与 Redis：MySQL 配置见 `shopflow-db/src/main/resources/application-db.yml`，Redis 默认为 `127.0.0.1:6379`、db `0`。
+- 后端打包命令：`mvn -pl shopflow-all -am -DskipTests package`。
+- 后端启动命令：`java -jar shopflow-all/target/shopflow-all-0.1.0-exec.jar`。
+- 后端启动后可用 `curl -s -X POST http://localhost:6914/wx/home/auth -H 'Content-Type: application/json' --data '{"appid":"1649067"}'` 验证，正常应返回 `errno: success` 且 `data` 为租户 token 字符串。
+- H5 前台目录为 `litemall-vue`，推荐本地端口为 `6256`。
+- H5 前台启动命令：`cd litemall-vue && VUE_APP_BASE_API=http://localhost:6914/wx VUE_APP_SHOPFLOW_APPID=1649067 npm run serve -- --port 6256`。
+- H5 访问地址：`http://localhost:6256/#/`，登录页通常为 `http://localhost:6256/#/login?redirect=user`。
+- `litemall-vue/vue.config.js` 里历史默认端口 `6255`、代理目标 `http://localhost:8080`，本地联调优先使用上面的显式 `VUE_APP_BASE_API=http://localhost:6914/wx`，不要默认依赖 `8080`。

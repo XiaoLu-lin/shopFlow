@@ -45,8 +45,10 @@ import org.ysling.shopflow.wx.model.auth.result.WxLoginResult;
 import org.ysling.shopflow.wx.service.WxAdminService;
 import org.ysling.shopflow.wx.service.WxAuthService;
 import org.ysling.shopflow.wx.service.WxUserService;
+import org.ysling.shopflow.wx.support.LegacyH5AuthSupport;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -144,15 +146,56 @@ public class WxWebAuthService {
     }
 
     /**
+     * 旧 H5 普通用户账号登录
+     */
+    public Object legacyLogin(AuthLegacyLoginBody body) {
+        String mobile = LegacyH5AuthSupport.normalize(body.getMobile());
+        String username = LegacyH5AuthSupport.normalize(body.getUsername());
+        String email = LegacyH5AuthSupport.normalize(body.getEmail());
+        String password = LegacyH5AuthSupport.normalize(body.getPassword());
+
+        if (StringUtils.hasText(email)) {
+            return ResponseUtil.fail("当前暂不支持邮箱登录");
+        }
+
+        List<ShopflowUser> userList = Collections.emptyList();
+        if (StringUtils.hasText(mobile)) {
+            userList = userService.queryByMobile(mobile);
+        } else if (StringUtils.hasText(username)) {
+            userList = userService.queryByUsername(username);
+        }
+
+        if (userList.size() != 1) {
+            return ResponseUtil.fail("账号或密码错误");
+        }
+
+        ShopflowUser user = userList.get(0);
+        if (user == null) {
+            return ResponseUtil.fail("账号或密码错误");
+        }
+        if (user.getStatus().equals(UserStatus.STATUS_DISABLED.getStatus())){
+            return ResponseUtil.fail("账号被禁用");
+        }
+        if (user.getStatus().equals(UserStatus.STATUS_OUT.getStatus())){
+            return ResponseUtil.fail("账号已注销");
+        }
+        if (!LegacyH5AuthSupport.matchesPassword(password, user.getPassword())) {
+            return ResponseUtil.fail("账号或密码错误");
+        }
+        user.setLastLoginTime(LocalDateTime.now());
+        if (adminService != null) {
+            // no-op branch keeps existing bean graph untouched; user login is stateless
+        }
+        return ResponseUtil.ok(LegacyH5AuthSupport.buildLoginResult(user));
+    }
+
+    /**
      * 请求手机验证码
      * TODO
      * 这里需要一定机制防止短信验证码被滥用
      * @param mobile 手机号码
      */
     public Object mobileCaptcha(String userId, String mobile) {
-        if(Objects.isNull(userId)){
-            return ResponseUtil.unlogin();
-        }
         if (!RegexUtil.isMobileSimple(mobile)) {
             return ResponseUtil.badArgumentValue();
         }
@@ -275,17 +318,20 @@ public class WxWebAuthService {
      * @return 登录结果
      */
     public Object register(AuthRegisterBody body, HttpServletRequest request){
+        String username = LegacyH5AuthSupport.normalize(body.getUsername());
         String password = body.getPassword();
         String mobile = body.getMobile();
         String code = body.getCode();
         String wxCode = body.getWxCode();
 
-        List<ShopflowUser> userList = userService.queryByMobile(mobile);
-        if (userList.size() > 0) {
-            return ResponseUtil.fail("用户名已注册");
+        if (StringUtils.hasText(username)) {
+            List<ShopflowUser> usernameList = userService.queryByUsername(username);
+            if (usernameList.size() > 0) {
+                return ResponseUtil.fail("用户名已注册");
+            }
         }
 
-        userList = userService.queryByMobile(mobile);
+        List<ShopflowUser> userList = userService.queryByMobile(mobile);
         if (userList.size() > 0) {
             return ResponseUtil.fail( "手机号已注册");
         }
@@ -321,7 +367,7 @@ public class WxWebAuthService {
         }
 
         ShopflowUser user = new ShopflowUser();
-        user.setUsername(openId);
+        user.setUsername(StringUtils.hasText(username) ? username : mobile);
         user.setPassword(CryptoUtil.encode(password));
         user.setMobile(mobile);
         user.setOpenid(openId);
@@ -336,7 +382,7 @@ public class WxWebAuthService {
 
         // userInfo
         UserInfo userInfo = new UserInfo();
-        userInfo.setNickName(mobile);
+        userInfo.setNickName(StringUtils.hasText(username) ? username : mobile);
         userInfo.setAvatarUrl(user.getAvatarUrl());
 
         // token

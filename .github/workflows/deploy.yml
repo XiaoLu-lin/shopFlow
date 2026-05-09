@@ -34,7 +34,7 @@ jobs:
           retention-days: 1
 
   build-frontend:
-    name: Build Frontend (Node / Vue)
+    name: Build Admin Frontend (Node / Vue)
     runs-on: ubuntu-latest
 
     steps:
@@ -61,4 +61,38 @@ jobs:
         with:
           name: frontend-dist
           path: shopflow-admin/dist/
+          retention-days: 1
+
+  build-h5:
+    name: Build H5 Frontend (litemall-vue)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node 16
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        working-directory: litemall-vue
+        run: npm install --legacy-peer-deps
+
+      - name: Run compatibility tests
+        working-directory: litemall-vue
+        run: node scripts/shopflow-compat.test.js
+
+      - name: Build production
+        working-directory: litemall-vue
+        env:
+          VUE_APP_SHOPFLOW_APPID: '1649067'
+        run: npm run build
+
+      - name: Upload H5 dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: h5-dist
+          path: litemall-vue/dist/
           retention-days: 1
