@@ -5,20 +5,20 @@
     <div class="filter-container">
       <el-form :model="listQuery" size="small" :inline="true">
         <el-form-item label="用户序号">
-          <el-input v-model="listQuery.userId" clearable class="filter-item" style="width: 200px;" placeholder="请输入用户Id"/>
+          <el-input v-model="listQuery.userId" clearable class="filter-item" style="width: 200px;" placeholder="请输入用户Id" />
         </el-form-item>
 
         <el-form-item label="邀请者序号">
-          <el-input v-model="listQuery.inviter" clearable class="filter-item" style="width: 200px;" placeholder="请输入邀请者序号"/>
+          <el-input v-model="listQuery.inviter" clearable class="filter-item" style="width: 200px;" placeholder="请输入邀请者序号" />
         </el-form-item>
 
         <el-form-item label="手机号码">
-          <el-input v-model="listQuery.mobile" clearable class="filter-item" style="width: 200px;" placeholder="请输入手机号"/>
+          <el-input v-model="listQuery.mobile" clearable class="filter-item" style="width: 200px;" placeholder="请输入手机号" />
         </el-form-item>
 
         <el-form-item label="用户等级">
           <el-select v-model="listQuery.level" clearable style="width: 200px" class="filter-item" placeholder="请选择用户等级">
-            <el-option v-for="item in levelOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            <el-option v-for="item in levelOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
 
@@ -31,19 +31,33 @@
           <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">导出</el-button>
         </el-form-item>
       </el-form>
+
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="1.5">
+          <el-button
+            type="danger"
+            plain
+            icon="el-icon-delete"
+            size="mini"
+            :disabled="multiple"
+            @click="handleBatchDelete"
+          >批量注销</el-button>
+        </el-col>
+      </el-row>
     </div>
 
     <!-- 查询结果 -->
-    <el-table v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row>
-      <el-table-column align="center" width="100px" label="用户序号" prop="id" sortable/>
+    <el-table ref="userTable" v-loading="listLoading" :data="list" element-loading-text="正在查询中。。。" border fit highlight-current-row @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" :selectable="isSelectable" />
+      <el-table-column align="center" width="100px" label="用户序号" prop="id" sortable />
 
       <el-table-column align="center" label="邀请者" prop="inviter">
         <template slot-scope="scope">
-          <el-tag >{{ scope.row.inviter }}</el-tag>
+          <el-tag>{{ scope.row.inviter }}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="用户昵称" prop="nickName"/>
+      <el-table-column align="center" label="用户昵称" prop="nickName" />
 
       <el-table-column align="center" label="用户头像" width="80">
         <template slot-scope="scope">
@@ -51,11 +65,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="手机号码" prop="mobile"/>
+      <el-table-column align="center" label="手机号码" prop="mobile" />
 
       <el-table-column align="center" label="性别" prop="gender">
         <template slot-scope="scope">
-          <el-tag >{{ genderDic[scope.row.gender] }}</el-tag>
+          <el-tag>{{ genderDic[scope.row.gender] }}</el-tag>
         </template>
       </el-table-column>
 
@@ -65,7 +79,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="用户余额" prop="integral"/>
+      <el-table-column align="center" label="用户余额" prop="integral" />
 
       <el-table-column align="center" label="状态" prop="status">
         <template slot-scope="scope">
@@ -73,7 +87,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="添加时间" prop="addTime"/>
+      <el-table-column align="center" label="添加时间" prop="addTime" />
 
       <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -124,9 +138,9 @@
 </template>
 
 <script>
-import { fetchList ,userDetail ,updateUser, deleteUser } from '@/api/user'
+import { fetchList, userDetail, updateUser, deleteUser, batchDeleteUser } from '@/api/user'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-
+import _ from 'lodash'
 
 const defaultLevelOptions = [
   {
@@ -152,6 +166,8 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
+      multiple: true,
+      multipleSelection: [],
       listQuery: {
         page: 1,
         limit: 20,
@@ -167,23 +183,34 @@ export default {
       levelDic: ['普通用户', 'VIP用户', '高级VIP用户'],
       statusDic: ['可用', '禁用', '注销'],
       userDialogVisible: false,
-      userDetail:{}
+      userDetail: {}
     }
   },
   created() {
     this.getList()
   },
   methods: {
+    resetSelection() {
+      this.multipleSelection = []
+      this.multiple = true
+      this.$nextTick(() => {
+        if (this.$refs.userTable) {
+          this.$refs.userTable.clearSelection()
+        }
+      })
+    },
+
     getList() {
       this.listLoading = true
-      if(this.listQuery.userId){
+      this.resetSelection()
+      if (this.listQuery.userId) {
         userDetail(this.listQuery.userId).then(response => {
-          this.list = [];
-          if(response.data){
+          this.list = []
+          if (response.data) {
             this.list.push(response.data)
             this.total = 1
             this.listLoading = false
-          }else{
+          } else {
             this.list = []
             this.total = 0
             this.listLoading = false
@@ -193,7 +220,7 @@ export default {
           this.total = 0
           this.listLoading = false
         })
-      }else{
+      } else {
         fetchList(this.listQuery).then(response => {
           this.list = response.data.list
           this.total = response.data.total
@@ -224,15 +251,15 @@ export default {
       this.userDialogVisible = true
     },
 
-    handleShare(row){
+    handleShare(row) {
       this.$router.push({ path: 'userShare', query: { id: row.id }})
     },
 
-    handleDeal(row){
+    handleDeal(row) {
       this.$router.push({ path: 'userDeal', query: { id: row.id }})
     },
 
-    handleUserUpdate(){
+    handleUserUpdate() {
       updateUser(this.userDetail).then((response) => {
         this.userDialogVisible = false
         this.$notify.success({
@@ -241,6 +268,15 @@ export default {
         })
         this.getList()
       })
+    },
+
+    isSelectable(row) {
+      return Number(row.status) !== 2
+    },
+
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+      this.multiple = !val.length
     },
 
     handleDelete(row) {
@@ -255,6 +291,35 @@ export default {
             title: '成功',
             message: '注销会员成功'
           })
+          this.getList()
+        })
+      }).catch(() => {})
+    },
+
+    handleBatchDelete() {
+      if (this.multipleSelection.length === 0) {
+        this.$message.error('请至少选择一条未注销会员记录')
+        return
+      }
+      const ids = []
+      _.forEach(this.multipleSelection, function(item) {
+        ids.push(item.id)
+      })
+      this.$confirm('确定批量注销选中的会员?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        batchDeleteUser({ ids: ids }).then((response) => {
+          const result = response.data || {}
+          const successCount = result.successCount || 0
+          const failCount = result.failCount || 0
+          this.$notify.success({
+            title: '成功',
+            message: `批量注销完成，成功 ${successCount} 条，失败 ${failCount} 条`
+          })
+          this.resetSelection()
           this.getList()
         })
       }).catch(() => {})

@@ -20,7 +20,7 @@ export function userDetail(id) {
   return request({
     url: '/user/detail',
     method: 'get',
-    params: {id}
+    params: { id }
   })
 }
 
@@ -37,6 +37,14 @@ export function deleteUser(id) {
     url: '/user/delete',
     method: 'post',
     params: { id }
+  })
+}
+
+export function batchDeleteUser(data) {
+  return request({
+    url: '/user/batch-delete',
+    method: 'post',
+    data
   })
 }
 
