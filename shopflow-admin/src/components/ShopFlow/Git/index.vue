@@ -9,7 +9,7 @@ export default {
   name: 'ShopFlowGit',
   data() {
     return {
-      url: 'https://gitee.com/JoyAtMeeting/shopflow'
+      url: 'https://github.com/XiaoLu-lin/shopFlow'
     }
   },
   methods: {
