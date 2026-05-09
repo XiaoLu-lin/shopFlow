@@ -13,6 +13,11 @@ import java.io.Serializable;
 public class AuthRegisterBody implements Serializable {
 
     /**
+     * 用户名（旧 H5 兼容可选）
+     */
+    private String username;
+
+    /**
      * 手机号
      */
     @NotValue(message = "手机号不能为空")

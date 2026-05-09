@@ -58,6 +58,14 @@ public class WxAuthController {
     }
 
     /**
+     * 旧 H5 普通用户账号登录
+     */
+    @PostMapping("login_legacy")
+    public Object legacyLogin(@Valid @RequestBody AuthLegacyLoginBody body) {
+        return authService.legacyLogin(body);
+    }
+
+    /**
      * 请求手机验证码
      * TODO
      * 这里需要一定机制防止短信验证码被滥用
@@ -65,7 +73,7 @@ public class WxAuthController {
      */
     @PostMapping("captcha/mobile")
     @RequestRateLimiter(rate = 10, rateInterval = 1, timeUnit = RateIntervalUnit.DAYS , errMsg = "验证码申请超过单日限制")
-    public Object mobileCaptcha(@LoginUser String userId, @JsonBody String mobile) {
+    public Object mobileCaptcha(@LoginUser(require = false) String userId, @JsonBody String mobile) {
         return authService.mobileCaptcha(userId , mobile);
     }
 

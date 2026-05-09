@@ -139,6 +139,59 @@ Spring Boot后端 + Vue管理员前端 + 微信小程序用户前端 + Vue用户
    > 这里只是最简启动方式，而微信登录、微信支付等功能需开发者设置才能运行，
    > 更详细方案请参考[文档](./doc/project.md)。
 
+## H5 登录流程留存
+
+当前仓库里的 `litemall-vue` 前台 H5，登录链路已经对齐到 ShopFlow 的 `wx-api` 普通用户登录体系，整体流程如下：
+
+```mermaid
+sequenceDiagram
+    participant U as 用户
+    participant H5 as litemall-vue 登录页
+    participant Req as request.js
+    participant WX as ShopFlow wx-api
+    participant LS as localStorage
+
+    U->>H5: 输入账号+密码
+    H5->>H5: 识别账号类型\nmobile / username / email
+
+    alt 本地没有 ShopFlowTenantToken
+        H5->>Req: 发起登录请求
+        Req->>WX: POST /wx/home/auth { appid }
+        WX-->>Req: tenant token
+        Req->>LS: 写入 ShopFlowTenantToken
+    end
+
+    H5->>Req: POST /wx/auth/login_legacy
+    Req->>WX: 携带 X-ShopFlow-TenantId
+    WX->>WX: 按 mobile/username 查普通用户
+    WX->>WX: 校验状态+密码\n兼容明文/BCrypt
+    WX-->>Req: userToken + userInfo
+    Req-->>H5: errno=success
+
+    H5->>LS: 写入 Authorization=userToken
+    H5->>LS: 写入 avatar / nickName
+    H5->>H5: window.location='#/user/'
+```
+
+补充说明：
+
+1. 前台登录接口不是后台管理员登录，而是普通用户 H5 兼容登录接口：`POST /wx/auth/login_legacy`。
+2. 登录前会自动做一次租户预热，请求 `POST /wx/home/auth`，并把返回值缓存到 `localStorage.ShopFlowTenantToken`。
+3. 正式登录请求会携带 `X-ShopFlow-TenantId` 请求头；登录成功后会把 `userToken` 落到 `localStorage.Authorization`。
+4. 路由守卫只看 `Authorization`，访问 `/user` 等 `meta.login = true` 页面时，没有本地登录态就会跳回 `/login`。
+5. 当前 `login_legacy` 支持手机号和用户名登录；邮箱登录明确不支持。
+6. 后端密码校验兼容历史明文密码和当前 BCrypt 密码。
+
+相关关键入口：
+
+- 前台登录页：`litemall-vue/src/views/login/login.vue`
+- 前台请求拦截：`litemall-vue/src/utils/request.js`
+- 前台兼容层：`litemall-vue/src/utils/shopflow-compat.js`
+- 前台 API 映射：`litemall-vue/src/api/api.js`
+- 后端登录控制器：`shopflow-wx-api/src/main/java/org/ysling/shopflow/wx/web/WxAuthController.java`
+- 后端登录实现：`shopflow-wx-api/src/main/java/org/ysling/shopflow/wx/web/impl/WxWebAuthService.java`
+- 后端兼容工具：`shopflow-wx-api/src/main/java/org/ysling/shopflow/wx/support/LegacyH5AuthSupport.java`
+
 ### 致谢
 
 | 框架                                                                                                                | 说明                                 | 版本         | 学习指南                                                           |
