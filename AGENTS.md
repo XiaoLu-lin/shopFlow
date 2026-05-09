@@ -52,13 +52,14 @@
 - `shopflow-db`：数据访问层，承载实体、领域对象、mapper、service 与 SQL 映射。
 - `shopflow-all`：聚合启动模块与整体装配入口。
 - `shopflow-admin`：Vue 2 + Element UI 管理端前端。
+- `shopflow-h5`：Vue 2 + Vant H5 前台，承载移动端网页前台页面、路由、请求封装和用户侧登录态兼容。
 - `shopflow-wx`：微信小程序前端。
 - `doc`：项目文档、FAQ、部署和说明材料。
 - `docker`：容器化部署相关文件。
 
 ## 4.1 包级 `AGENTS.md` 要求
 
-- `shopflow-admin-api`、`shopflow-wx-api`、`shopflow-core`、`shopflow-db`、`shopflow-admin`、`shopflow-wx` 默认都应有自己的 `AGENTS.md`。
+- `shopflow-admin-api`、`shopflow-wx-api`、`shopflow-core`、`shopflow-db`、`shopflow-admin`、`shopflow-h5`、`shopflow-wx` 默认都应有自己的 `AGENTS.md`。
 - 根 `AGENTS.md` 只写全局约束，不代替包内规则。
 - 包级 `AGENTS.md` 应补目录职责、局部边界、复用入口、命名与测试要求。
 - 如果包级规则与根规则冲突，以更近一级且更严格的规则为准。
@@ -103,7 +104,7 @@
 - 后端打包命令：`mvn -pl shopflow-all -am -DskipTests package`。
 - 后端启动命令：`java -jar shopflow-all/target/shopflow-all-0.1.0-exec.jar`。
 - 后端启动后可用 `curl -s -X POST http://localhost:6914/wx/home/auth -H 'Content-Type: application/json' --data '{"appid":"1649067"}'` 验证，正常应返回 `errno: success` 且 `data` 为租户 token 字符串。
-- H5 前台目录为 `litemall-vue`，推荐本地端口为 `6256`。
-- H5 前台启动命令：`cd litemall-vue && VUE_APP_BASE_API=http://localhost:6914/wx VUE_APP_SHOPFLOW_APPID=1649067 npm run serve -- --port 6256`。
+- H5 前台目录为 `shopflow-h5`，推荐本地端口为 `6256`。
+- H5 前台启动命令：`cd shopflow-h5 && VUE_APP_BASE_API=http://localhost:6914/wx VUE_APP_SHOPFLOW_APPID=1649067 npm run serve -- --port 6256`。
 - H5 访问地址：`http://localhost:6256/#/`，登录页通常为 `http://localhost:6256/#/login?redirect=user`。
-- `litemall-vue/vue.config.js` 里历史默认端口 `6255`、代理目标 `http://localhost:8080`，本地联调优先使用上面的显式 `VUE_APP_BASE_API=http://localhost:6914/wx`，不要默认依赖 `8080`。
+- `shopflow-h5/vue.config.js` 里历史默认端口 `6255`、代理目标 `http://localhost:8080`，本地联调优先使用上面的显式 `VUE_APP_BASE_API=http://localhost:6914/wx`，不要默认依赖 `8080`。

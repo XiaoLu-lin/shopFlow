@@ -1,7 +1,7 @@
 {
-  "name": "litemall-vue",
+  "name": "shopflow-h5",
   "version": "0.1.0",
-  "description": "litemall-vue basing on vant--mobile-mall 0.1.0",
+  "description": "ShopFlow H5 frontend based on the legacy litemall Vue mobile mall",
   "author": "litemall <linlinjava@163.com>",
   "license": "MIT",
   "private": true,
