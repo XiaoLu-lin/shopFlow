@@ -12,7 +12,8 @@
 ## 2. 复用与依赖边界
 
 - 优先复用入口：`src/api`、`src/utils/request.js`、`src/utils/shopflow-compat.js`、`src/router`、`src/store`。
-- 用户侧接口统一走 ShopFlow wx API，生产配置默认指向 `https://manager.enshipeixue.com/wx`。
+- 用户侧接口统一走 ShopFlow wx API，生产配置默认指向 `https://manager.enshipeixue.com/wx/`。
+- 线上部署时 H5 静态页面不要占用 `/wx` 路径；`/wx/*` 必须保留给后端 API，H5 推荐部署到 `/h5/` 或独立域名。
 - 租户上下文通过 `X-ShopFlow-TenantId` 传递，用户登录态通过 `X-ShopFlow-User-Token` 传递。
 - 不要恢复旧 `X-Litemall-Token` 作为当前请求协议，只能在兼容说明中作为历史背景出现。
 

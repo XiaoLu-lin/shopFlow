@@ -192,6 +192,12 @@ sequenceDiagram
 - 后端登录实现：`shopflow-wx-api/src/main/java/org/ysling/shopflow/wx/web/impl/WxWebAuthService.java`
 - 后端兼容工具：`shopflow-wx-api/src/main/java/org/ysling/shopflow/wx/support/LegacyH5AuthSupport.java`
 
+线上部署提醒：
+
+- `/wx/*` 是后端用户侧 API 命名空间，Nginx 必须反向代理到后端服务，不能落到静态前端目录。
+- H5 静态页面建议部署到 `/h5/` 或独立域名；如果放到 `/wx/`，会和 `/wx/home/auth`、`/wx/auth/login_legacy` 等接口路径冲突。
+- 生产环境 H5 的 `VUE_APP_BASE_API` 使用 `https://manager.enshipeixue.com/wx/`，避免裸 `/wx` 被 Nginx 规范化重定向。
+
 ### 致谢
 
 | 框架                                                                                                                | 说明                                 | 版本         | 学习指南                                                           |
