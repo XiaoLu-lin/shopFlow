@@ -53,7 +53,7 @@ import fieldGroup from '@/components/field-group/';
 
 import { authLoginByAccount } from '@/api/api';
 import { setLocalStorage } from '@/utils/local-storage';
-import shopflowCompat from '@/utils/shopflow-compat';
+import { persistLegacyLoginSession } from '@/utils/shopflow-compat';
 import { emailReg, mobileReg } from '@/utils/validate';
 
 import { Toast } from 'vant';
@@ -88,7 +88,7 @@ export default {
     login() {
       let loginData = this.getLoginData();
       authLoginByAccount(loginData).then(res => {
-        const session = shopflowCompat.persistLegacyLoginSession(
+        const session = persistLegacyLoginSession(
           window.localStorage,
           res.data
         );
@@ -110,7 +110,6 @@ export default {
       try {
         this.validate();
         this.login();
-        this.isLogining = false;
       } catch (err) {
         console.log(err.message);
         this.isLogining = false;

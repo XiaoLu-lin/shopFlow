@@ -1,8 +1,6 @@
 import axios from 'axios'
 import { Dialog, Toast } from 'vant';
-import shopflowCompat from '@/utils/shopflow-compat';
-
-const {
+import {
   applyShopFlowHeaders,
   extractTenantToken,
   getShopFlowHomeAuthPath,
@@ -15,7 +13,7 @@ const {
   shouldBootstrapTenant,
   withAppIdParam,
   writeTenantToken
-} = shopflowCompat;
+} from '@/utils/shopflow-compat';
 
 // create an axios instance
 const service = axios.create({

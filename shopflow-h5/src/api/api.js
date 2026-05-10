@@ -1,7 +1,5 @@
 import request from '@/utils/request'
-import shopflowCompat from '@/utils/shopflow-compat'
-
-const { resolveShopFlowAppId, withAppIdParam } = shopflowCompat;
+import { resolveShopFlowAppId, withAppIdParam } from '@/utils/shopflow-compat'
 
 const IndexUrl= '/home/index'; //首页数据接口
 export function getHome() {
@@ -159,7 +157,7 @@ export function cartAdd(data) {
     data
   })
 }
-const CartFastAdd='/cart/fastadd'; // 立即购买商品
+const CartFastAdd='/cart/fast/add'; // 立即购买商品
 export function cartFastAdd(data) {
   return request({
     url: CartFastAdd,
@@ -191,7 +189,7 @@ export function cartChecked(data) {
     data
   })
 }
-const CartGoodsCount='/cart/goodscount'; // 获取购物车商品件数
+const CartGoodsCount='/cart/count'; // 获取购物车商品件数
 export function cartGoodsCount() {
   return request({
     url: CartGoodsCount,

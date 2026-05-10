@@ -5,7 +5,7 @@ import 'vant/lib/icon/local.css';
 import '@/assets/scss/global.scss';
 import '@/assets/scss/iconfont/iconfont.css';
 
-import VueCountdown from '@chenfengyuan/vue-countdown';
+import VueCountdown from '@chenfengyuan/vue-countdown/dist/vue-countdown.esm';
 import store from './store'
 
 

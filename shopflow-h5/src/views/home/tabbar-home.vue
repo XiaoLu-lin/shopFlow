@@ -182,9 +182,7 @@
 import { getHome, goodsCategory, couponReceive } from '@/api/api';
 import scrollFixed from '@/mixin/scroll-fixed';
 import _ from 'lodash';
-import shopflowCompat from '@/utils/shopflow-compat';
-
-const { writeTenantToken } = shopflowCompat;
+import { writeTenantToken } from '@/utils/shopflow-compat';
 
 import {
   List,
