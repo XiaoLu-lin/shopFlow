@@ -1,0 +1,24 @@
+:root {
+  --sf-color-ink: 31 41 55;
+  --sf-color-page: 248 250 252;
+  --sf-color-shell: 255 255 255;
+  --sf-color-mist: 243 246 250;
+  --sf-color-brand: 59 130 246;
+  --sf-color-brand-soft: 239 246 255;
+  --sf-color-brand-deep: 37 99 235;
+  --sf-color-accent: 255 77 90;
+  --sf-color-sage: 226 239 230;
+  --sf-color-lilac: 241 245 249;
+  --sf-color-sky: 219 234 254;
+  --sf-color-peach: 254 242 242;
+  --sf-color-success: 22 163 74;
+  --sf-color-danger: 220 38 38;
+  --sf-color-line: 230 236 243;
+  --sf-shell-width: 30rem;
+  --sf-radius-card: 12px;
+  --sf-radius-panel: 10px;
+  --sf-radius-chip: 999px;
+  --sf-shadow-card: 0 6px 18px rgba(15, 23, 42, 0.08);
+  --sf-shadow-soft: 0 3px 10px rgba(15, 23, 42, 0.05);
+  --sf-shadow-brand: 0 8px 20px rgba(59, 130, 246, 0.18);
+}

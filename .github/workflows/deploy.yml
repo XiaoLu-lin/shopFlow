@@ -96,3 +96,37 @@ jobs:
           name: h5-dist
           path: shopflow-h5/dist/
           retention-days: 1
+
+  build-h5-next:
+    name: Build H5 Next Frontend (shopflow-h5-next)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: shopflow-h5-next
+        run: npm install
+
+      - name: Run unit tests
+        working-directory: shopflow-h5-next
+        run: npm test
+
+      - name: Build production
+        working-directory: shopflow-h5-next
+        env:
+          VITE_APP_SHOPFLOW_APPID: '1649067'
+        run: npm run build
+
+      - name: Upload H5 next dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: h5-next-dist
+          path: shopflow-h5-next/dist/
+          retention-days: 1

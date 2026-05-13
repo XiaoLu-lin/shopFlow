@@ -1,0 +1,251 @@
+{
+  "pages": [
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "ShopFlow",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/items/catalog/index",
+      "style": {
+        "navigationBarTitleText": "分类"
+      }
+    },
+    {
+      "path": "pages/items/search/index",
+      "style": {
+        "navigationBarTitleText": "搜索"
+      }
+    },
+    {
+      "path": "pages/items/detail/index",
+      "style": {
+        "navigationBarTitleText": "商品详情"
+      }
+    },
+    {
+      "path": "pages/items/category/index",
+      "style": {
+        "navigationBarTitleText": "分类商品"
+      }
+    },
+    {
+      "path": "pages/items/hot/index",
+      "style": {
+        "navigationBarTitleText": "热卖"
+      }
+    },
+    {
+      "path": "pages/items/new/index",
+      "style": {
+        "navigationBarTitleText": "新品"
+      }
+    },
+    {
+      "path": "pages/items/groupon/index",
+      "style": {
+        "navigationBarTitleText": "拼团"
+      }
+    },
+    {
+      "path": "pages/items/brand-list/index",
+      "style": {
+        "navigationBarTitleText": "品牌"
+      }
+    },
+    {
+      "path": "pages/items/brand/index",
+      "style": {
+        "navigationBarTitleText": "品牌详情"
+      }
+    },
+    {
+      "path": "pages/items/topic-list/index",
+      "style": {
+        "navigationBarTitleText": "专题"
+      }
+    },
+    {
+      "path": "pages/items/topic/index",
+      "style": {
+        "navigationBarTitleText": "专题详情"
+      }
+    },
+    {
+      "path": "pages/login/index",
+      "style": {
+        "navigationBarTitleText": "账号登录"
+      }
+    },
+    {
+      "path": "pages/login/register-get-code/index",
+      "style": {
+        "navigationBarTitleText": "注册"
+      }
+    },
+    {
+      "path": "pages/login/forget/index",
+      "style": {
+        "navigationBarTitleText": "找回密码"
+      }
+    },
+    {
+      "path": "pages/user/index",
+      "style": {
+        "navigationBarTitleText": "个人中心"
+      }
+    },
+    {
+      "path": "pages/order/cart/index",
+      "style": {
+        "navigationBarTitleText": "购物车"
+      }
+    },
+    {
+      "path": "pages/order/checkout/index",
+      "style": {
+        "navigationBarTitleText": "确认订单"
+      }
+    },
+    {
+      "path": "pages/order/payment/index",
+      "style": {
+        "navigationBarTitleText": "支付订单"
+      }
+    },
+    {
+      "path": "pages/order/payment-status/index",
+      "style": {
+        "navigationBarTitleText": "支付结果"
+      }
+    },
+    {
+      "path": "pages/order/detail/index",
+      "style": {
+        "navigationBarTitleText": "订单详情"
+      }
+    },
+    {
+      "path": "pages/user/order-list/index",
+      "style": {
+        "navigationBarTitleText": "我的订单"
+      }
+    },
+    {
+      "path": "pages/user/address/index",
+      "style": {
+        "navigationBarTitleText": "收货地址"
+      }
+    },
+    {
+      "path": "pages/user/address-edit/index",
+      "style": {
+        "navigationBarTitleText": "编辑地址"
+      }
+    },
+    {
+      "path": "pages/user/collect/index",
+      "style": {
+        "navigationBarTitleText": "我的收藏"
+      }
+    },
+    {
+      "path": "pages/user/profile/index",
+      "style": {
+        "navigationBarTitleText": "资料设置"
+      }
+    },
+    {
+      "path": "pages/user/help/index",
+      "style": {
+        "navigationBarTitleText": "帮助中心"
+      }
+    },
+    {
+      "path": "pages/user/service/index",
+      "style": {
+        "navigationBarTitleText": "服务中心"
+      }
+    },
+    {
+      "path": "pages/user/feedback/index",
+      "style": {
+        "navigationBarTitleText": "意见反馈"
+      }
+    },
+    {
+      "path": "pages/user/coupon/index",
+      "style": {
+        "navigationBarTitleText": "优惠券"
+      }
+    },
+    {
+      "path": "pages/user/refund/index",
+      "style": {
+        "navigationBarTitleText": "退款/售后"
+      }
+    },
+    {
+      "path": "pages/user/refund-detail/index",
+      "style": {
+        "navigationBarTitleText": "售后详情"
+      }
+    },
+    {
+      "path": "pages/user/refund-apply/index",
+      "style": {
+        "navigationBarTitleText": "申请售后"
+      }
+    },
+    {
+      "path": "pages/user/profile-edit-nickname/index",
+      "style": {
+        "navigationBarTitleText": "修改昵称"
+      }
+    },
+    {
+      "path": "pages/user/profile-edit-mobile/index",
+      "style": {
+        "navigationBarTitleText": "修改手机号"
+      }
+    },
+    {
+      "path": "pages/user/profile-edit-password/index",
+      "style": {
+        "navigationBarTitleText": "重置密码"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "ShopFlow",
+    "navigationBarBackgroundColor": "#f6f8fb",
+    "backgroundColor": "#f6f8fb"
+  },
+  "tabBar": {
+    "color": "#8a94a6",
+    "selectedColor": "#1677ff",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/items/catalog/index",
+        "text": "分类"
+      },
+      {
+        "pagePath": "pages/order/cart/index",
+        "text": "购物车"
+      },
+      {
+        "pagePath": "pages/user/index",
+        "text": "我的"
+      }
+    ]
+  }
+}
