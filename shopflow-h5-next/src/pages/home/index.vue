@@ -48,6 +48,25 @@
       </view>
     </view>
 
+    <view v-if="couponList.length" class="section">
+      <view class="section-head">
+        <text class="section-title">优惠券</text>
+        <text class="section-more">领取后下单自动抵扣</text>
+      </view>
+      <view class="coupon-list">
+        <view v-for="coupon in couponList.slice(0, 2)" :key="coupon.id" class="coupon-card">
+          <view>
+            <text class="coupon-name">{{ coupon.name }}</text>
+            <text class="coupon-desc">{{ coupon.desc }}</text>
+          </view>
+          <view class="coupon-side">
+            <text class="coupon-amount">¥{{ coupon.discount }}</text>
+            <text class="coupon-tag">{{ coupon.tag }}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
     <view v-if="newGoodsList.length" class="section">
       <view class="section-head">
         <text class="section-title">新品首发</text>
@@ -83,6 +102,7 @@ const home = ref<HomePayload | null>(null)
 
 const bannerList = computed(() => home.value?.banner || [])
 const channelList = computed(() => home.value?.channel || [])
+const couponList = computed(() => home.value?.couponList || [])
 const newGoodsList = computed(() => home.value?.newGoodsList || [])
 const channelEntries = computed(() => {
   const targets = [
@@ -311,6 +331,60 @@ function goDetail(id: number) {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16rpx;
+}
+
+.coupon-list {
+  display: grid;
+  gap: 14rpx;
+}
+
+.coupon-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+  padding: 22rpx 24rpx;
+  border-radius: 22rpx;
+  background: linear-gradient(135deg, #fff7e6 0%, #ffffff 100%);
+  box-shadow: 0 12rpx 28rpx rgba(23, 32, 51, 0.06);
+}
+
+.coupon-name {
+  display: block;
+  font-size: 28rpx;
+  line-height: 1.35;
+  color: #172033;
+}
+
+.coupon-desc {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  line-height: 1.45;
+  color: #7a8798;
+}
+
+.coupon-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8rpx;
+  flex-shrink: 0;
+}
+
+.coupon-amount {
+  font-size: 36rpx;
+  font-weight: 600;
+  line-height: 1;
+  color: #d97706;
+}
+
+.coupon-tag {
+  padding: 6rpx 12rpx;
+  border-radius: 999px;
+  background: rgba(217, 119, 6, 0.12);
+  color: #b45309;
+  font-size: 20rpx;
 }
 
 .goods-card {

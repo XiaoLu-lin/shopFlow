@@ -1,7 +1,7 @@
 <template>
-  <view class="page">
+  <view class="page" role="main">
     <view class="hero-card">
-      <text class="title">退款 / 售后</text>
+      <text class="title" role="heading" aria-level="1">退款 / 售后</text>
       <text class="desc">已接回真实售后列表接口，当前支持按状态查看与撤销申请中的售后单。</text>
     </view>
 
@@ -12,6 +12,7 @@
           :key="tab.label"
           class="tab-chip"
           :class="{ 'tab-chip--active': index === activeTab }"
+          role="button"
           @click="switchTab(index)"
         >
           {{ tab.label }}
@@ -39,7 +40,7 @@
           <text class="record-status" :class="resolveAftersaleStatusClass(record.statusText)">{{ record.statusText }}</text>
         </view>
 
-        <view class="goods-card" @click="goAftersaleDetail(record.orderId)">
+        <view class="goods-card" role="button" @click="goAftersaleDetail(record.orderId)">
           <image class="goods-image" :src="record.picUrl" mode="aspectFill" />
           <view class="goods-body">
             <text class="goods-title">{{ record.goodsName }}</text>
@@ -59,9 +60,9 @@
         </view>
 
         <view class="action-row">
-          <view class="ghost-btn" @click="goAftersaleDetail(record.orderId)">查看售后</view>
-          <view class="ghost-btn" @click="goOrderDetail(record.orderId)">查看订单</view>
-          <view v-if="canCancelAftersale(record.status)" class="dark-btn" @click="handleCancel(record.id)">撤销售后</view>
+          <view class="ghost-btn" role="button" @click="goAftersaleDetail(record.orderId)">查看售后</view>
+          <view class="ghost-btn" role="button" @click="goOrderDetail(record.orderId)">查看订单</view>
+          <view v-if="canCancelAftersale(record.status)" class="dark-btn" role="button" @click="handleCancel(record.id)">撤销售后</view>
         </view>
       </view>
     </view>

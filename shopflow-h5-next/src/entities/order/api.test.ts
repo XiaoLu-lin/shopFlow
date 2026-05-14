@@ -93,6 +93,7 @@ describe('order api', () => {
               cancel: true,
               pay: true,
               refund: false,
+              aftersale: false,
               confirm: false,
               delete: false,
               comment: false,
@@ -121,6 +122,7 @@ describe('order api', () => {
       },
     })
     expect(result.orderInfo.orderSn).toBe('SO20260510001')
+    expect(result.orderInfo.handleOption.aftersale).toBe(false)
     expect(result.orderGoods).toHaveLength(1)
   })
 
@@ -189,5 +191,51 @@ describe('order api', () => {
     })
     expect(result.orderIds).toEqual(['99'])
     expect(result.isPay).toBe(false)
+  })
+
+  test('requests order goods by legacy goodsId query and submits order comment payload', async () => {
+    client.get.mockResolvedValueOnce({
+      data: {
+        errno: 0,
+        data: {
+          id: 11,
+          goodsId: 101,
+          goodsName: '轻软跑鞋',
+          number: 1,
+          price: 88,
+          picUrl: 'shoe.png',
+          specifications: ['白色', '42'],
+        },
+      },
+    })
+    client.post.mockResolvedValueOnce({
+      data: {
+        errno: 0,
+        data: null,
+      },
+    })
+
+    const { fetchOrderCommentGoods, submitOrderComment } = await import('./api')
+    await fetchOrderCommentGoods(101)
+    await submitOrderComment({
+      goodsId: 101,
+      content: '穿着舒服',
+      star: 5,
+      hasPicture: true,
+      picUrls: ['https://cdn.shopflow.test/comment-1.png'],
+    })
+
+    expect(client.get).toHaveBeenLastCalledWith('/order/goods', {
+      params: {
+        goodsId: 101,
+      },
+    })
+    expect(client.post).toHaveBeenLastCalledWith('/order/comment', {
+      goodsId: 101,
+      content: '穿着舒服',
+      star: 5,
+      hasPicture: true,
+      picUrls: ['https://cdn.shopflow.test/comment-1.png'],
+    })
   })
 })

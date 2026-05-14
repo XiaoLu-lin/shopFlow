@@ -32,7 +32,13 @@ export interface ApiClientLike {
   get<T = unknown>(url: string, config?: RequestConfig): Promise<ApiResponse<T>>
   post<T = unknown>(url: string, data?: unknown, config?: RequestConfig): Promise<ApiResponse<T>>
   upload<T = unknown>(url: string, options: {
-    filePath: string
+    file?: File
+    filePath?: string
+    files?: Array<{
+      name?: string
+      file?: File
+      uri?: string
+    }>
     name: string
     formData?: Record<string, unknown>
     headers?: Record<string, string>
@@ -181,7 +187,13 @@ export function createApiClient(runtime: RequestRuntime = {}): ApiClientLike {
       })
     },
     async upload<T = unknown>(url: string, options: {
-      filePath: string
+      file?: File
+      filePath?: string
+      files?: Array<{
+        name?: string
+        file?: File
+        uri?: string
+      }>
       name: string
       formData?: Record<string, unknown>
       headers?: Record<string, string>
@@ -192,14 +204,16 @@ export function createApiClient(runtime: RequestRuntime = {}): ApiClientLike {
 
       const response = await uni.uploadFile({
         url: buildUrl(baseURL, url),
+        file: options.file,
         filePath: options.filePath,
+        files: options.files,
         name: options.name,
         formData: normalizeFormData(options.formData),
         header: sanitizeHeaders(resolvedConfig.headers),
         timeout: 5000,
       })
 
-      const normalizedHeader = normalizeHeaders(response.header)
+      const normalizedHeader = normalizeHeaders((response as typeof response & { header?: Record<string, string> }).header)
       const payload = parseUploadPayload(response.data)
 
       if (!isSuccessResponse(payload)) {

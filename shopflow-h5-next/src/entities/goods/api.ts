@@ -79,6 +79,32 @@ export interface GoodsDetailPayload {
   specificationList: GoodsSpecification[]
   productList: GoodsProduct[]
   userHasCollect: number
+  comment?: {
+    allCount: number
+    hasPicCount: number
+  }
+}
+
+export interface GoodsCommentCountPayload {
+  allCount: number
+  hasPicCount: number
+}
+
+export interface GoodsCommentItem {
+  id: number | string
+  nickName?: string
+  avatarUrl?: string
+  addTime?: string
+  content?: string
+  star?: number
+  picUrls?: string[]
+  adminContent?: string
+}
+
+export interface GoodsCommentListPayload {
+  list: GoodsCommentItem[]
+  page: number
+  pages: number
 }
 
 export interface TopicInfo {
@@ -168,6 +194,25 @@ export async function fetchNewGoodsList(params: { page: number; limit: number })
 export async function fetchGoodsDetail(id: number | string) {
   const response = await getApiClient().get<ApiEnvelope<GoodsDetailPayload>>('/goods/detail', {
     params: { id },
+  })
+  return response.data.data
+}
+
+export async function fetchGoodsCommentCount(goodsId: number | string) {
+  const response = await getApiClient().get<ApiEnvelope<GoodsCommentCountPayload>>('/goods/comment/count', {
+    params: { goodsId },
+  })
+  return response.data.data
+}
+
+export async function fetchGoodsCommentList(params: {
+  goodsId: number | string
+  page: number
+  limit: number
+  hasPicture: boolean
+}) {
+  const response = await getApiClient().get<ApiEnvelope<GoodsCommentListPayload>>('/goods/comment/list', {
+    params,
   })
   return response.data.data
 }

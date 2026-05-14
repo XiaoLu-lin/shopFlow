@@ -1,7 +1,7 @@
 <template>
-  <view class="page">
+  <view class="page" role="main">
     <view class="hero-card">
-      <text class="title">确认订单</text>
+      <text class="title" role="heading" aria-level="1">确认订单</text>
       <text class="desc">已接入结算接口，沿用旧站 `AddressId / CartId / CouponId / UserCouponId` 下单上下文。</text>
     </view>
 
@@ -12,7 +12,7 @@
           <text class="panel-copy">{{ checkedAddress?.tel || '请先到地址页设置' }}</text>
           <text class="panel-copy">{{ checkedAddress?.addressDetail || '当前结算页先展示地址摘要' }}</text>
         </view>
-        <view class="panel-action" @click="goSelectAddress">选择地址</view>
+        <view class="panel-action" role="button" @click="goSelectAddress">选择地址</view>
       </view>
     </view>
 
@@ -40,6 +40,7 @@
           <view
             class="coupon-chip"
             :class="{ 'coupon-chip--active': selectedCouponIndex === -1 }"
+            role="button"
             @click="selectCoupon(-1)"
           >
             不使用
@@ -49,6 +50,7 @@
             :key="coupon.id"
             class="coupon-chip"
             :class="{ 'coupon-chip--active': selectedCouponIndex === index }"
+            role="button"
             @click="selectCoupon(index)"
           >
             {{ coupon.name }} - ¥{{ coupon.discount }}
@@ -86,7 +88,7 @@
           <text class="price-label">实付</text>
           <text class="pay-price">¥ {{ checkoutData?.actualPrice || 0 }}</text>
         </view>
-        <view class="submit-btn" @click="submit">提交订单</view>
+        <view class="submit-btn" role="button" @click="submit">提交订单</view>
       </view>
     </view>
   </view>
@@ -187,6 +189,9 @@ async function submit() {
     uni.showToast({
       title: order.isPay ? '下单成功' : '订单已创建',
       icon: 'none',
+    })
+    uni.navigateTo({
+      url: `/pages/order/payment/index?orderId=${order.orderIds[0] || ''}&orderIds=${(order.orderIds || []).join(',')}`,
     })
   } catch (error) {
     console.error(error)

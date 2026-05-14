@@ -1,12 +1,12 @@
 <template>
-  <view class="page">
+  <view class="page" role="main">
     <view class="hero-card">
       <view class="hero-head">
         <view>
-          <text class="title">购物车</text>
+          <text class="title" role="heading" aria-level="1">购物车</text>
           <text class="desc">已接回旧站勾选、编辑、删除和数量修改语义。</text>
         </view>
-        <view v-if="cartItems.length" class="edit-btn" @click="editing = !editing">
+        <view v-if="cartItems.length" class="edit-btn" role="button" @click="editing = !editing">
           {{ editing ? '完成' : '编辑' }}
         </view>
       </view>
@@ -18,6 +18,7 @@
           <view
             class="check-dot"
             :class="{ 'check-dot--active': checkedIds.includes(item.id) }"
+            role="button"
             @click="toggleChecked(item.id)"
           >
             <text v-if="checkedIds.includes(item.id)" class="check-mark">✓</text>
@@ -32,13 +33,13 @@
             <view class="goods-foot">
               <text class="goods-price">¥ {{ item.price }}</text>
               <view v-if="editing" class="count-row">
-                <view class="count-btn" @click="updateQuantity(item.id, -1)">-</view>
+                <view class="count-btn" role="button" @click="updateQuantity(item.id, -1)">-</view>
                 <text class="count-value">{{ item.number }}</text>
-                <view class="count-btn" @click="updateQuantity(item.id, 1)">+</view>
+                <view class="count-btn" role="button" @click="updateQuantity(item.id, 1)">+</view>
               </view>
               <text v-else class="goods-count">x {{ item.number }}</text>
             </view>
-            <text v-if="editing" class="delete-btn" @click="removeItems([item.productId])">删除</text>
+            <text v-if="editing" class="delete-btn" role="button" @click="removeItems([item.productId])">删除</text>
           </view>
         </view>
       </view>
@@ -51,7 +52,7 @@
 
     <view class="footer-bar">
       <view class="footer-meta">
-        <view class="footer-check" @click="toggleAll">
+        <view class="footer-check" role="button" @click="toggleAll">
           <view class="check-dot" :class="{ 'check-dot--active': allChecked }">
             <text v-if="allChecked" class="check-mark">✓</text>
           </view>
@@ -65,7 +66,7 @@
           <text class="footer-price">¥ {{ totalPrice }}</text>
         </view>
       </view>
-      <view class="submit-btn" :class="{ 'submit-btn--disabled': !checkedIds.length }" @click="submitAction">
+      <view class="submit-btn" :class="{ 'submit-btn--disabled': !checkedIds.length }" role="button" @click="submitAction">
         {{ editing ? '删除所选商品' : '去结算' }}
       </view>
     </view>
@@ -204,7 +205,7 @@ async function submitAction() {
 <style scoped lang="scss">
 .page {
   min-height: 100vh;
-  padding: 20rpx 20rpx 180rpx;
+  padding: 20rpx 20rpx 240rpx;
   background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
 }
 
@@ -381,11 +382,12 @@ async function submitAction() {
   position: fixed;
   left: 20rpx;
   right: 20rpx;
-  bottom: 20rpx;
+  bottom: calc(112rpx + env(safe-area-inset-bottom));
   padding: 18rpx;
   border-radius: 12rpx;
   background: #ffffff;
   box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  z-index: 20;
 }
 
 .footer-check {

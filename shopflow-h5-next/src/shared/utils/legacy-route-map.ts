@@ -85,3 +85,20 @@ export function resolveLegacyHashRoute(input: string) {
 
   return ''
 }
+
+export function resolveLegacyHashRedirectTarget(input: string) {
+  const resolved = resolveLegacyHashRoute(input)
+
+  if (!resolved) {
+    return ''
+  }
+
+  const normalizedInput = trimHashPrefix(input)
+  const current = normalizedInput.startsWith('/') ? normalizedInput : `/${normalizedInput}`
+
+  if (resolved === current) {
+    return ''
+  }
+
+  return `#${resolved}`
+}

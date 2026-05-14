@@ -1,7 +1,7 @@
 <template>
-  <view class="page">
+  <view class="page" role="main">
     <view class="hero-card">
-      <text class="title">订单详情</text>
+      <text class="title" role="heading" aria-level="1">订单详情</text>
       <text class="desc">已接回旧站订单结构，当前支持查看和基础订单操作。</text>
     </view>
 
@@ -48,47 +48,133 @@
     </view>
 
     <view v-if="orderInfo" class="action-row">
-      <view v-if="orderInfo.handleOption.cancel" class="ghost-btn" @click="handleOrderAction(orderInfo.id, 'cancel')">取消订单</view>
-      <view v-if="orderInfo.handleOption.delete" class="ghost-btn" @click="handleOrderAction(orderInfo.id, 'delete')">删除订单</view>
-      <view v-if="orderInfo.handleOption.refund" class="ghost-btn" @click="goAftersaleApply(orderInfo.id)">申请售后</view>
-      <view v-if="orderInfo.handleOption.confirm" class="dark-btn" @click="handleOrderAction(orderInfo.id, 'confirm')">确认收货</view>
-      <view v-if="orderInfo.handleOption.pay" class="primary-btn" @click="goPay(orderInfo.id)">去支付</view>
+      <view
+        v-if="orderInfo.handleOption.cancel"
+        class="ghost-btn"
+        role="button"
+        @click="handleOrderAction(orderInfo.id, 'cancel')"
+      >取消订单</view>
+      <view
+        v-if="orderInfo.handleOption.delete"
+        class="ghost-btn"
+        role="button"
+        @click="handleOrderAction(orderInfo.id, 'delete')"
+      >删除订单</view>
+      <view
+        v-if="orderInfo.handleOption.comment && commentGoodsId"
+        class="ghost-btn"
+        role="button"
+        @click="goCommentPost(commentGoodsId)"
+      >去评价</view>
+      <view
+        v-if="orderInfo.handleOption.refund"
+        class="ghost-btn"
+        role="button"
+        @click="handleRefund(orderInfo.id)"
+      >申请退款</view>
+      <view
+        v-if="orderInfo.handleOption.aftersale"
+        class="ghost-btn"
+        role="button"
+        @click="goAftersaleApply(orderInfo.id)"
+      >申请售后</view>
+      <view
+        v-if="orderInfo.handleOption.confirm"
+        class="dark-btn"
+        role="button"
+        @click="handleOrderAction(orderInfo.id, 'confirm')"
+      >确认收货</view>
+      <view
+        v-if="orderInfo.handleOption.pay"
+        class="primary-btn"
+        role="button"
+        @click="goPay(orderInfo.id)"
+      >去支付</view>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
 import { onShow } from '@dcloudio/uni-app'
-import { ref } from 'vue'
-import { cancelUserOrder, confirmUserOrder, deleteUserOrder, fetchOrderDetail } from '@/entities/order/api'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { cancelUserOrder, confirmUserOrder, deleteUserOrder, fetchOrderDetail, refundUserOrder } from '@/entities/order/api'
 
 type UniPageWithOptions = {
   options?: Record<string, unknown>
 }
 
-const pageOptions = (getCurrentPages()[getCurrentPages().length - 1] as UniPageWithOptions | undefined)?.options || {}
-const orderId = typeof pageOptions.orderId === 'string' ? pageOptions.orderId : ''
-
 const orderInfo = ref<Awaited<ReturnType<typeof fetchOrderDetail>>['orderInfo'] | null>(null)
 const orderGoods = ref<Awaited<ReturnType<typeof fetchOrderDetail>>['orderGoods']>([])
+const commentGoodsId = computed(() => {
+  const firstGoods = orderGoods.value[0]
+
+  if (!firstGoods || firstGoods.comment) {
+    return 0
+  }
+
+  return Number(firstGoods.id || 0)
+})
 
 bootstrap()
 onShow(() => {
   void bootstrap()
 })
 
+onMounted(() => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  window.addEventListener('hashchange', handleHashChange)
+})
+
+onBeforeUnmount(() => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  window.removeEventListener('hashchange', handleHashChange)
+})
+
 async function bootstrap() {
-  if (!orderId) {
+  const currentOrderId = resolveOrderId()
+
+  if (!currentOrderId) {
+    orderInfo.value = null
+    orderGoods.value = []
     return
   }
 
   try {
-    const result = await fetchOrderDetail(orderId)
+    const result = await fetchOrderDetail(currentOrderId)
     orderInfo.value = result.orderInfo
     orderGoods.value = result.orderGoods || []
   } catch (error) {
     console.error(error)
   }
+}
+
+function resolveOrderId() {
+  if (typeof window !== 'undefined') {
+    const hash = window.location.hash || ''
+    const queryIndex = hash.indexOf('?')
+
+    if (queryIndex >= 0) {
+      const params = new URLSearchParams(hash.slice(queryIndex + 1))
+      const value = params.get('orderId')
+
+      if (value) {
+        return value
+      }
+    }
+  }
+
+  const pageOptions = (getCurrentPages()[getCurrentPages().length - 1] as UniPageWithOptions | undefined)?.options || {}
+  return typeof pageOptions.orderId === 'string' ? pageOptions.orderId : ''
+}
+
+function handleHashChange() {
+  void bootstrap()
 }
 
 function goPay(id: string) {
@@ -100,6 +186,29 @@ function goPay(id: string) {
 function goAftersaleApply(id: string) {
   uni.navigateTo({
     url: `/pages/user/refund-apply/index?orderId=${id}`,
+  })
+}
+
+async function handleRefund(id: string) {
+  try {
+    await refundUserOrder(Number(id))
+    await bootstrap()
+    uni.showToast({
+      title: '已申请订单退款',
+      icon: 'none',
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+function goCommentPost(goodsId: number) {
+  if (!goodsId) {
+    return
+  }
+
+  uni.navigateTo({
+    url: `/pages/order/comment-post/index?goodsId=${goodsId}`,
   })
 }
 

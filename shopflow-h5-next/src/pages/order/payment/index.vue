@@ -1,7 +1,7 @@
 <template>
-  <view class="page">
+  <view class="page" role="main">
     <view class="hero-card">
-      <text class="title">支付订单</text>
+      <text class="title" role="heading" aria-level="1">支付订单</text>
       <text class="desc">当前先保持旧站“微信支付优先”的兼容路径。</text>
     </view>
 
@@ -19,14 +19,14 @@
     <view class="panel">
       <text class="panel-title">选择支付方式</text>
       <view class="pay-list">
-        <view class="pay-item" :class="{ 'pay-item--active': payWay === 'wx' }" @click="payWay = 'wx'">
+        <view class="pay-item" :class="{ 'pay-item--active': payWay === 'wx' }" role="button" @click="payWay = 'wx'">
           <view>
             <text class="pay-title">微信支付</text>
             <text class="pay-copy">{{ inWechat ? '当前在微信内，可优先走 JSAPI' : '当前环境会优先尝试 H5 支付地址' }}</text>
           </view>
           <text class="pay-state">已选</text>
         </view>
-        <view class="pay-item" :class="{ 'pay-item--active': payWay === 'ali' }" @click="payWay = 'ali'">
+        <view class="pay-item" :class="{ 'pay-item--active': payWay === 'ali' }" role="button" @click="payWay = 'ali'">
           <view>
             <text class="pay-title">支付宝</text>
             <text class="pay-copy">保留入口，链路待后续补齐</text>
@@ -36,7 +36,7 @@
       </view>
     </view>
 
-    <view class="submit-btn" @click="pay">去支付</view>
+    <view class="submit-btn" role="button" @click="pay">去支付</view>
   </view>
 </template>
 
@@ -135,6 +135,9 @@ async function payInMiniProgram() {
 
   await uni.requestPayment({
     provider: 'wxpay',
+    orderInfo: {
+      orderIds,
+    },
     timeStamp: String(prepayResult.timeStamp || ''),
     nonceStr: String(prepayResult.nonceStr || ''),
     package: String(prepayResult.packageValue || ''),

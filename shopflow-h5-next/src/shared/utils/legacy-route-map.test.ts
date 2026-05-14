@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { resolveLegacyHashRoute, splitLegacyHashRoute } from './legacy-route-map'
+import { resolveLegacyHashRedirectTarget, resolveLegacyHashRoute, splitLegacyHashRoute } from './legacy-route-map'
 
 describe('legacy route map', () => {
   test('splits legacy hash path and query', () => {
@@ -20,5 +20,13 @@ describe('legacy route map', () => {
     expect(resolveLegacyHashRoute('#/order/payment/success?orderId=10')).toBe(
       '/pages/order/payment-status/index?status=success&orderId=10',
     )
+  })
+
+  test('builds redirect hash for legacy h5 routes', () => {
+    expect(resolveLegacyHashRedirectTarget('http://localhost:6257/#/order')).toBe('#/pages/order/cart/index')
+    expect(resolveLegacyHashRedirectTarget('#/order/payment/success?orderId=10')).toBe(
+      '#/pages/order/payment-status/index?status=success&orderId=10',
+    )
+    expect(resolveLegacyHashRedirectTarget('#/pages/order/cart/index')).toBe('')
   })
 })

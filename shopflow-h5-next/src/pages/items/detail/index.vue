@@ -32,6 +32,14 @@
       <text class="stock-copy">{{ completedSelection ? `库存 ${matchedStock}` : '请选择完整规格后再购买' }}</text>
     </view>
 
+    <view class="panel" role="button" @click="goCommentList">
+      <view class="comment-head">
+        <text class="panel-title">商品评价</text>
+        <text class="panel-link">查看全部评论</text>
+      </view>
+      <text class="comment-copy">共 {{ commentCount }} 条评价，{{ hasPicCount }} 条带图</text>
+    </view>
+
     <view v-if="specList.length" class="panel">
       <text class="panel-title">选择规格</text>
       <view class="sku-group" v-for="(item, groupIndex) in specList" :key="item.name">
@@ -104,6 +112,8 @@ const matchedProduct = computed(() => (detail.value ? resolveMatchedProduct(deta
 const completedSelection = computed(() => (detail.value ? hasCompletedSkuSelection(detail.value, selectedValueIds.value) : false))
 const matchedPrice = computed(() => matchedProduct.value?.price ?? detail.value?.info.retailPrice ?? '--')
 const matchedStock = computed(() => matchedProduct.value?.number ?? 0)
+const commentCount = computed(() => detail.value?.comment?.allCount || 0)
+const hasPicCount = computed(() => detail.value?.comment?.hasPicCount || 0)
 
 bootstrap()
 
@@ -239,6 +249,16 @@ function goCart() {
     url: '/pages/order/cart/index',
   })
 }
+
+function goCommentList() {
+  if (!id || typeof id !== 'string') {
+    return
+  }
+
+  uni.navigateTo({
+    url: `/pages/items/comment-list/index?goodsId=${id}`,
+  })
+}
 </script>
 
 <style scoped lang="scss">
@@ -304,12 +324,27 @@ function goCart() {
 }
 
 .goods-brief,
-.tip-copy {
+.tip-copy,
+.comment-copy {
   display: block;
   margin-top: 8rpx;
   font-size: 22rpx;
   line-height: 1.45;
   color: #748194;
+}
+
+.comment-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.panel-link {
+  flex-shrink: 0;
+  font-size: 22rpx;
+  line-height: 1.3;
+  color: #1677ff;
 }
 
 .price-row {

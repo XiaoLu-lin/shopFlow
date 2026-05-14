@@ -60,6 +60,7 @@ export interface OrderDetailHandleOption {
   cancel: boolean
   pay: boolean
   refund: boolean
+  aftersale?: boolean
   confirm: boolean
   delete: boolean
   comment: boolean
@@ -91,11 +92,31 @@ export interface OrderDetailGoodsItem {
   price: number
   picUrl: string
   specifications: string[]
+  comment?: number
 }
 
 export interface OrderDetailPayload {
   orderInfo: OrderDetailInfo
   orderGoods: OrderDetailGoodsItem[]
+}
+
+export interface OrderCommentGoodsItem {
+  id: number
+  goodsId?: number
+  goodsName: string
+  number: number
+  price: number
+  picUrl: string
+  specifications: string[]
+  comment?: number
+}
+
+export interface OrderCommentPayload {
+  goodsId: number
+  content: string
+  star: number
+  hasPicture: boolean
+  picUrls: string[]
 }
 
 export interface OrderPrepayPayload {
@@ -176,6 +197,19 @@ export async function fetchOrderDetail(orderId: string) {
     ...data,
     orderGoods: Array.isArray(data.orderGoods) ? data.orderGoods : data.orderGoods ? [data.orderGoods] : [],
   }
+}
+
+export async function fetchOrderCommentGoods(goodsId: number | string) {
+  const response = await getApiClient().get<ApiEnvelope<OrderCommentGoodsItem>>('/order/goods', {
+    params: {
+      goodsId,
+    },
+  })
+  return response.data.data
+}
+
+export async function submitOrderComment(payload: OrderCommentPayload) {
+  await getApiClient().post('/order/comment', payload)
 }
 
 export async function submitOrderPrepay(orderIds: string[]) {

@@ -199,4 +199,48 @@ describe('goods api', () => {
 
     expect(client.post).toHaveBeenLastCalledWith('/search/clearhistory')
   })
+
+  test('requests goods comment count and paged comment list with picture filter', async () => {
+    client.get
+      .mockResolvedValueOnce({
+        data: {
+          errno: 0,
+          data: {
+            allCount: 12,
+            hasPicCount: 5,
+          },
+        },
+      })
+      .mockResolvedValueOnce({
+        data: {
+          errno: 0,
+          data: {
+            list: [],
+            page: 1,
+            pages: 1,
+          },
+        },
+      })
+
+    const { fetchGoodsCommentCount, fetchGoodsCommentList } = await import('./api')
+    await fetchGoodsCommentCount(101)
+    await fetchGoodsCommentList({
+      goodsId: 101,
+      page: 1,
+      limit: 20,
+      hasPicture: true,
+    })
+
+    expect(client.get).toHaveBeenNthCalledWith(1, '/goods/comment/count', {
+      params: { goodsId: 101 },
+    })
+    expect(client.get).toHaveBeenNthCalledWith(2, '/goods/comment/list', {
+      params: {
+        goodsId: 101,
+        page: 1,
+        limit: 20,
+        hasPicture: true,
+      },
+    })
+  })
 })

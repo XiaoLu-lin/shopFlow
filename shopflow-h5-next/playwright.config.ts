@@ -8,7 +8,7 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'npm run dev -- --host 127.0.0.1 --port 6257',
+    command: 'npm run dev:h5 -- --host 127.0.0.1 --port 6257',
     url: 'http://127.0.0.1:6257',
     reuseExistingServer: !process.env.CI,
   },

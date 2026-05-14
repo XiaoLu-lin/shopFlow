@@ -321,6 +321,7 @@ describe('user api', () => {
       id: '9001',
       orderId: '701',
       aftersaleSn: 'AS20260510001',
+      status: 3,
       statusText: '退款成功',
       goodsName: '轻软跑鞋',
       specificationsText: '白色 / 42',
@@ -430,6 +431,29 @@ describe('user api', () => {
       name: 'file',
     })
     expect(result.url).toBe('https://cdn.shopflow.test/proof-1.png')
+  })
+
+  test('supports h5 file object uploads for aftersale proof', async () => {
+    client.upload.mockResolvedValueOnce({
+      data: {
+        errno: 0,
+        data: {
+          url: 'https://cdn.shopflow.test/proof-file.png',
+        },
+      },
+    })
+
+    const file = { name: 'proof.png' } as File
+    const { uploadAftersaleProof } = await import('./api')
+    const result = await uploadAftersaleProof({ file })
+
+    expect(client.upload).toHaveBeenLastCalledWith('/storage/upload', {
+      file,
+      filePath: undefined,
+      files: [{ name: 'file', file }],
+      name: 'file',
+    })
+    expect(result.url).toBe('https://cdn.shopflow.test/proof-file.png')
   })
 
   test('submits feedback and profile updates with legacy payload shape', async () => {

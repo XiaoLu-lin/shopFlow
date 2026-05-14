@@ -26,6 +26,12 @@
       }
     },
     {
+      "path": "pages/items/comment-list/index",
+      "style": {
+        "navigationBarTitleText": "商品评价"
+      }
+    },
+    {
       "path": "pages/items/category/index",
       "style": {
         "navigationBarTitleText": "分类商品"
@@ -125,6 +131,12 @@
       "path": "pages/order/detail/index",
       "style": {
         "navigationBarTitleText": "订单详情"
+      }
+    },
+    {
+      "path": "pages/order/comment-post/index",
+      "style": {
+        "navigationBarTitleText": "订单评价"
       }
     },
     {

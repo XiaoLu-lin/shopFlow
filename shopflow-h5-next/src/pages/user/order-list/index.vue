@@ -1,7 +1,7 @@
 <template>
-  <view class="page">
+  <view class="page" role="main">
     <view class="hero-card">
-      <text class="title">我的订单</text>
+      <text class="title" role="heading" aria-level="1">我的订单</text>
       <text class="desc">已接回旧站订单查询语义，支持按状态筛选与基础操作。</text>
     </view>
 
@@ -45,10 +45,36 @@
         </view>
 
         <view class="action-row">
-          <view v-if="order.handleOption.cancel" class="ghost-btn" @click="handleOrderAction(order.id, 'cancel')">取消订单</view>
-          <view v-if="order.handleOption.delete" class="ghost-btn" @click="handleOrderAction(order.id, 'delete')">删除订单</view>
-          <view v-if="order.handleOption.confirm" class="dark-btn" @click="handleOrderAction(order.id, 'confirm')">确认收货</view>
-          <view v-if="order.handleOption.pay" class="primary-btn" @click="goPay(order.id)">去支付</view>
+          <view
+            v-if="order.handleOption.cancel"
+            class="ghost-btn"
+            role="button"
+            @click="handleOrderAction(order.id, 'cancel')"
+          >取消订单</view>
+          <view
+            v-if="order.handleOption.delete"
+            class="ghost-btn"
+            role="button"
+            @click="handleOrderAction(order.id, 'delete')"
+          >删除订单</view>
+          <view
+            v-if="resolveCommentGoodsId(order)"
+            class="ghost-btn"
+            role="button"
+            @click="goCommentPost(resolveCommentGoodsId(order))"
+          >去评价</view>
+          <view
+            v-if="order.handleOption.confirm"
+            class="dark-btn"
+            role="button"
+            @click="handleOrderAction(order.id, 'confirm')"
+          >确认收货</view>
+          <view
+            v-if="order.handleOption.pay"
+            class="primary-btn"
+            role="button"
+            @click="goPay(order.id)"
+          >去支付</view>
         </view>
       </view>
     </view>
@@ -110,6 +136,30 @@ function goOrderDetail(id: number) {
 function goPay(id: number) {
   uni.navigateTo({
     url: `/pages/order/payment/index?orderId=${id}`,
+  })
+}
+
+function resolveCommentGoodsId(order: UserOrderItem) {
+  if (!order.handleOption.comment) {
+    return 0
+  }
+
+  const firstGoods = order.goodsList[0]
+
+  if (!firstGoods || firstGoods.comment) {
+    return 0
+  }
+
+  return Number(firstGoods.id || 0)
+}
+
+function goCommentPost(goodsId: number) {
+  if (!goodsId) {
+    return
+  }
+
+  uni.navigateTo({
+    url: `/pages/order/comment-post/index?goodsId=${goodsId}`,
   })
 }
 

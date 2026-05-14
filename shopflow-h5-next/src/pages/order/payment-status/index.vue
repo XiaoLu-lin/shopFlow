@@ -1,14 +1,14 @@
 <template>
-  <view class="page">
+  <view class="page" role="main">
     <view class="status-card">
       <view class="status-icon" :class="statusClass">{{ statusIcon }}</view>
-      <text class="title">{{ title }}</text>
+      <text class="title" role="heading" aria-level="1">{{ title }}</text>
       <text class="desc">{{ description }}</text>
       <text v-if="orderInfo?.orderSn" class="order-copy">订单编号：{{ orderInfo.orderSn }}</text>
       <text v-if="shouldAutoRedirect" class="redirect-copy">3 秒后自动跳转到订单列表</text>
     </view>
 
-    <view class="submit-btn" @click="goOrderList">查看订单</view>
+    <view class="submit-btn" role="button" @click="goOrderList">查看订单</view>
   </view>
 </template>
 

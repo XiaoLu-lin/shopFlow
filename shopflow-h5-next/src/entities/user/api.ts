@@ -50,10 +50,12 @@ export interface AddressForm {
 }
 
 export interface UserOrderGoodsItem {
+  id?: number
   goodsName: string
   number: number
   picUrl: string
   specifications: string[]
+  comment?: number
 }
 
 export interface UserOrderHandleOption {
@@ -212,6 +214,11 @@ export interface UploadProofPayload {
   url: string
 }
 
+export interface UploadProofSource {
+  file?: File
+  filePath?: string
+}
+
 export async function fetchUserIndex() {
   const response = await getApiClient().get<ApiEnvelope<UserIndexPayload>>('/user/index')
   return response.data.data
@@ -341,9 +348,17 @@ export async function submitAftersale(payload: AftersaleSubmitPayload) {
   await getApiClient().post('/aftersale/submit', payload)
 }
 
-export async function uploadAftersaleProof(filePath: string) {
+export async function uploadAftersaleProof(source: string | UploadProofSource) {
+  const normalizedSource = typeof source === 'string'
+    ? { filePath: source }
+    : source
+
   const response = await getApiClient().upload<ApiEnvelope<UploadProofPayload>>('/storage/upload', {
-    filePath,
+    file: normalizedSource.file,
+    filePath: normalizedSource.filePath,
+    files: normalizedSource.file
+      ? [{ name: 'file', file: normalizedSource.file }]
+      : undefined,
     name: 'file',
   })
   return response.data.data

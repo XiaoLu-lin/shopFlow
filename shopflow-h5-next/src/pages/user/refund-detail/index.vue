@@ -1,7 +1,7 @@
 <template>
-  <view class="page">
+  <view class="page" role="main">
     <view class="hero-card">
-      <text class="title">售后详情</text>
+      <text class="title" role="heading" aria-level="1">售后详情</text>
       <text class="desc">已接回真实售后详情接口，当前展示售后状态、商品、退款原因和金额信息。</text>
     </view>
 
@@ -58,15 +58,15 @@
         <view v-if="detail.aftersale.pictures?.length" class="section-card">
           <text class="section-title">凭证图片</text>
           <view class="proof-grid">
-            <view v-for="picture in detail.aftersale.pictures" :key="picture" class="proof-card" @click="previewImage(picture)">
+            <view v-for="picture in detail.aftersale.pictures" :key="picture" class="proof-card" role="button" @click="previewImage(picture)">
               <image class="proof-image" :src="picture" mode="aspectFill" />
             </view>
           </view>
         </view>
 
         <view class="action-row">
-          <view class="ghost-btn" @click="goOrderDetail">查看订单</view>
-          <view v-if="canCancelAftersale(detail.aftersale.status)" class="dark-btn" @click="handleCancel">撤销售后</view>
+          <view class="ghost-btn" role="button" @click="goOrderDetail">查看订单</view>
+          <view v-if="canCancelAftersale(detail.aftersale.status)" class="dark-btn" role="button" @click="requestCancel">撤销售后</view>
         </view>
       </view>
     </template>
@@ -74,6 +74,17 @@
     <view v-else class="empty-card">
       <text class="empty-title">未找到售后详情</text>
       <text class="empty-desc">请返回售后列表重试。</text>
+    </view>
+
+    <view v-if="showCancelDialog" class="dialog-mask">
+      <view class="dialog-card">
+        <text class="dialog-title">确认撤销售后</text>
+        <text class="dialog-desc">撤销后将返回售后列表，当前申请无法继续处理。</text>
+        <view class="dialog-actions">
+          <view class="ghost-btn" role="button" @click="showCancelDialog = false">取消</view>
+          <view class="dark-btn" role="button" @click="handleCancel">确认</view>
+        </view>
+      </view>
     </view>
   </view>
 </template>
@@ -92,6 +103,7 @@ const pageOptions = (getCurrentPages()[getCurrentPages().length - 1] as UniPageW
 const orderId = typeof pageOptions.orderId === 'string' ? pageOptions.orderId : ''
 const loading = ref(true)
 const detail = ref<AftersaleDetailPayload | null>(null)
+const showCancelDialog = ref(false)
 
 bootstrap()
 onShow(() => {
@@ -130,6 +142,7 @@ async function handleCancel() {
   }
 
   try {
+    showCancelDialog.value = false
     await cancelAftersale(aftersaleId)
     uni.showToast({
       title: '已撤销售后申请',
@@ -147,6 +160,10 @@ async function handleCancel() {
       icon: 'none',
     })
   }
+}
+
+function requestCancel() {
+  showCancelDialog.value = true
 }
 
 function previewImage(current: string) {
@@ -307,6 +324,47 @@ function previewImage(current: string) {
 .proof-image {
   width: 100%;
   height: 160rpx;
+}
+
+.dialog-mask {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(23, 32, 51, 0.28);
+  padding: 32rpx;
+}
+
+.dialog-card {
+  width: 100%;
+  max-width: 560rpx;
+  border-radius: 16rpx;
+  background: #ffffff;
+  padding: 28rpx 24rpx;
+  box-shadow: 0 20rpx 40rpx rgba(23, 32, 51, 0.12);
+}
+
+.dialog-title {
+  display: block;
+  font-size: 28rpx;
+  line-height: 1.4;
+  color: #172033;
+}
+
+.dialog-desc {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  line-height: 1.5;
+  color: #748194;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16rpx;
+  margin-top: 24rpx;
 }
 
 .action-row {
