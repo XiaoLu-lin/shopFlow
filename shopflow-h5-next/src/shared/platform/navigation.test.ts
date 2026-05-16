@@ -12,12 +12,10 @@ describe('navigation platform adapter', () => {
     expect(resolveNamedPage('unknown')).toBe('/pages/home/index')
   })
 
-  test('redirects tab pages with switchTab and content pages with redirectTo', () => {
-    const switchTab = vi.fn()
-    const redirectTo = vi.fn()
+  test('redirects after login with reLaunch', () => {
+    const reLaunch = vi.fn()
     vi.stubGlobal('uni', {
-      switchTab,
-      redirectTo,
+      reLaunch,
       navigateTo: vi.fn(),
       navigateBack: vi.fn(),
     })
@@ -25,7 +23,7 @@ describe('navigation platform adapter', () => {
     redirectAfterLogin('user')
     redirectAfterLogin('orderCheckout')
 
-    expect(switchTab).toHaveBeenCalledWith({ url: '/pages/user/index' })
-    expect(redirectTo).toHaveBeenCalledWith({ url: '/pages/order/checkout/index' })
+    expect(reLaunch).toHaveBeenCalledWith({ url: '/pages/user/index' })
+    expect(reLaunch).toHaveBeenCalledWith({ url: '/pages/order/checkout/index' })
   })
 })

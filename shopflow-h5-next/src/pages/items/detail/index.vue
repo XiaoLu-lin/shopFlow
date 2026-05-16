@@ -1,5 +1,15 @@
 <template>
   <view class="page">
+    <view class="detail-header">
+      <view class="header-icon" @click="goBack">‹</view>
+      <view class="header-tabs">
+        <text class="header-tab header-tab--active">商品</text>
+        <text class="header-tab">评价</text>
+        <text class="header-tab">详情</text>
+      </view>
+      <view class="header-icon">⋯</view>
+    </view>
+
     <swiper
       v-if="gallery.length"
       class="hero-swiper"
@@ -7,29 +17,42 @@
       circular
       autoplay
       :interval="3200"
-      indicator-color="rgba(255,255,255,0.5)"
-      indicator-active-color="#1677ff"
+      indicator-color="rgba(74,111,165,0.22)"
+      indicator-active-color="#4A6FA5"
     >
       <swiper-item v-for="(item, index) in gallery" :key="`${item}-${index}`">
         <image class="hero-image" :src="item" mode="aspectFill" />
       </swiper-item>
     </swiper>
+    <view v-else class="hero-placeholder">
+      <text>商品图片加载中</text>
+    </view>
 
     <view class="summary-card">
+      <view class="price-row">
+        <text class="price">¥{{ matchedPrice }}</text>
+        <text v-if="detail?.info.counterPrice" class="origin-price">¥{{ detail.info.counterPrice }}</text>
+        <text v-if="discountLabel" class="discount-tag">{{ discountLabel }}</text>
+      </view>
       <view class="summary-head">
         <view class="summary-main">
           <text class="goods-name">{{ detail?.info.name || '商品详情' }}</text>
           <text class="goods-brief">{{ detail?.info.brief || '正在加载商品基础信息。' }}</text>
         </view>
-        <view class="collect-btn" :class="{ 'collect-btn--active': collected }" @click="toggleCollectState">
-          {{ collected ? '已收藏' : '收藏' }}
-        </view>
-      </view>
-      <view class="price-row">
-        <text class="price">¥ {{ matchedPrice }}</text>
-        <text class="origin-price">¥ {{ detail?.info.counterPrice ?? '--' }}</text>
       </view>
       <text class="stock-copy">{{ completedSelection ? `库存 ${matchedStock}` : '请选择完整规格后再购买' }}</text>
+    </view>
+
+    <view class="service-card">
+      <view class="promo-row">
+        <text class="promo-label">券</text>
+        <text class="promo-copy">优惠以结算页可用券为准</text>
+      </view>
+      <view class="service-row">
+        <text>正品保障</text>
+        <text>7天无理由</text>
+        <text>极速退款</text>
+      </view>
     </view>
 
     <view v-if="specList.length" class="panel">
@@ -50,6 +73,23 @@
       </view>
     </view>
 
+    <view class="panel">
+      <text class="panel-title">购买数量</text>
+      <view class="quantity-row">
+        <view class="quantity-btn" @click="changeQuantity(-1)">-</view>
+        <text class="quantity-value">{{ quantity }}</text>
+        <view class="quantity-btn" @click="changeQuantity(1)">+</view>
+      </view>
+    </view>
+
+    <view class="panel">
+      <text class="panel-title">商品详情</text>
+      <rich-text v-if="hasDetailContent" class="detail-content" :nodes="detail?.info.detail || ''" />
+      <view v-else class="detail-empty">
+        <text>详情信息整理中</text>
+      </view>
+    </view>
+
     <view v-if="attributeList.length" class="panel">
       <text class="panel-title">商品属性</text>
       <view class="attr-list">
@@ -60,19 +100,14 @@
       </view>
     </view>
 
-    <view class="panel">
-      <text class="panel-title">购买数量</text>
-      <view class="quantity-row">
-        <view class="quantity-btn" @click="changeQuantity(-1)">-</view>
-        <text class="quantity-value">{{ quantity }}</text>
-        <view class="quantity-btn" @click="changeQuantity(1)">+</view>
-      </view>
-    </view>
-
     <view class="action-bar">
-      <view class="action-btn action-btn--ghost" @click="goCart">购物车</view>
-      <view class="action-btn action-btn--primary" @click="addToCart">加入购物车</view>
-      <view class="action-btn action-btn--dark" @click="buyNow">立即购买</view>
+      <view class="action-icon" @click="contactService">客服</view>
+      <view class="action-icon" :class="{ 'action-icon--active': collected }" @click="toggleCollectState">
+        收藏
+      </view>
+      <view class="action-icon" @click="goCart">购物车</view>
+      <view class="action-btn action-btn--primary" @click="addToCart">加购</view>
+      <view class="action-btn action-btn--buy" @click="buyNow">购买</view>
     </view>
   </view>
 </template>
@@ -83,6 +118,7 @@ import { addCartItem, fastAddCartItem } from '@/entities/cart/api'
 import { fetchGoodsDetail } from '@/entities/goods/api'
 import { toggleCollect } from '@/entities/user/api'
 import type { GoodsDetailPayload } from '@/entities/goods/api'
+import { formatDiscountLabel, hasRenderableDetail } from '@/features/goods/detail-display-utils'
 import { buildCartPayload, clampSkuQuantity, hasCompletedSkuSelection, resolveMatchedProduct } from '@/features/goods/sku-utils'
 import { writeFlowContext } from '@/shared/compat/session-adapter'
 
@@ -104,6 +140,8 @@ const matchedProduct = computed(() => (detail.value ? resolveMatchedProduct(deta
 const completedSelection = computed(() => (detail.value ? hasCompletedSkuSelection(detail.value, selectedValueIds.value) : false))
 const matchedPrice = computed(() => matchedProduct.value?.price ?? detail.value?.info.retailPrice ?? '--')
 const matchedStock = computed(() => matchedProduct.value?.number ?? 0)
+const discountLabel = computed(() => formatDiscountLabel(matchedPrice.value, detail.value?.info.counterPrice))
+const hasDetailContent = computed(() => hasRenderableDetail(detail.value?.info.detail))
 
 bootstrap()
 
@@ -234,9 +272,22 @@ async function buyNow() {
   }
 }
 
+function goBack() {
+  uni.navigateBack({
+    delta: 1,
+  })
+}
+
 function goCart() {
   uni.navigateTo({
     url: '/pages/order/cart/index',
+  })
+}
+
+function contactService() {
+  uni.showToast({
+    title: '客服入口待接入',
+    icon: 'none',
   })
 }
 </script>
@@ -244,15 +295,69 @@ function goCart() {
 <style scoped lang="scss">
 .page {
   min-height: 100vh;
-  padding: 20rpx 20rpx 140rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  padding: 16rpx 18rpx 128rpx;
+  background: rgb(var(--sf-color-page));
 }
 
-.hero-swiper {
-  height: 560rpx;
-  border-radius: 12rpx;
+.detail-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 76rpx;
+  padding: 0 12rpx;
+  border: 2rpx solid rgb(var(--sf-color-line));
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 4rpx 12rpx rgba(44, 62, 80, 0.04);
+}
+
+.header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52rpx;
+  height: 52rpx;
+  color: rgb(var(--sf-color-text-secondary));
+  font-size: 34rpx;
+}
+
+.header-tabs {
+  display: flex;
+  align-items: center;
+  gap: 32rpx;
+}
+
+.header-tab {
+  color: rgb(var(--sf-color-text-secondary));
+  font-size: 24rpx;
+  font-weight: 700;
+  line-height: 52rpx;
+}
+
+.header-tab--active {
+  color: rgb(var(--sf-color-brand));
+  border-bottom: 4rpx solid rgb(var(--sf-color-brand));
+}
+
+.hero-swiper,
+.hero-placeholder {
+  height: 670rpx;
+  margin-top: 16rpx;
   overflow: hidden;
-  background: #f3f6fb;
+  border: 2rpx solid rgb(var(--sf-color-line));
+  border-radius: 8px;
+  background: rgb(var(--sf-color-mist));
+}
+
+.hero-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(var(--sf-color-text-secondary));
+  font-size: 24rpx;
 }
 
 .hero-image {
@@ -261,18 +366,54 @@ function goCart() {
 }
 
 .summary-card,
+.service-card,
 .panel {
-  margin-top: 16rpx;
-  padding: 22rpx;
-  border-radius: 12rpx;
-  background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  margin-top: 12rpx;
+  padding: 20rpx 22rpx;
+  border: 1rpx solid rgba(var(--sf-color-line), 0.86);
+  border-radius: 8px;
+  background: rgb(var(--sf-color-shell));
+  box-shadow: 0 2rpx 8rpx rgba(44, 62, 80, 0.025);
+}
+
+.price-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 9rpx;
+}
+
+.price {
+  color: rgb(var(--sf-color-price));
+  font-size: 48rpx;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.origin-price {
+  color: rgb(var(--sf-color-text-hint));
+  font-size: 23rpx;
+  line-height: 1.1;
+  text-decoration: line-through;
+}
+
+.discount-tag,
+.promo-label {
+  border-radius: 6rpx;
+  background: rgb(var(--sf-color-price-soft));
+  color: rgb(var(--sf-color-price));
+}
+
+.discount-tag {
+  padding: 3rpx 7rpx;
+  border-radius: 4px;
+  font-size: 18rpx;
+  font-weight: 700;
 }
 
 .summary-head {
   display: flex;
   align-items: flex-start;
-  gap: 16rpx;
+  margin-top: 16rpx;
 }
 
 .summary-main {
@@ -280,125 +421,123 @@ function goCart() {
   flex: 1;
 }
 
-.collect-btn {
-  flex-shrink: 0;
-  padding: 10rpx 16rpx;
-  border-radius: 999px;
-  background: #f3f6fb;
-  font-size: 21rpx;
-  line-height: 1.2;
-  color: #5f6b7c;
-}
-
-.collect-btn--active {
-  background: #edf5ff;
-  color: #1677ff;
-}
-
 .goods-name,
 .panel-title {
   display: block;
+  color: rgb(var(--sf-color-ink));
   font-size: 28rpx;
+  font-weight: 800;
   line-height: 1.3;
-  color: #172033;
 }
 
 .goods-brief,
-.tip-copy {
+.stock-copy {
   display: block;
-  margin-top: 8rpx;
-  font-size: 22rpx;
+  color: rgb(var(--sf-color-text-secondary));
+  font-size: 21rpx;
   line-height: 1.45;
-  color: #748194;
 }
 
-.price-row {
-  display: flex;
-  align-items: flex-end;
-  gap: 12rpx;
-  margin-top: 16rpx;
-}
-
-.price {
-  font-size: 34rpx;
-  line-height: 1.2;
-  font-weight: 600;
-  color: #172033;
-}
-
-.origin-price {
-  font-size: 22rpx;
-  line-height: 1.2;
-  color: #9aa5b5;
-  text-decoration: line-through;
+.goods-brief {
+  margin-top: 8rpx;
 }
 
 .stock-copy {
-  display: block;
-  margin-top: 8rpx;
+  margin-top: 12rpx;
+  color: rgb(var(--sf-color-brand));
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.action-icon--active {
+  background: rgb(var(--sf-color-brand-soft));
+  color: rgb(var(--sf-color-brand));
+}
+
+.promo-row,
+.service-row {
+  display: flex;
+  align-items: center;
+}
+
+.promo-row {
+  gap: 12rpx;
+}
+
+.promo-label {
+  padding: 3rpx 8rpx;
+  border-radius: 4px;
+  font-size: 18rpx;
+  font-weight: 700;
+}
+
+.promo-copy {
+  color: rgb(var(--sf-color-price));
   font-size: 21rpx;
-  line-height: 1.35;
-  color: #748194;
+  font-weight: 600;
+}
+
+.service-row {
+  flex-wrap: wrap;
+  gap: 8rpx 16rpx;
+  margin-top: 12rpx;
+  color: rgb(var(--sf-color-brand));
+  font-size: 20rpx;
+  font-weight: 600;
+}
+
+.service-row text::before {
+  display: inline-block;
+  width: 6rpx;
+  height: 6rpx;
+  margin-right: 7rpx;
+  border-radius: 999px;
+  background: rgb(var(--sf-color-brand));
+  content: '';
+  vertical-align: middle;
 }
 
 .sku-group {
   margin-top: 14rpx;
 }
 
-.spec-list,
-.attr-list {
-  display: grid;
-  gap: 12rpx;
-  margin-top: 14rpx;
-}
-
-.attr-row {
-  padding: 16rpx;
-  border-radius: 10rpx;
-  background: #f7faff;
-}
-
 .spec-name,
 .attr-label {
   display: block;
-  font-size: 23rpx;
+  color: rgb(var(--sf-color-text-secondary));
+  font-size: 20rpx;
+  font-weight: 600;
   line-height: 1.3;
-  color: #516076;
-}
-
-.attr-value {
-  display: block;
-  margin-top: 6rpx;
-  font-size: 23rpx;
-  line-height: 1.35;
-  color: #172033;
 }
 
 .sku-values {
   display: flex;
   flex-wrap: wrap;
-  gap: 10rpx;
+  gap: 8rpx 10rpx;
   margin-top: 10rpx;
 }
 
 .sku-chip {
-  padding: 10rpx 16rpx;
-  border-radius: 999px;
-  background: #f3f6fb;
-  font-size: 21rpx;
+  padding: 8rpx 14rpx;
+  border: 2rpx solid transparent;
+  border-radius: 8px;
+  background: rgb(var(--sf-color-mist));
+  color: rgb(var(--sf-color-text-secondary));
+  font-size: 20rpx;
   line-height: 1.2;
-  color: #5f6b7c;
 }
 
 .sku-chip--active {
-  background: #edf5ff;
-  color: #1677ff;
+  border-color: rgba(var(--sf-color-brand), 0.28);
+  background: rgb(var(--sf-color-brand-soft));
+  color: rgb(var(--sf-color-brand));
+  font-weight: 700;
 }
 
 .quantity-row {
   display: flex;
   align-items: center;
-  gap: 14rpx;
+  gap: 8rpx;
   margin-top: 14rpx;
 }
 
@@ -407,47 +546,100 @@ function goCart() {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 68rpx;
-  height: 68rpx;
-  border-radius: 10rpx;
-  background: #f3f6fb;
-  font-size: 26rpx;
-  color: #172033;
+  min-width: 48rpx;
+  height: 46rpx;
+  border-radius: 8px;
+  background: rgb(var(--sf-color-mist));
+  color: rgb(var(--sf-color-ink));
+  font-size: 22rpx;
+}
+
+.quantity-value {
+  padding: 0 18rpx;
+  background: rgb(var(--sf-color-shell));
+  border: 2rpx solid rgb(var(--sf-color-line));
+}
+
+.detail-content {
+  display: block;
+  margin-top: 16rpx;
+  color: rgb(var(--sf-color-ink));
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+
+.detail-empty {
+  margin-top: 16rpx;
+  padding: 32rpx 20rpx;
+  border-radius: 8px;
+  background: rgb(var(--sf-color-mist));
+  color: rgb(var(--sf-color-text-secondary));
+  font-size: 23rpx;
+  text-align: center;
+}
+
+.attr-list {
+  display: grid;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+.attr-row {
+  padding: 15rpx 16rpx;
+  border-radius: 8px;
+  background: rgb(var(--sf-color-mist));
+}
+
+.attr-value {
+  display: block;
+  margin-top: 6rpx;
+  color: rgb(var(--sf-color-ink));
+  font-size: 23rpx;
+  line-height: 1.35;
 }
 
 .action-bar {
   position: fixed;
-  left: 20rpx;
-  right: 20rpx;
-  bottom: 20rpx;
+  left: 18rpx;
+  right: 18rpx;
+  bottom: 18rpx;
+  z-index: 20;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 12rpx;
+  grid-template-columns: 84rpx 84rpx 84rpx 1fr 1fr;
+  gap: 8rpx;
+  padding: 9rpx;
+  border: 2rpx solid rgb(var(--sf-color-line));
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--sf-shadow-soft);
 }
 
+.action-icon,
 .action-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 84rpx;
-  border-radius: 12rpx;
-  font-size: 24rpx;
+  height: 68rpx;
+  border-radius: 8px;
+  font-size: 21rpx;
   line-height: 1.2;
 }
 
-.action-btn--ghost {
-  background: #ffffff;
-  color: #5f6b7c;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+.action-icon {
+  background: rgb(var(--sf-color-mist));
+  color: rgb(var(--sf-color-text-secondary));
+}
+
+.action-btn {
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .action-btn--primary {
-  background: #1677ff;
-  color: #ffffff;
+  background: linear-gradient(135deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
 }
 
-.action-btn--dark {
-  background: #172033;
-  color: #ffffff;
+.action-btn--buy {
+  background: linear-gradient(135deg, rgb(var(--sf-color-price)) 0%, #f06b55 100%);
 }
 </style>

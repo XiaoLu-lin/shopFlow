@@ -19,7 +19,7 @@ body,
 body {
   margin: 0;
   color: rgb(var(--sf-color-ink));
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  background: rgb(var(--sf-color-page));
   font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   font-size: 14px;
   line-height: 1.4;
@@ -63,14 +63,14 @@ img {
 :root {
   --van-font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --van-text-color: rgb(var(--sf-color-ink));
-  --van-text-color-2: rgba(17, 24, 39, 0.62);
-  --van-text-color-3: rgba(17, 24, 39, 0.45);
+  --van-text-color-2: rgb(var(--sf-color-text-secondary));
+  --van-text-color-3: rgb(var(--sf-color-text-hint));
   --van-primary-color: rgb(var(--sf-color-brand));
   --van-success-color: rgb(var(--sf-color-success));
-  --van-danger-color: rgb(var(--sf-color-danger));
+  --van-danger-color: rgb(var(--sf-color-price));
   --van-background: rgb(var(--sf-color-mist));
   --van-background-2: rgb(var(--sf-color-shell));
-  --van-border-color: rgba(223, 228, 236, 0.95);
+  --van-border-color: rgb(var(--sf-color-line));
   --van-cell-background: rgba(255, 255, 255, 0.98);
   --van-field-placeholder-text-color: rgba(100, 116, 139, 0.9);
   --van-cell-horizontal-padding: 14px;

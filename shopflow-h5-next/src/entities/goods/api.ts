@@ -167,7 +167,7 @@ export async function fetchNewGoodsList(params: { page: number; limit: number })
 
 export async function fetchGoodsDetail(id: number | string) {
   const response = await getApiClient().get<ApiEnvelope<GoodsDetailPayload>>('/goods/detail', {
-    params: { id },
+    params: { goodId: id },
   })
   return response.data.data
 }

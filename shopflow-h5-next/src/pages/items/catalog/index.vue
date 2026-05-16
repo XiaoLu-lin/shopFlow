@@ -1,8 +1,11 @@
 <template>
   <view class="page">
     <view class="search-card" @click="goSearch">
-      <text class="search-label">搜索商品、品牌和分类</text>
-      <text class="search-copy">进入搜索页继续查找你想看的内容</text>
+      <view>
+        <text class="brand-name">ShopFlow</text>
+        <text class="search-copy">搜索商品、品牌和分类</text>
+      </view>
+      <text class="search-action">搜索</text>
     </view>
 
     <view class="catalog-layout">
@@ -26,16 +29,18 @@
             :src="currentCategory.picUrl"
             mode="aspectFill"
           />
-          <view v-else class="hero-placeholder" />
+          <view v-else class="hero-placeholder">
+            <text class="hero-placeholder-title">{{ currentCategory?.name || '精选分类' }}</text>
+          </view>
           <view class="hero-body">
             <text class="hero-title">{{ currentCategory?.name || '分类加载中' }}</text>
             <text class="hero-desc">
-              {{ currentCategory?.desc || '正在整理当前分类和子分类内容。' }}
+              {{ currentCategory?.desc || '按分类浏览 ShopFlow 精选商品。' }}
             </text>
           </view>
         </view>
 
-        <view class="sub-grid">
+        <view v-if="currentSubCategories.length" class="sub-grid">
           <view
             v-for="item in currentSubCategories"
             :key="item.id"
@@ -53,9 +58,9 @@
           </view>
         </view>
 
-        <view v-if="!currentSubCategories.length" class="empty-card">
-          <text class="empty-title">当前分类还没有子分类</text>
-          <text class="empty-desc">后续会继续补商品列表和更多筛选能力。</text>
+        <view v-else class="empty-card">
+          <text class="empty-title">暂无子分类</text>
+          <text class="empty-desc">可以切换左侧分类继续浏览。</text>
         </view>
       </scroll-view>
     </view>
@@ -128,59 +133,79 @@ function goCategoryGoods(id: number, name: string) {
 <style scoped lang="scss">
 .page {
   min-height: 100vh;
-  padding: 20rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  padding: 18rpx 20rpx 36rpx;
+  background: rgb(var(--sf-color-page));
 }
 
 .search-card {
-  padding: 20rpx 22rpx;
-  border-radius: 12rpx;
-  background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  padding: 18rpx 20rpx;
+  border: 2rpx solid rgb(var(--sf-color-line));
+  border-radius: 16rpx;
+  background: rgb(var(--sf-color-shell));
+  box-shadow: var(--sf-shadow-card);
 }
 
-.search-label {
+.brand-name,
+.search-copy {
   display: block;
-  font-size: 26rpx;
-  line-height: 1.3;
-  color: #172033;
+}
+
+.brand-name {
+  color: rgb(var(--sf-color-brand));
+  font-size: 32rpx;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .search-copy {
-  display: block;
-  margin-top: 6rpx;
+  margin-top: 4rpx;
+  color: rgb(var(--sf-color-text-secondary));
   font-size: 22rpx;
   line-height: 1.35;
-  color: #748194;
+}
+
+.search-action {
+  flex-shrink: 0;
+  padding: 8rpx 16rpx;
+  border-radius: 999px;
+  background: rgb(var(--sf-color-brand-soft));
+  color: rgb(var(--sf-color-brand));
+  font-size: 22rpx;
+  font-weight: 700;
 }
 
 .catalog-layout {
   display: flex;
   gap: 16rpx;
-  height: calc(100vh - 180rpx);
-  margin-top: 16rpx;
+  height: calc(100vh - 142rpx);
+  margin-top: 18rpx;
 }
 
 .sidebar {
-  width: 160rpx;
+  width: 164rpx;
   padding: 8rpx;
-  border-radius: 12rpx;
-  background: #f7faff;
+  border: 2rpx solid rgb(var(--sf-color-line));
+  border-radius: 16rpx;
+  background: rgb(var(--sf-color-shell));
 }
 
 .sidebar-item {
-  padding: 22rpx 10rpx;
-  border-radius: 10rpx;
-  font-size: 23rpx;
-  line-height: 1.3;
-  color: #5e6a7d;
+  padding: 22rpx 8rpx;
+  border-radius: 12rpx;
+  color: rgb(var(--sf-color-text-secondary));
+  font-size: 24rpx;
+  line-height: 1.25;
   text-align: center;
 }
 
 .sidebar-item--active {
-  background: #ffffff;
-  color: #1677ff;
-  box-shadow: 0 8rpx 18rpx rgba(22, 119, 255, 0.08);
+  background: rgb(var(--sf-color-brand-soft));
+  color: rgb(var(--sf-color-brand));
+  font-weight: 700;
 }
 
 .content {
@@ -188,18 +213,32 @@ function goCategoryGoods(id: number, name: string) {
   flex: 1;
 }
 
-.hero {
+.hero,
+.empty-card {
   overflow: hidden;
-  border-radius: 12rpx;
-  background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  border: 2rpx solid rgb(var(--sf-color-line));
+  border-radius: 16rpx;
+  background: rgb(var(--sf-color-shell));
+  box-shadow: var(--sf-shadow-card);
 }
 
 .hero-image,
 .hero-placeholder {
   width: 100%;
-  height: 220rpx;
-  background: #edf4ff;
+  height: 170rpx;
+  background: linear-gradient(135deg, rgb(var(--sf-color-brand-soft)) 0%, rgb(var(--sf-color-price-soft)) 100%);
+}
+
+.hero-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-placeholder-title {
+  color: rgb(var(--sf-color-brand-deep));
+  font-size: 30rpx;
+  font-weight: 700;
 }
 
 .hero-body {
@@ -208,17 +247,18 @@ function goCategoryGoods(id: number, name: string) {
 
 .hero-title {
   display: block;
-  font-size: 28rpx;
-  line-height: 1.3;
-  color: #172033;
+  color: rgb(var(--sf-color-ink));
+  font-size: 30rpx;
+  font-weight: 700;
+  line-height: 1.25;
 }
 
 .hero-desc {
   display: block;
-  margin-top: 6rpx;
+  margin-top: 8rpx;
+  color: rgb(var(--sf-color-text-secondary));
   font-size: 22rpx;
   line-height: 1.4;
-  color: #748194;
 }
 
 .sub-grid {
@@ -229,51 +269,55 @@ function goCategoryGoods(id: number, name: string) {
 }
 
 .sub-card {
-  padding: 14rpx 10rpx;
-  border-radius: 12rpx;
-  background: #ffffff;
-  box-shadow: 0 10rpx 22rpx rgba(23, 32, 51, 0.05);
+  padding: 12rpx 8rpx;
+  border: 2rpx solid rgb(var(--sf-color-divider));
+  border-radius: 16rpx;
+  background: rgb(var(--sf-color-shell));
+  text-align: center;
 }
 
 .sub-image {
   width: 100%;
-  height: 120rpx;
-  border-radius: 10rpx;
-  background: #f3f6fb;
+  height: 92rpx;
+  border-radius: 12rpx;
+  background: rgb(var(--sf-color-mist));
 }
 
 .sub-image--empty {
-  background: #edf4ff;
+  background: rgb(var(--sf-color-brand-soft));
 }
 
 .sub-name {
   display: block;
   margin-top: 10rpx;
-  font-size: 22rpx;
-  line-height: 1.35;
-  color: #172033;
-  text-align: center;
+  overflow: hidden;
+  color: rgb(var(--sf-color-ink));
+  font-size: 21rpx;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .empty-card {
   margin-top: 16rpx;
-  padding: 24rpx;
-  border-radius: 12rpx;
-  background: #ffffff;
+  padding: 32rpx 24rpx;
+  text-align: center;
+}
+
+.empty-title,
+.empty-desc {
+  display: block;
 }
 
 .empty-title {
-  display: block;
+  color: rgb(var(--sf-color-ink));
   font-size: 25rpx;
-  line-height: 1.3;
-  color: #172033;
+  font-weight: 700;
 }
 
 .empty-desc {
-  display: block;
   margin-top: 8rpx;
+  color: rgb(var(--sf-color-text-secondary));
   font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
 }
 </style>
