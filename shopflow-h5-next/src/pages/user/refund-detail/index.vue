@@ -1,8 +1,14 @@
 <template>
   <view class="page">
     <view class="hero-card">
-      <text class="title">售后详情</text>
-      <text class="desc">已接回真实售后详情接口，当前展示售后状态、商品、退款原因和金额信息。</text>
+      <view class="hero-row">
+        <view class="hero-avatar">详</view>
+        <view class="hero-copy">
+          <text class="eyebrow">{{ hero.eyebrow }}</text>
+          <text class="title">{{ hero.title }}</text>
+        </view>
+      </view>
+      <text class="desc">{{ hero.description }}</text>
     </view>
 
     <view v-if="loading" class="section-list">
@@ -16,13 +22,13 @@
     <template v-else-if="detail">
       <view class="section-list">
         <view class="section-card">
-          <view class="head-row">
-            <view>
-              <text class="meta">售后单号 {{ detail.aftersale.aftersaleSn }}</text>
-              <text class="meta meta--muted">订单号 {{ detail.order.orderSn }}</text>
+          <view class="summary-head">
+            <view class="summary-copy">
+              <text class="summary-title">售后单 {{ detail.aftersale.aftersaleSn }}</text>
+              <text class="summary-meta">订单号 {{ detail.order.orderSn }}</text>
             </view>
-            <text class="status" :class="resolveAftersaleStatusClass(detail.aftersale.statusText || '')">
-              {{ detail.aftersale.statusText || '处理中' }}
+            <text class="status-tag" :class="resolveAftersaleStatusClass(statusText)">
+              {{ statusText }}
             </text>
           </view>
         </view>
@@ -66,23 +72,24 @@
 
         <view class="action-row">
           <view class="ghost-btn" @click="goOrderDetail">查看订单</view>
-          <view v-if="canCancelAftersale(detail.aftersale.status)" class="dark-btn" @click="handleCancel">撤销售后</view>
+          <view v-if="canCancelAftersale(detail.aftersale.status)" class="primary-inline-btn" @click="handleCancel">撤销售后</view>
         </view>
       </view>
     </template>
 
     <view v-else class="empty-card">
       <text class="empty-title">未找到售后详情</text>
-      <text class="empty-desc">请返回售后列表重试。</text>
+      <text class="empty-desc">请返回售后列表重新查看。</text>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
 import { onShow } from '@dcloudio/uni-app'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { cancelAftersale, fetchAftersaleDetail, type AftersaleDetailPayload } from '@/entities/user/api'
-import { canCancelAftersale, resolveAftersaleStatusClass } from '../aftersale-utils'
+import { canCancelAftersale, resolveAftersaleStatusClass, resolveAftersaleStatusText } from '../aftersale-utils'
+import { resolveUserPageHero } from '../page-display-utils'
 
 type UniPageWithOptions = {
   options?: Record<string, unknown>
@@ -92,6 +99,15 @@ const pageOptions = (getCurrentPages()[getCurrentPages().length - 1] as UniPageW
 const orderId = typeof pageOptions.orderId === 'string' ? pageOptions.orderId : ''
 const loading = ref(true)
 const detail = ref<AftersaleDetailPayload | null>(null)
+const hero = resolveUserPageHero('refund-detail')
+const statusText = computed(() => {
+  const aftersale = detail.value?.aftersale
+  if (!aftersale) {
+    return '处理中'
+  }
+
+  return aftersale.statusText || resolveAftersaleStatusText(aftersale.status)
+})
 
 bootstrap()
 onShow(() => {
@@ -161,80 +177,173 @@ function previewImage(current: string) {
 <style scoped lang="scss">
 .page {
   min-height: 100vh;
-  padding: 20rpx 20rpx 40rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  padding: 14rpx 14rpx 32rpx;
+  background: linear-gradient(180deg, rgb(var(--sf-color-brand-soft)) 0%, rgb(var(--sf-color-page)) 26%, #ffffff 100%);
 }
 
 .hero-card,
 .section-card,
 .empty-card {
-  border-radius: 12rpx;
+  border-radius: var(--sf-radius-card);
   background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  border: 1px solid rgb(var(--sf-color-line));
+  box-shadow: var(--sf-shadow-soft);
 }
 
-.hero-card,
-.section-card,
-.empty-card {
-  padding: 22rpx;
+.hero-card {
+  padding: 14rpx 16rpx 16rpx;
+  color: #ffffff;
+  background: linear-gradient(145deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
+  box-shadow: var(--sf-shadow-brand);
 }
 
-.title,
-.empty-title,
-.section-title {
-  display: block;
-  font-size: 28rpx;
-  line-height: 1.3;
-  color: #172033;
-}
-
-.desc,
-.empty-desc,
-.meta,
-.comment {
-  display: block;
-  margin-top: 8rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
-}
-
-.section-list {
-  display: grid;
-  gap: 14rpx;
-  margin-top: 16rpx;
-}
-
-.head-row,
+.hero-row,
+.summary-head,
 .goods-foot,
 .action-row,
 .info-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16rpx;
 }
 
-.meta--muted {
+.hero-row {
+  gap: 10rpx;
+}
+
+.hero-avatar {
+  display: flex;
+  width: 56rpx;
+  height: 56rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sf-radius-card);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(229, 237, 246, 0.92));
   font-size: 20rpx;
-  color: #a0aaba;
+  font-weight: 700;
+  color: rgb(var(--sf-color-brand));
 }
 
-.status {
+.hero-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 16rpx;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.title,
+.section-title,
+.empty-title,
+.summary-title {
+  display: block;
+  margin-top: 4rpx;
   font-size: 22rpx;
+  line-height: 1.28;
+  color: inherit;
+}
+
+.desc,
+.empty-desc,
+.summary-meta,
+.comment {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 18rpx;
+  line-height: 1.42;
+}
+
+.desc {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.section-list {
+  display: grid;
+  gap: 8rpx;
+  margin-top: 10rpx;
+}
+
+.section-card,
+.empty-card {
+  padding: 12rpx 14rpx;
+}
+
+.summary-head,
+.action-row,
+.info-row {
+  justify-content: space-between;
+  gap: 10rpx;
+}
+
+.summary-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.summary-title,
+.goods-title,
+.empty-title {
+  color: rgb(var(--sf-color-ink));
+}
+
+.summary-title,
+.goods-title {
+  font-weight: 600;
+}
+
+.summary-meta,
+.goods-spec,
+.goods-count,
+.empty-desc,
+.comment,
+.info-label {
+  color: rgb(var(--sf-color-text-secondary));
+}
+
+.status-tag {
+  flex-shrink: 0;
+  padding: 4rpx 10rpx;
+  border-radius: 999px;
+  font-size: 16rpx;
+  line-height: 1.2;
+}
+
+.status-tag--brand {
+  background: rgb(var(--sf-color-brand-soft));
+  color: rgb(var(--sf-color-brand));
+}
+
+.status-tag--success {
+  background: rgba(var(--sf-color-success), 0.12);
+  color: rgb(var(--sf-color-success));
+}
+
+.status-tag--muted {
+  background: rgb(var(--sf-color-divider));
+  color: rgba(var(--sf-color-ink), 0.55);
+}
+
+.status-tag--plain {
+  background: rgb(var(--sf-color-page));
+  color: rgba(var(--sf-color-ink), 0.72);
 }
 
 .goods-row {
   display: flex;
-  gap: 14rpx;
+  gap: 10rpx;
 }
 
 .goods-image {
-  width: 112rpx;
-  height: 112rpx;
+  width: 104rpx;
+  height: 104rpx;
   flex-shrink: 0;
-  border-radius: 10rpx;
-  background: #f6f8fb;
+  border-radius: var(--sf-radius-card);
+  background: rgb(var(--sf-color-page));
 }
 
 .goods-body {
@@ -242,66 +351,58 @@ function previewImage(current: string) {
   flex: 1;
 }
 
-.goods-title {
-  display: block;
-  font-size: 24rpx;
-  line-height: 1.4;
-  color: #172033;
-}
-
 .goods-spec,
-.goods-count {
+.goods-count,
+.info-label,
+.info-value {
   display: block;
-  margin-top: 8rpx;
-  font-size: 22rpx;
+  margin-top: 6rpx;
+  font-size: 17rpx;
   line-height: 1.4;
-  color: #748194;
 }
 
-.goods-price {
-  font-size: 26rpx;
-  color: #172033;
+.goods-foot {
+  justify-content: space-between;
+  gap: 8rpx;
+  margin-top: 8rpx;
+}
+
+.goods-price,
+.info-value {
+  color: rgb(var(--sf-color-ink));
 }
 
 .info-list {
-  margin-top: 14rpx;
+  margin-top: 8rpx;
 }
 
 .info-row + .info-row {
-  margin-top: 12rpx;
-}
-
-.info-label {
-  font-size: 22rpx;
-  color: #748194;
+  margin-top: 10rpx;
 }
 
 .info-value {
-  max-width: 60%;
+  max-width: 62%;
   text-align: right;
-  font-size: 22rpx;
-  color: #172033;
 }
 
 .comment {
-  margin-top: 14rpx;
-  border-radius: 10rpx;
-  background: #f6f8fb;
-  padding: 16rpx;
-  color: #5f6b7c;
+  margin-top: 10rpx;
+  padding: 10rpx 12rpx;
+  border-radius: var(--sf-radius-card);
+  background: rgb(var(--sf-color-page));
 }
 
 .proof-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12rpx;
-  margin-top: 14rpx;
+  gap: 8rpx;
+  margin-top: 10rpx;
 }
 
 .proof-card {
   overflow: hidden;
-  border-radius: 10rpx;
-  background: #f6f8fb;
+  border-radius: var(--sf-radius-card);
+  background: rgb(var(--sf-color-page));
 }
 
 .proof-image {
@@ -314,45 +415,41 @@ function previewImage(current: string) {
 }
 
 .ghost-btn,
-.dark-btn {
-  padding: 12rpx 16rpx;
-  border-radius: 10rpx;
-  font-size: 22rpx;
+.primary-inline-btn {
+  padding: 8rpx 14rpx;
+  border-radius: var(--sf-radius-card);
+  font-size: 18rpx;
+  line-height: 1.2;
 }
 
 .ghost-btn {
   background: #ffffff;
-  color: #5f6b7c;
-  box-shadow: inset 0 0 0 1px #dbe3ef;
+  border: 1px solid rgb(var(--sf-color-line));
+  color: rgb(var(--sf-color-text-secondary));
 }
 
-.dark-btn {
-  background: #253044;
+.primary-inline-btn {
+  background: rgb(var(--sf-color-brand));
   color: #ffffff;
 }
 
 .section-card--skeleton {
-  min-height: 108rpx;
+  padding: 12rpx 14rpx;
 }
 
 .skeleton-line {
-  height: 20rpx;
-  margin-top: 12rpx;
+  height: 16rpx;
+  margin-top: 10rpx;
   border-radius: 999px;
-  background: #edf1f6;
+  background: rgb(var(--sf-color-divider));
 }
 
 .skeleton-line--title {
-  width: 220rpx;
+  width: 180rpx;
   margin-top: 0;
 }
 
 .skeleton-line--short {
-  width: 140rpx;
-}
-
-.empty-card {
-  margin-top: 16rpx;
-  text-align: center;
+  width: 120rpx;
 }
 </style>

@@ -1,12 +1,18 @@
 <template>
   <view class="page">
     <view class="hero-card">
-      <text class="title">意见反馈</text>
-      <text class="desc">保留旧站反馈类型、内容和联系方式三段式提交。</text>
+      <view class="hero-row">
+        <view class="hero-avatar">反</view>
+        <view class="hero-copy">
+          <text class="eyebrow">{{ hero.eyebrow }}</text>
+          <text class="title">{{ hero.title }}</text>
+        </view>
+      </view>
+      <text class="desc">{{ hero.description }}</text>
     </view>
 
     <view class="panel">
-      <text class="field-label">反馈类型</text>
+      <text class="field-label">问题类型</text>
       <view class="type-row">
         <view
           v-for="type in types"
@@ -55,6 +61,7 @@ import { computed, ref } from 'vue'
 import { submitUserFeedback } from '@/entities/user/api'
 import { getSessionSnapshot } from '@/shared/compat/session-adapter'
 import { mobileReg } from '@/shared/utils/validate'
+import { resolveUserPageHero } from '../page-display-utils'
 
 const session = getSessionSnapshot()
 const mobile = ref(session.mobile || '')
@@ -62,6 +69,7 @@ const content = ref('')
 const feedType = ref('商品相关')
 const submitting = ref(false)
 const types = ['商品相关', '功能异常', '优化建议', '其他']
+const hero = resolveUserPageHero('feedback')
 
 const canSubmit = computed(() => mobileReg.test(mobile.value.trim()) && content.value.trim().length > 0)
 
@@ -114,27 +122,64 @@ function toast(title: string) {
 <style scoped lang="scss">
 .page {
   min-height: 100vh;
-  padding: 20rpx 20rpx 148rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  padding: 14rpx 14rpx 124rpx;
+  background: linear-gradient(180deg, rgb(var(--sf-color-brand-soft)) 0%, rgb(var(--sf-color-page)) 26%, #ffffff 100%);
 }
 
 .hero-card,
 .panel {
-  border-radius: 12rpx;
+  border-radius: var(--sf-radius-card);
   background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  border: 1px solid rgb(var(--sf-color-line));
+  box-shadow: var(--sf-shadow-soft);
 }
 
-.hero-card,
-.panel {
-  padding: 22rpx;
+.hero-card {
+  padding: 14rpx 16rpx 16rpx;
+  color: #ffffff;
+  background: linear-gradient(145deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
+  box-shadow: var(--sf-shadow-brand);
+}
+
+.hero-row {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.hero-avatar {
+  display: flex;
+  width: 56rpx;
+  height: 56rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sf-radius-card);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(229, 237, 246, 0.92));
+  font-size: 20rpx;
+  font-weight: 700;
+  color: rgb(var(--sf-color-brand));
+}
+
+.hero-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 16rpx;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .title {
   display: block;
-  font-size: 28rpx;
-  line-height: 1.3;
-  color: #172033;
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  line-height: 1.28;
+  color: #ffffff;
 }
 
 .desc,
@@ -142,55 +187,64 @@ function toast(title: string) {
 .count {
   display: block;
   margin-top: 8rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
+  font-size: 18rpx;
+  line-height: 1.42;
+}
+
+.desc {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.field-label,
+.count {
+  color: rgb(var(--sf-color-text-secondary));
 }
 
 .panel {
-  margin-top: 16rpx;
+  margin-top: 10rpx;
+  padding: 12rpx 14rpx;
 }
 
 .type-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 12rpx;
-  margin-top: 14rpx;
+  gap: 8rpx;
+  margin-top: 12rpx;
 }
 
 .type-chip {
-  padding: 12rpx 18rpx;
-  border-radius: 10rpx;
-  background: #f6f8fb;
-  font-size: 22rpx;
-  color: #5f6b7c;
+  padding: 8rpx 14rpx;
+  border-radius: 999px;
+  background: rgb(var(--sf-color-page));
+  font-size: 18rpx;
+  color: rgb(var(--sf-color-text-secondary));
 }
 
 .type-chip--active {
-  background: #1677ff;
+  background: rgb(var(--sf-color-brand));
   color: #ffffff;
 }
 
 .field-input,
 .field-textarea {
   width: 100%;
-  margin-top: 14rpx;
-  border-radius: 10rpx;
-  background: #f6f8fb;
-  padding: 0 18rpx;
-  font-size: 24rpx;
-  color: #172033;
+  margin-top: 12rpx;
+  padding: 0 16rpx;
+  border-radius: var(--sf-radius-card);
+  background: rgb(var(--sf-color-page));
+  font-size: 20rpx;
+  color: rgb(var(--sf-color-ink));
   box-sizing: border-box;
 }
 
 .field-input {
-  height: 78rpx;
+  height: 76rpx;
 }
 
 .field-textarea {
   min-height: 220rpx;
-  padding-top: 18rpx;
-  padding-bottom: 18rpx;
+  padding-top: 16rpx;
+  padding-bottom: 16rpx;
   line-height: 1.5;
 }
 
@@ -201,9 +255,9 @@ function toast(title: string) {
 
 .footer {
   position: fixed;
-  right: 20rpx;
-  bottom: 24rpx;
-  left: 20rpx;
+  right: 14rpx;
+  bottom: 18rpx;
+  left: 14rpx;
 }
 
 .primary-btn {
@@ -211,11 +265,11 @@ function toast(title: string) {
   align-items: center;
   justify-content: center;
   height: 84rpx;
-  border-radius: 12rpx;
-  background: #1677ff;
-  font-size: 24rpx;
+  border-radius: var(--sf-radius-card);
+  background: linear-gradient(145deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
+  font-size: 22rpx;
   color: #ffffff;
-  box-shadow: 0 14rpx 30rpx rgba(22, 119, 255, 0.2);
+  box-shadow: var(--sf-shadow-brand);
 }
 
 .primary-btn--disabled {

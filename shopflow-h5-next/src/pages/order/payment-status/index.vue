@@ -2,6 +2,7 @@
   <view class="page">
     <view class="status-card">
       <view class="status-icon" :class="statusClass">{{ statusIcon }}</view>
+      <text class="eyebrow">ShopFlow Result</text>
       <text class="title">{{ title }}</text>
       <text class="desc">{{ description }}</text>
       <text v-if="orderInfo?.orderSn" class="order-copy">订单编号：{{ orderInfo.orderSn }}</text>
@@ -80,15 +81,16 @@ function goOrderList() {
 <style scoped lang="scss">
 .page {
   min-height: 100vh;
-  padding: 48rpx 20rpx 20rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  padding: 60rpx 20rpx 20rpx;
+  background: rgb(var(--sf-color-page));
 }
 
 .status-card {
-  padding: 36rpx 24rpx;
-  border-radius: 12rpx;
-  background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  padding: 40rpx 28rpx;
+  border: 2rpx solid rgb(var(--sf-color-line));
+  border-radius: 20rpx;
+  background: rgb(var(--sf-color-shell));
+  box-shadow: var(--sf-shadow-soft);
   text-align: center;
 }
 
@@ -96,55 +98,67 @@ function goOrderList() {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 112rpx;
-  height: 112rpx;
+  width: 120rpx;
+  height: 120rpx;
   margin: 0 auto;
   border-radius: 999px;
-  font-size: 44rpx;
+  font-size: 46rpx;
 }
 
 .status-icon--success {
-  background: #edf9f0;
-  color: #1f9d55;
+  background: rgba(var(--sf-color-success), 0.12);
+  color: rgb(var(--sf-color-success));
 }
 
 .status-icon--warning {
-  background: #fff7e8;
-  color: #b7791f;
+  background: rgba(var(--sf-color-warning), 0.14);
+  color: rgb(var(--sf-color-warning));
 }
 
 .status-icon--error {
-  background: #fff1f0;
-  color: #d84d3a;
+  background: rgb(var(--sf-color-price-soft));
+  color: rgb(var(--sf-color-price));
+}
+
+.eyebrow {
+  display: block;
+  margin-top: 22rpx;
+  font-size: 18rpx;
+  line-height: 1.2;
+  letter-spacing: 2rpx;
+  text-transform: uppercase;
+  color: rgb(var(--sf-color-brand-deep));
 }
 
 .title {
   display: block;
-  margin-top: 20rpx;
-  font-size: 30rpx;
-  line-height: 1.3;
-  color: #172033;
+  margin-top: 12rpx;
+  font-size: 34rpx;
+  line-height: 1.24;
+  font-weight: 600;
+  color: rgb(var(--sf-color-ink));
 }
 
 .desc,
 .order-copy,
 .redirect-copy {
   display: block;
-  margin-top: 10rpx;
+  margin-top: 12rpx;
   font-size: 22rpx;
-  line-height: 1.45;
-  color: #748194;
+  line-height: 1.5;
+  color: rgb(var(--sf-color-text-secondary));
 }
 
 .submit-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 84rpx;
+  height: 88rpx;
   margin-top: 20rpx;
-  border-radius: 12rpx;
-  background: #1677ff;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
   font-size: 24rpx;
-  color: #ffffff;
+  font-weight: 600;
+  color: rgb(var(--sf-color-shell));
 }
 </style>

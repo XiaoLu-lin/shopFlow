@@ -1,8 +1,11 @@
 <template>
   <view class="page">
-    <view class="hero-card">
-      <text class="title">我的订单</text>
-      <text class="desc">已接回旧站订单查询语义，支持按状态筛选与基础操作。</text>
+    <view class="page-head">
+      <view>
+        <text class="eyebrow">ShopFlow Orders</text>
+        <text class="title">我的订单</text>
+        <text class="desc">按状态查看订单进度，处理支付、收货和售后操作。</text>
+      </view>
     </view>
 
     <scroll-view scroll-x class="tab-scroll">
@@ -21,21 +24,28 @@
 
     <view v-if="orders.length" class="order-list">
       <view v-for="order in orders" :key="order.id" class="order-card">
-        <view @click="goOrderDetail(order.id)">
-          <view class="order-head">
-            <text class="order-sn">订单号 {{ order.orderSn }}</text>
-            <text class="order-status" :class="resolveOrderStatusClass(order.orderStatusText)">{{ order.orderStatusText }}</text>
+        <view class="order-top" @click="goOrderDetail(order.id)">
+          <view>
+            <text class="order-label">订单编号</text>
+            <text class="order-sn">{{ order.orderSn }}</text>
           </view>
+          <text class="order-status" :class="resolveOrderStatusClass(order.orderStatusText)">
+            {{ order.orderStatusText }}
+          </text>
+        </view>
 
-          <view class="goods-wrap">
-            <view v-for="goods in order.goodsList" :key="`${order.id}-${goods.goodsName}-${goods.picUrl}`" class="goods-item">
-              <image class="goods-image" :src="goods.picUrl" mode="aspectFill" />
-              <view class="goods-body">
-                <text class="goods-name">{{ goods.goodsName }}</text>
-                <text class="goods-spec">{{ goods.specifications.join(' / ') || '默认规格' }}</text>
-              </view>
-              <text class="goods-count">x {{ goods.number }}</text>
+        <view class="goods-wrap" @click="goOrderDetail(order.id)">
+          <view
+            v-for="goods in order.goodsList"
+            :key="`${order.id}-${goods.goodsName}-${goods.picUrl}`"
+            class="goods-item"
+          >
+            <image class="goods-image" :src="goods.picUrl" mode="aspectFill" />
+            <view class="goods-body">
+              <text class="goods-name">{{ goods.goodsName }}</text>
+              <text class="goods-spec">{{ goods.specifications.join(' / ') || '默认规格' }}</text>
             </view>
+            <text class="goods-count">x {{ goods.number }}</text>
           </view>
         </view>
 
@@ -45,26 +55,51 @@
         </view>
 
         <view class="action-row">
-          <view v-if="order.handleOption.cancel" class="ghost-btn" @click="handleOrderAction(order.id, 'cancel')">取消订单</view>
-          <view v-if="order.handleOption.delete" class="ghost-btn" @click="handleOrderAction(order.id, 'delete')">删除订单</view>
-          <view v-if="order.handleOption.confirm" class="dark-btn" @click="handleOrderAction(order.id, 'confirm')">确认收货</view>
-          <view v-if="order.handleOption.pay" class="primary-btn" @click="goPay(order.id)">去支付</view>
+          <view
+            v-if="order.handleOption.cancel"
+            class="ghost-btn"
+            @click="handleOrderAction(order.id, 'cancel')"
+          >
+            取消订单
+          </view>
+          <view
+            v-if="order.handleOption.delete"
+            class="ghost-btn"
+            @click="handleOrderAction(order.id, 'delete')"
+          >
+            删除订单
+          </view>
+          <view
+            v-if="order.handleOption.confirm"
+            class="ghost-btn ghost-btn--brand"
+            @click="handleOrderAction(order.id, 'confirm')"
+          >
+            确认收货
+          </view>
+          <view
+            v-if="order.handleOption.pay"
+            class="primary-btn"
+            @click="goPay(order.id)"
+          >
+            去支付
+          </view>
         </view>
       </view>
     </view>
 
     <view v-else class="empty-card">
-      <text class="empty-title">当前状态下还没有订单记录</text>
-      <text class="empty-desc">等你下完一单后，这里就会有真实数据了。</text>
+      <text class="empty-title">{{ emptyState.title }}</text>
+      <text class="empty-desc">{{ emptyState.description }}</text>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
-import { ref } from 'vue'
 import { cancelUserOrder, confirmUserOrder, deleteUserOrder } from '@/entities/order/api'
 import { fetchUserOrderList, type UserOrderItem } from '@/entities/user/api'
+import { resolveOrderEmptyState } from '@/features/order/order-display-utils'
 import { ORDER_TABS, normalizeListTab, resolveOrderStatusClass } from '../user-list-utils'
 
 type UniPageWithOptions = {
@@ -74,6 +109,7 @@ type UniPageWithOptions = {
 const pageOptions = (getCurrentPages()[getCurrentPages().length - 1] as UniPageWithOptions | undefined)?.options || {}
 const activeTab = ref(normalizeListTab(typeof pageOptions.active === 'string' ? pageOptions.active : undefined, ORDER_TABS.length))
 const orders = ref<UserOrderItem[]>([])
+const emptyState = computed(() => resolveOrderEmptyState(activeTab.value))
 
 bootstrap()
 onShow(() => {
@@ -90,6 +126,10 @@ async function bootstrap() {
     orders.value = result.list || []
   } catch (error) {
     console.error(error)
+    uni.showToast({
+      title: '订单加载失败',
+      icon: 'none',
+    })
   }
 }
 
@@ -129,6 +169,10 @@ async function handleOrderAction(orderId: number, action: 'cancel' | 'delete' | 
     })
   } catch (error) {
     console.error(error)
+    uni.showToast({
+      title: '订单操作失败',
+      icon: 'none',
+    })
   }
 }
 </script>
@@ -136,76 +180,98 @@ async function handleOrderAction(orderId: number, action: 'cancel' | 'delete' | 
 <style scoped lang="scss">
 .page {
   min-height: 100vh;
-  padding: 20rpx 20rpx 40rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  padding: 24rpx 20rpx 40rpx;
+  background: rgb(var(--sf-color-page));
 }
 
-.hero-card,
+.page-head,
 .order-card,
 .empty-card {
-  border-radius: 12rpx;
-  background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  border: 2rpx solid rgb(var(--sf-color-line));
+  border-radius: 16rpx;
+  background: rgb(var(--sf-color-shell));
+  box-shadow: var(--sf-shadow-card);
 }
 
-.hero-card {
-  padding: 22rpx;
+.page-head {
+  padding: 26rpx 24rpx;
+  background: linear-gradient(135deg, rgb(var(--sf-color-brand-soft)) 0%, rgb(var(--sf-color-shell)) 72%);
+}
+
+.eyebrow {
+  display: block;
+  font-size: 18rpx;
+  line-height: 1.2;
+  letter-spacing: 2rpx;
+  text-transform: uppercase;
+  color: rgb(var(--sf-color-brand-deep));
 }
 
 .title {
   display: block;
-  font-size: 28rpx;
-  line-height: 1.3;
-  color: #172033;
+  margin-top: 10rpx;
+  font-size: 34rpx;
+  line-height: 1.24;
+  font-weight: 600;
+  color: rgb(var(--sf-color-ink));
 }
 
 .desc,
-.price-copy,
+.order-label,
+.order-sn,
 .goods-spec,
-.empty-desc,
-.order-sn {
+.goods-count,
+.price-copy,
+.empty-desc {
   display: block;
   margin-top: 8rpx;
+  font-size: 21rpx;
+  line-height: 1.45;
+  color: rgb(var(--sf-color-text-secondary));
+}
+
+.desc {
+  margin-top: 10rpx;
   font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
 }
 
 .tab-scroll {
-  margin-top: 16rpx;
+  margin-top: 18rpx;
   white-space: nowrap;
 }
 
 .tab-row {
   display: inline-flex;
   gap: 12rpx;
+  padding: 2rpx 2rpx 4rpx;
 }
 
 .tab-chip {
-  padding: 12rpx 20rpx;
+  padding: 14rpx 22rpx;
   border-radius: 999px;
-  background: #ffffff;
+  background: rgb(var(--sf-color-shell));
   font-size: 22rpx;
-  color: #5f6b7c;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  line-height: 1.2;
+  color: rgb(var(--sf-color-text-secondary));
+  box-shadow: var(--sf-shadow-card);
 }
 
 .tab-chip--active {
-  background: #1677ff;
-  color: #ffffff;
+  background: rgb(var(--sf-color-brand));
+  color: rgb(var(--sf-color-shell));
 }
 
 .order-list {
   display: grid;
-  gap: 14rpx;
-  margin-top: 16rpx;
+  gap: 16rpx;
+  margin-top: 18rpx;
 }
 
 .order-card {
-  padding: 18rpx;
+  padding: 20rpx;
 }
 
-.order-head,
+.order-top,
 .goods-item,
 .price-row,
 .action-row {
@@ -216,26 +282,46 @@ async function handleOrderAction(orderId: number, action: 'cancel' | 'delete' | 
 }
 
 .order-status {
-  font-size: 22rpx;
+  flex-shrink: 0;
+  padding: 8rpx 14rpx;
+  border-radius: 999px;
+  font-size: 20rpx;
+  line-height: 1.2;
+}
+
+.order-status--pending {
+  background: rgb(var(--sf-color-brand-soft));
+  color: rgb(var(--sf-color-brand-deep));
+}
+
+.order-status--done {
+  background: rgb(var(--sf-color-mist));
+  color: rgba(var(--sf-color-ink), 0.72);
+}
+
+.order-status--muted {
+  background: rgb(var(--sf-color-divider));
+  color: rgba(var(--sf-color-ink), 0.6);
 }
 
 .goods-wrap {
   display: grid;
   gap: 12rpx;
-  margin-top: 14rpx;
+  margin-top: 18rpx;
 }
 
 .goods-item {
   padding: 14rpx;
-  border-radius: 10rpx;
-  background: #f7faff;
+  border-radius: 14rpx;
+  background: rgb(var(--sf-color-page));
 }
 
 .goods-image {
   width: 120rpx;
   height: 120rpx;
-  border-radius: 10rpx;
-  background: #ffffff;
+  flex-shrink: 0;
+  border-radius: var(--sf-radius-image);
+  background: rgb(var(--sf-color-shell));
 }
 
 .goods-body {
@@ -246,52 +332,60 @@ async function handleOrderAction(orderId: number, action: 'cancel' | 'delete' | 
 .goods-name,
 .price-value,
 .empty-title {
-  font-size: 24rpx;
-  line-height: 1.35;
-  color: #172033;
+  display: block;
+  font-size: 25rpx;
+  line-height: 1.36;
+  color: rgb(var(--sf-color-ink));
 }
 
-.goods-count {
-  font-size: 21rpx;
-  color: #748194;
+.price-value {
+  font-weight: 600;
+  color: rgb(var(--sf-color-price));
 }
 
 .price-row,
 .action-row {
-  margin-top: 14rpx;
+  margin-top: 16rpx;
+}
+
+.action-row {
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .ghost-btn,
-.dark-btn,
 .primary-btn {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 132rpx;
   height: 72rpx;
-  padding: 0 18rpx;
-  border-radius: 12rpx;
+  padding: 0 22rpx;
+  border-radius: 999px;
   font-size: 21rpx;
+  line-height: 1.2;
 }
 
 .ghost-btn {
-  background: #ffffff;
-  color: #5f6b7c;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  border: 2rpx solid rgb(var(--sf-color-line));
+  background: rgb(var(--sf-color-shell));
+  color: rgb(var(--sf-color-text-secondary));
 }
 
-.dark-btn {
-  background: #172033;
-  color: #ffffff;
+.ghost-btn--brand {
+  border-color: rgb(var(--sf-color-brand-soft));
+  background: rgb(var(--sf-color-brand-soft));
+  color: rgb(var(--sf-color-brand-deep));
 }
 
 .primary-btn {
-  background: #1677ff;
-  color: #ffffff;
+  background: linear-gradient(135deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
+  color: rgb(var(--sf-color-shell));
 }
 
 .empty-card {
-  margin-top: 16rpx;
-  padding: 32rpx 24rpx;
+  margin-top: 18rpx;
+  padding: 48rpx 28rpx;
   text-align: center;
 }
 </style>

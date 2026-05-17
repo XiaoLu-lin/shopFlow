@@ -1,8 +1,14 @@
 <template>
   <view class="page">
     <view class="hero-card">
-      <text class="title">优惠券</text>
-      <text class="desc">保持旧站未使用 / 已使用 / 已过期三种状态语义，列表接口已接通。</text>
+      <view class="hero-row">
+        <view class="hero-avatar">券</view>
+        <view class="hero-copy">
+          <text class="eyebrow">{{ hero.eyebrow }}</text>
+          <text class="title">{{ hero.title }}</text>
+        </view>
+      </view>
+      <text class="desc">{{ hero.description }}</text>
     </view>
 
     <scroll-view scroll-x class="tab-scroll">
@@ -32,7 +38,7 @@
 
     <view v-else-if="coupons.length" class="coupon-list">
       <view v-for="coupon in coupons" :key="coupon.id" class="coupon-card">
-        <view class="coupon-side" :class="couponToneClass">
+        <view class="coupon-side" :class="`coupon-side--${couponTone}`">
           <text class="coupon-side-copy">立减</text>
           <text class="coupon-side-price">¥{{ coupon.discount }}</text>
         </view>
@@ -48,8 +54,8 @@
     </view>
 
     <view v-else class="empty-card">
-      <text class="empty-title">当前状态下没有优惠券</text>
-      <text class="empty-desc">等你领券或下单后，这里就会出现真实记录。</text>
+      <text class="empty-title">{{ emptyState.title }}</text>
+      <text class="empty-desc">{{ emptyState.description }}</text>
     </view>
   </view>
 </template>
@@ -59,6 +65,7 @@ import { onShow } from '@dcloudio/uni-app'
 import { computed, ref } from 'vue'
 import { fetchUserCouponList, type UserCouponItem } from '@/entities/user/api'
 import { COUPON_TABS, normalizeListTab } from '../user-list-utils'
+import { resolveCouponEmptyState, resolveCouponTone, resolveUserPageHero } from '../page-display-utils'
 
 type UniPageWithOptions = {
   options?: Record<string, unknown>
@@ -68,18 +75,10 @@ const pageOptions = (getCurrentPages()[getCurrentPages().length - 1] as UniPageW
 const activeTab = ref(normalizeListTab(typeof pageOptions.active === 'string' ? pageOptions.active : undefined, COUPON_TABS.length))
 const loading = ref(true)
 const coupons = ref<UserCouponItem[]>([])
+const hero = resolveUserPageHero('coupon')
 
-const couponToneClass = computed(() => {
-  if (activeTab.value === 0) {
-    return 'coupon-side--brand'
-  }
-
-  if (activeTab.value === 1) {
-    return 'coupon-side--dark'
-  }
-
-  return 'coupon-side--muted'
-})
+const couponTone = computed(() => resolveCouponTone(activeTab.value))
+const emptyState = computed(() => resolveCouponEmptyState(activeTab.value))
 
 bootstrap()
 onShow(() => {
@@ -116,68 +115,131 @@ async function switchTab(index: number) {
 <style scoped lang="scss">
 .page {
   min-height: 100vh;
-  padding: 20rpx 20rpx 40rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  padding: 14rpx 14rpx 32rpx;
+  background: linear-gradient(180deg, rgb(var(--sf-color-brand-soft)) 0%, rgb(var(--sf-color-page)) 26%, #ffffff 100%);
 }
 
 .hero-card,
 .coupon-card,
 .empty-card {
-  border-radius: 12rpx;
+  border-radius: var(--sf-radius-card);
   background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  border: 1px solid rgb(var(--sf-color-line));
+  box-shadow: var(--sf-shadow-soft);
 }
 
-.hero-card,
+.hero-card {
+  padding: 14rpx 16rpx 16rpx;
+  color: #ffffff;
+  background: linear-gradient(145deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
+  box-shadow: var(--sf-shadow-brand);
+}
+
 .empty-card {
-  padding: 22rpx;
+  padding: 12rpx 14rpx;
+}
+
+.hero-row,
+.coupon-head,
+.tab-row {
+  display: flex;
+}
+
+.hero-row,
+.coupon-head {
+  align-items: center;
+  gap: 10rpx;
+}
+
+.hero-avatar {
+  display: flex;
+  width: 56rpx;
+  height: 56rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sf-radius-card);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(229, 237, 246, 0.92));
+  font-size: 20rpx;
+  font-weight: 700;
+  color: rgb(var(--sf-color-brand));
+}
+
+.hero-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 16rpx;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .title,
 .empty-title {
   display: block;
-  font-size: 28rpx;
-  line-height: 1.3;
-  color: #172033;
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  line-height: 1.28;
+  color: inherit;
 }
 
 .desc,
 .empty-desc {
   display: block;
   margin-top: 8rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
+  font-size: 18rpx;
+  line-height: 1.42;
+}
+
+.desc {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.empty-title,
+.coupon-title {
+  color: rgb(var(--sf-color-ink));
+}
+
+.empty-desc,
+.coupon-desc,
+.coupon-time {
+  color: rgb(var(--sf-color-text-secondary));
 }
 
 .tab-scroll {
-  margin-top: 16rpx;
+  margin-top: 10rpx;
   white-space: nowrap;
 }
 
 .tab-row {
   display: inline-flex;
-  gap: 12rpx;
+  gap: 6rpx;
 }
 
 .tab-chip {
-  padding: 12rpx 20rpx;
+  padding: 8rpx 14rpx;
   border-radius: 999px;
-  background: #ffffff;
-  font-size: 22rpx;
-  color: #5f6b7c;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgb(var(--sf-color-line));
+  font-size: 18rpx;
+  color: rgb(var(--sf-color-text-secondary));
+  box-shadow: var(--sf-shadow-card);
 }
 
 .tab-chip--active {
-  background: #1677ff;
+  background: rgb(var(--sf-color-brand));
+  border-color: rgb(var(--sf-color-brand));
   color: #ffffff;
 }
 
 .coupon-list {
   display: grid;
-  gap: 14rpx;
-  margin-top: 16rpx;
+  gap: 8rpx;
+  margin-top: 10rpx;
 }
 
 .coupon-card {
@@ -188,105 +250,103 @@ async function switchTab(index: number) {
 .coupon-side,
 .skeleton-side {
   display: flex;
-  width: 164rpx;
+  width: 124rpx;
   flex-shrink: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 18rpx 12rpx;
+  padding: 14rpx 8rpx;
 }
 
 .coupon-side--brand {
-  background: #1677ff;
+  background: linear-gradient(180deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
   color: #ffffff;
 }
 
-.coupon-side--dark {
-  background: #253044;
+.coupon-side--deep {
+  background: rgb(var(--sf-color-brand-deep));
   color: #ffffff;
 }
 
 .coupon-side--muted {
-  background: #e9eef5;
-  color: #4f5d72;
+  background: rgb(var(--sf-color-brand-soft));
+  color: rgb(var(--sf-color-brand-deep));
 }
 
 .coupon-side-copy {
-  font-size: 20rpx;
+  font-size: 16rpx;
   opacity: 0.86;
 }
 
 .coupon-side-price {
-  margin-top: 8rpx;
-  font-size: 38rpx;
+  margin-top: 4rpx;
+  font-size: 30rpx;
   line-height: 1;
 }
 
 .coupon-body {
   min-width: 0;
   flex: 1;
-  padding: 20rpx;
+  padding: 14rpx;
 }
 
 .coupon-head {
-  display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12rpx;
+  gap: 8rpx;
 }
 
 .coupon-title {
   min-width: 0;
   flex: 1;
-  font-size: 24rpx;
+  font-size: 20rpx;
   line-height: 1.35;
-  color: #172033;
+  color: rgb(var(--sf-color-ink));
 }
 
 .coupon-tag {
-  flex-shrink: 0;
-  border-radius: 8rpx;
-  background: #f6f8fb;
-  padding: 6rpx 10rpx;
-  font-size: 18rpx;
-  color: #748194;
+  padding: 3rpx 7rpx;
+  border-radius: var(--sf-radius-card);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgb(var(--sf-color-line));
+  font-size: 16rpx;
+  color: rgb(var(--sf-color-brand));
 }
 
 .coupon-desc,
 .coupon-time {
-  display: block;
-  margin-top: 10rpx;
-  font-size: 22rpx;
+  margin-top: 6rpx;
+  font-size: 17rpx;
   line-height: 1.45;
-  color: #748194;
 }
 
 .coupon-card--skeleton {
-  min-height: 156rpx;
+  min-height: 132rpx;
 }
 
 .skeleton-side {
-  background: #edf1f6;
+  background: rgb(var(--sf-color-divider));
 }
 
 .skeleton-line {
-  height: 20rpx;
-  margin-top: 12rpx;
+  height: 16rpx;
+  margin-top: 8rpx;
   border-radius: 999px;
-  background: #edf1f6;
+  background: rgb(var(--sf-color-divider));
 }
 
 .skeleton-line--title {
-  width: 220rpx;
+  width: 180rpx;
   margin-top: 0;
 }
 
 .skeleton-line--short {
-  width: 140rpx;
+  width: 112rpx;
 }
 
 .empty-card {
-  margin-top: 16rpx;
-  text-align: center;
+  margin-top: 10rpx;
+  padding-top: 12rpx;
+  padding-bottom: 12rpx;
 }
 </style>

@@ -13,11 +13,12 @@ const LEGACY_STATIC_ROUTE_MAP: Record<string, string> = {
   '/order': '/pages/order/cart/index',
   '/order/checkout': '/pages/order/checkout/index',
   '/user': '/pages/user/index',
+  '/user/server': '/pages/user/service/index',
   '/user/address': '/pages/user/address/index',
   '/user/collect': '/pages/user/collect/index',
   '/user/help': '/pages/user/help/index',
   '/user/feedback': '/pages/user/feedback/index',
-  '/user/information': '/pages/user/information/index',
+  '/user/information': '/pages/user/profile/index',
 }
 
 function trimHashPrefix(input: string) {
@@ -81,6 +82,49 @@ export function resolveLegacyHashRoute(input: string) {
   if (paymentStatusMatch) {
     const suffix = query ? `&${query}` : ''
     return `/pages/order/payment-status/index?status=${paymentStatusMatch[1]}${suffix ? suffix : ''}`
+  }
+
+  const orderListMatch = path.match(/^\/user\/order\/list\/([^/]+)$/)
+  if (orderListMatch) {
+    const active = orderListMatch[1]
+    const suffix = query ? `&${query}` : ''
+    return `/pages/user/order-list/index?active=${active}${suffix ? suffix : ''}`
+  }
+
+  const couponListMatch = path.match(/^\/user\/coupon\/list\/([^/]+)$/)
+  if (couponListMatch) {
+    const active = couponListMatch[1]
+    const suffix = query ? `&${query}` : ''
+    return `/pages/user/coupon/index?active=${active}${suffix ? suffix : ''}`
+  }
+
+  const infoEditMatch = path.match(/^\/user\/information\/(setMobile|setNickname|setPassword)$/)
+  if (infoEditMatch) {
+    const routeMap: Record<string, string> = {
+      setMobile: '/pages/user/profile-edit-mobile/index',
+      setNickname: '/pages/user/profile-edit-nickname/index',
+      setPassword: '/pages/user/profile-edit-password/index',
+    }
+    const suffix = query ? `?${query}` : ''
+    return `${routeMap[infoEditMatch[1]]}${suffix}`
+  }
+
+  const orderDetailMatch = path.match(/^\/order\/order-detail$/)
+  if (orderDetailMatch) {
+    const suffix = query ? `?${query}` : ''
+    return `/pages/order/detail/index${suffix}`
+  }
+
+  const orderPaymentMatch = path.match(/^\/order\/payment$/)
+  if (orderPaymentMatch) {
+    const suffix = query ? `?${query}` : ''
+    return `/pages/order/payment/index${suffix}`
+  }
+
+  const refundListMatch = path.match(/^\/user\/refund\/list$/)
+  if (refundListMatch) {
+    const suffix = query ? `&${query}` : ''
+    return `/pages/user/refund/index?active=0${suffix ? suffix : ''}`
   }
 
   return ''

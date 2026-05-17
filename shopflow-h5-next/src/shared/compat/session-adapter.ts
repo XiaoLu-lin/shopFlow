@@ -1,5 +1,6 @@
 import { SESSION_KEYS } from './session-keys'
 import { resolveStorage, type StorageLike } from '@/shared/platform/storage'
+import { isLikelyTenantToken } from './tenant'
 
 export interface SessionSnapshot {
   token: string
@@ -18,9 +19,16 @@ function readValue(storage: StorageLike, key: string): string {
 }
 
 export function getSessionSnapshot(storage: StorageLike = resolveStorage()): SessionSnapshot {
+  const persistedTenantToken = readValue(storage, SESSION_KEYS.tenantToken)
+  const tenantToken = isLikelyTenantToken(persistedTenantToken) ? persistedTenantToken : ''
+
+  if (persistedTenantToken && !tenantToken) {
+    storage.removeItem(SESSION_KEYS.tenantToken)
+  }
+
   return {
     token: readValue(storage, SESSION_KEYS.authorization),
-    tenantToken: readValue(storage, SESSION_KEYS.tenantToken),
+    tenantToken,
     avatar: readValue(storage, SESSION_KEYS.avatar),
     nickName: readValue(storage, SESSION_KEYS.nickName),
     mobile: readValue(storage, SESSION_KEYS.mobile),
@@ -56,7 +64,7 @@ export function persistLegacyLoginSession(
 }
 
 export function persistTenantToken(token: string, storage: StorageLike = resolveStorage()): string {
-  const nextToken = token.trim()
+  const nextToken = isLikelyTenantToken(token) ? token.trim() : ''
   if (nextToken) {
     storage.setItem(SESSION_KEYS.tenantToken, nextToken)
   }

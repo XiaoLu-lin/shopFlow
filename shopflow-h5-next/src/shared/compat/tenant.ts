@@ -23,7 +23,7 @@ export function normalizeWxPath(url: string): string {
 }
 
 export function shouldBootstrapTenant(path: string, tenantToken: string): boolean {
-  if (tenantToken.trim()) {
+  if (isLikelyTenantToken(tenantToken)) {
     return false
   }
 
@@ -33,7 +33,7 @@ export function shouldBootstrapTenant(path: string, tenantToken: string): boolea
 
 export function extractTenantToken(payload: unknown): string {
   if (typeof payload === 'string') {
-    return payload.trim()
+    return isLikelyTenantToken(payload) ? payload.trim() : ''
   }
 
   if (typeof payload === 'object' && payload !== null) {
@@ -52,4 +52,19 @@ export function extractTenantToken(payload: unknown): string {
 export function handleTenantPayload(payload: unknown, storage: StorageLike = resolveStorage()): string {
   const tenantToken = extractTenantToken(payload)
   return tenantToken ? persistTenantToken(tenantToken, storage) : ''
+}
+
+export function isLikelyTenantToken(value: string): boolean {
+  const normalized = value.trim()
+
+  if (!normalized) {
+    return false
+  }
+
+  const lowered = normalized.toLowerCase()
+  if (lowered.startsWith('<!doctype') || lowered.startsWith('<html') || lowered.includes('<body')) {
+    return false
+  }
+
+  return !/[<>\r\n]/.test(normalized)
 }

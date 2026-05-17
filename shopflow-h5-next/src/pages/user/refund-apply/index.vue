@@ -1,8 +1,14 @@
 <template>
   <view class="page">
     <view class="hero-card">
-      <text class="title">申请售后</text>
-      <text class="desc">当前先接通退款原因、金额、说明和凭证上传流程。</text>
+      <view class="hero-row">
+        <view class="hero-avatar">申</view>
+        <view class="hero-copy">
+          <text class="eyebrow">{{ hero.eyebrow }}</text>
+          <text class="title">{{ hero.title }}</text>
+        </view>
+      </view>
+      <text class="desc">{{ hero.description }}</text>
     </view>
 
     <view v-if="loading" class="section-list">
@@ -47,7 +53,7 @@
         <view class="section-card">
           <text class="field-label">退款金额</text>
           <input v-model="amount" class="field-input" type="digit" :placeholder="`最多 ¥ ${amountPlaceholder}`" />
-          <text class="hint">默认按订单实付金额提交，可手动调整。</text>
+          <text class="hint">默认按订单实付金额提交，也可以按实际情况调整。</text>
         </view>
 
         <view class="section-card">
@@ -59,9 +65,7 @@
         <view class="section-card">
           <view class="upload-head">
             <text class="section-title">凭证图片</text>
-            <view class="ghost-btn" @click="chooseProofImage">
-              {{ uploading ? '上传中...' : '上传图片' }}
-            </view>
+            <view class="ghost-btn" @click="chooseProofImage">{{ uploading ? '上传中...' : '上传图片' }}</view>
           </view>
           <view v-if="pictures.length" class="proof-grid">
             <view v-for="(picture, index) in pictures" :key="picture" class="proof-card" @click="removePicture(index)">
@@ -71,26 +75,27 @@
           </view>
           <text v-else class="hint">可补充商品问题截图或物流凭证。</text>
         </view>
+      </view>
 
-        <view class="footer">
-          <view class="primary-btn" :class="{ 'primary-btn--disabled': saving || uploading }" @click="submit">
-            {{ saving ? '提交中...' : '提交售后申请' }}
-          </view>
+      <view class="footer">
+        <view class="primary-btn" :class="{ 'primary-btn--disabled': saving || uploading }" @click="submit">
+          {{ saving ? '提交中...' : '提交售后申请' }}
         </view>
       </view>
     </template>
 
     <view v-else class="empty-card">
       <text class="empty-title">未找到订单信息</text>
-      <text class="empty-desc">请返回订单页重试。</text>
+      <text class="empty-desc">请返回订单页重新发起售后申请。</text>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { fetchOrderDetail, type OrderDetailInfo, type OrderDetailGoodsItem } from '@/entities/order/api'
+import { fetchOrderDetail, type OrderDetailGoodsItem, type OrderDetailInfo } from '@/entities/order/api'
 import { submitAftersale, uploadAftersaleProof } from '@/entities/user/api'
+import { resolveUserPageHero } from '../page-display-utils'
 
 type UniPageWithOptions = {
   options?: Record<string, unknown>
@@ -109,6 +114,7 @@ const pictures = ref<string[]>([])
 const orderInfo = ref<OrderDetailInfo | null>(null)
 const orderGoods = ref<OrderDetailGoodsItem | null>(null)
 const amountPlaceholder = ref('0')
+const hero = resolveUserPageHero('refund-apply')
 
 bootstrap()
 
@@ -218,31 +224,72 @@ function toast(title: string) {
 <style scoped lang="scss">
 .page {
   min-height: 100vh;
-  padding: 20rpx 20rpx 148rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  padding: 14rpx 14rpx 124rpx;
+  background: linear-gradient(180deg, rgb(var(--sf-color-brand-soft)) 0%, rgb(var(--sf-color-page)) 26%, #ffffff 100%);
 }
 
 .hero-card,
 .section-card,
 .empty-card {
-  border-radius: 12rpx;
+  border-radius: var(--sf-radius-card);
   background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  border: 1px solid rgb(var(--sf-color-line));
+  box-shadow: var(--sf-shadow-soft);
 }
 
-.hero-card,
-.section-card,
-.empty-card {
-  padding: 22rpx;
+.hero-card {
+  padding: 14rpx 16rpx 16rpx;
+  color: #ffffff;
+  background: linear-gradient(145deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
+  box-shadow: var(--sf-shadow-brand);
+}
+
+.hero-row,
+.goods-foot,
+.upload-head {
+  display: flex;
+  align-items: center;
+}
+
+.hero-row {
+  gap: 10rpx;
+}
+
+.hero-avatar {
+  display: flex;
+  width: 56rpx;
+  height: 56rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sf-radius-card);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(229, 237, 246, 0.92));
+  font-size: 20rpx;
+  font-weight: 700;
+  color: rgb(var(--sf-color-brand));
+}
+
+.hero-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 16rpx;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .title,
 .section-title,
 .empty-title {
   display: block;
-  font-size: 28rpx;
-  line-height: 1.3;
-  color: #172033;
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  line-height: 1.28;
+  color: inherit;
 }
 
 .desc,
@@ -252,36 +299,46 @@ function toast(title: string) {
 .empty-desc {
   display: block;
   margin-top: 8rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
+  font-size: 18rpx;
+  line-height: 1.42;
+}
+
+.desc {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.field-label,
+.hint,
+.count,
+.empty-desc,
+.goods-spec,
+.goods-meta {
+  color: rgb(var(--sf-color-text-secondary));
 }
 
 .section-list {
   display: grid;
-  gap: 14rpx;
-  margin-top: 16rpx;
+  gap: 8rpx;
+  margin-top: 10rpx;
 }
 
-.goods-row,
-.goods-foot,
-.upload-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16rpx;
+.section-card,
+.empty-card {
+  padding: 12rpx 14rpx;
 }
 
 .goods-row {
+  display: flex;
   align-items: flex-start;
+  gap: 10rpx;
 }
 
 .goods-image {
-  width: 112rpx;
-  height: 112rpx;
+  width: 104rpx;
+  height: 104rpx;
   flex-shrink: 0;
-  border-radius: 10rpx;
-  background: #f6f8fb;
+  border-radius: var(--sf-radius-card);
+  background: rgb(var(--sf-color-page));
 }
 
 .goods-body {
@@ -289,70 +346,80 @@ function toast(title: string) {
   flex: 1;
 }
 
-.goods-title {
+.goods-title,
+.empty-title {
   display: block;
-  font-size: 24rpx;
-  line-height: 1.4;
-  color: #172033;
+  font-size: 20rpx;
+  line-height: 1.32;
+  color: rgb(var(--sf-color-ink));
+}
+
+.goods-title {
+  font-weight: 600;
 }
 
 .goods-spec,
 .goods-meta {
   display: block;
-  margin-top: 8rpx;
-  font-size: 22rpx;
+  margin-top: 6rpx;
+  font-size: 17rpx;
   line-height: 1.4;
-  color: #748194;
+}
+
+.goods-foot {
+  justify-content: space-between;
+  gap: 8rpx;
+  margin-top: 8rpx;
 }
 
 .goods-price {
-  font-size: 26rpx;
-  color: #172033;
+  font-size: 22rpx;
+  color: rgb(var(--sf-color-ink));
 }
 
 .chip-scroll {
-  margin-top: 14rpx;
+  margin-top: 10rpx;
   white-space: nowrap;
 }
 
 .chip-row {
   display: inline-flex;
-  gap: 12rpx;
+  gap: 6rpx;
 }
 
 .chip {
-  padding: 12rpx 18rpx;
+  padding: 8rpx 14rpx;
   border-radius: 999px;
-  background: #f6f8fb;
-  font-size: 22rpx;
-  color: #5f6b7c;
+  background: rgb(var(--sf-color-page));
+  font-size: 18rpx;
+  color: rgb(var(--sf-color-text-secondary));
 }
 
 .chip--active {
-  background: #1677ff;
+  background: rgb(var(--sf-color-brand));
   color: #ffffff;
 }
 
 .field-input,
 .field-textarea {
   width: 100%;
-  margin-top: 14rpx;
-  border-radius: 10rpx;
-  background: #f6f8fb;
-  padding: 0 18rpx;
-  font-size: 24rpx;
-  color: #172033;
+  margin-top: 12rpx;
+  padding: 0 16rpx;
+  border-radius: var(--sf-radius-card);
+  background: rgb(var(--sf-color-page));
+  font-size: 20rpx;
+  color: rgb(var(--sf-color-ink));
   box-sizing: border-box;
 }
 
 .field-input {
-  height: 78rpx;
+  height: 76rpx;
 }
 
 .field-textarea {
   min-height: 200rpx;
-  padding-top: 18rpx;
-  padding-bottom: 18rpx;
+  padding-top: 16rpx;
+  padding-bottom: 16rpx;
   line-height: 1.5;
 }
 
@@ -361,31 +428,35 @@ function toast(title: string) {
   text-align: right;
 }
 
+.upload-head {
+  justify-content: space-between;
+  gap: 10rpx;
+}
+
 .ghost-btn {
   display: inline-flex;
+  min-width: 152rpx;
   align-items: center;
   justify-content: center;
-  min-width: 160rpx;
   height: 64rpx;
-  border-radius: 10rpx;
-  background: #ffffff;
-  font-size: 22rpx;
-  color: #5f6b7c;
-  box-shadow: inset 0 0 0 1px #dbe3ef;
+  border-radius: var(--sf-radius-card);
+  background: rgb(var(--sf-color-brand-soft));
+  font-size: 18rpx;
+  color: rgb(var(--sf-color-brand));
 }
 
 .proof-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12rpx;
-  margin-top: 14rpx;
+  gap: 8rpx;
+  margin-top: 10rpx;
 }
 
 .proof-card {
   position: relative;
   overflow: hidden;
-  border-radius: 10rpx;
-  background: #f6f8fb;
+  border-radius: var(--sf-radius-card);
+  background: rgb(var(--sf-color-page));
 }
 
 .proof-image {
@@ -395,20 +466,20 @@ function toast(title: string) {
 
 .proof-remove {
   position: absolute;
-  right: 8rpx;
   top: 8rpx;
-  border-radius: 999px;
-  background: rgba(23, 32, 51, 0.66);
+  right: 8rpx;
   padding: 4rpx 8rpx;
-  font-size: 18rpx;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.62);
+  font-size: 16rpx;
   color: #ffffff;
 }
 
 .footer {
   position: fixed;
-  right: 20rpx;
-  bottom: 24rpx;
-  left: 20rpx;
+  right: 14rpx;
+  bottom: 18rpx;
+  left: 14rpx;
 }
 
 .primary-btn {
@@ -416,11 +487,11 @@ function toast(title: string) {
   align-items: center;
   justify-content: center;
   height: 84rpx;
-  border-radius: 12rpx;
-  background: #1677ff;
-  font-size: 24rpx;
+  border-radius: var(--sf-radius-card);
+  background: linear-gradient(145deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
+  font-size: 22rpx;
   color: #ffffff;
-  box-shadow: 0 14rpx 30rpx rgba(22, 119, 255, 0.2);
+  box-shadow: var(--sf-shadow-brand);
 }
 
 .primary-btn--disabled {
@@ -428,23 +499,18 @@ function toast(title: string) {
 }
 
 .section-card--skeleton {
-  min-height: 96rpx;
+  padding: 12rpx 14rpx;
 }
 
 .skeleton-line {
-  height: 20rpx;
-  margin-top: 12rpx;
+  height: 16rpx;
+  margin-top: 10rpx;
   border-radius: 999px;
-  background: #edf1f6;
+  background: rgb(var(--sf-color-divider));
 }
 
 .skeleton-line--title {
-  width: 220rpx;
+  width: 180rpx;
   margin-top: 0;
-}
-
-.empty-card {
-  margin-top: 16rpx;
-  text-align: center;
 }
 </style>

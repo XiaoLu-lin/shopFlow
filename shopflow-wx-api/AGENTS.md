@@ -30,7 +30,8 @@
 
 ## 5. OpenSpec 衔接
 
-- 涉及当前目录的功能新增、行为变更、主流程调整时，默认先走 OpenSpec。
+- 涉及当前目录的功能新增、行为变更、主流程调整时，默认先使用根规则中的 `openspec-superpowers-orchestrator` 作为统一入口，由它判断 `brainstorming` / `openspec-explore` 与后续阶段。
+- 除已明确可按 `lightweight` 处理的极小改动外，不要绕过 `openspec-superpowers-orchestrator` 直接进入实现。
 - `apply` 完成后自动进入 `review`。
 - `review` 完成后停止等待用户确认，再决定是否 `archive`。
 - 如果归档结论只影响当前目录，优先沉淀到当前 `AGENTS.md`。

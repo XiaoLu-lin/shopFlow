@@ -13,12 +13,12 @@ export function normalizeListTab(value: string | undefined, length: number) {
 
 export function resolveOrderStatusClass(statusText: string) {
   if (statusText.includes('待')) {
-    return 'text-brand-deep'
+    return 'order-status--pending'
   }
 
   if (statusText.includes('已') || statusText.includes('完成')) {
-    return 'text-ink/45'
+    return 'order-status--done'
   }
 
-  return 'text-ink/60'
+  return 'order-status--muted'
 }

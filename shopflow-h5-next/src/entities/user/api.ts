@@ -267,7 +267,7 @@ export async function fetchUserCouponList(params: {
   page: number
   limit: number
 }) {
-  const response = await getApiClient().get<ApiEnvelope<UserCouponListPayload>>('/coupon/mylist', {
+  const response = await getApiClient().get<ApiEnvelope<UserCouponListPayload>>('/coupon/user', {
     params,
   })
   return response.data.data

@@ -41,6 +41,17 @@ describe('session-adapter', () => {
     expect(snapshot.tenantToken).toBe('tenant-1')
   })
 
+  test('drops persisted invalid tenant token from storage snapshot', () => {
+    const storage = createMemoryStorage({
+      ShopFlowTenantToken: '<!doctype html><html><body>vite</body></html>',
+    })
+
+    const snapshot = getSessionSnapshot(storage)
+
+    expect(snapshot.tenantToken).toBe('')
+    expect(storage.getItem('ShopFlowTenantToken')).toBeNull()
+  })
+
   test('clears legacy session fields including mobile', () => {
     const storage = createMemoryStorage({
       Authorization: 'token-1',

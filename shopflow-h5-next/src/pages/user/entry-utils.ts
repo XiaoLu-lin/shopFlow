@@ -90,6 +90,6 @@ export function resolveQuickLinkAction(link: QuickLinkItem) {
 
   return {
     action: 'toast' as const,
-    title: `${link.label}下一批补齐`,
+    title: `${link.label}正在整理中`,
   }
 }

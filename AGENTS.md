@@ -7,12 +7,14 @@
 
 ## 1. OpenSpec 默认规则
 
-- 涉及功能新增、功能修改、主流程调整、接口或数据结构变化、较大修复时，默认先走 OpenSpec。
-- 涉及管理端页面行为、小程序交互流程、后端接口返回结构、数据库模型与 SQL 变更时，也必须先走 OpenSpec，不要绕过 `explore / propose` 直接改实现。
-- 涉及新增能力、行为变更、方案设计或非平凡重构时，先显式使用 `superpowers:brainstorming`，形成设计结论后再进入 OpenSpec 建档。
+- 涉及功能新增、功能修改、主流程调整、接口或数据结构变化、较大修复时，默认先使用 `openspec-superpowers-orchestrator` 作为正式 change 的统一编排入口。
+- `openspec-superpowers-orchestrator` 负责判断 `full-flow` / `lightweight`、选择 `superpowers:brainstorming` 或 `openspec-explore` 作为入口，并统一执行 Gate 1、Gate 2 与后续阶段衔接。
+- 涉及管理端页面行为、小程序交互流程、后端接口返回结构、数据库模型与 SQL 变更时，也必须先经过 `openspec-superpowers-orchestrator` 的阶段判断，不要绕过入口 skill 与确认闸门直接改实现。
+- 涉及新增能力、行为变更、方案设计或非平凡重构时，由 `openspec-superpowers-orchestrator` 默认优先路由到 `superpowers:brainstorming`，形成设计结论后再进入 OpenSpec 建档。
 - 默认遵循官方 OpenSpec 主流程：`explore -> propose -> apply -> archive`。
 - 本项目采用增强治理，推荐执行链路为：`brainstorming -> explore -> propose -> writing-plans -> apply -> review -> verify -> archive`。
 - 本项目采用增强治理：`apply` 完成后自动进入 `review`，`review` 与 `verify` 完成后停止并等待用户确认，再决定是否 `archive`。
+- 除纯代码解释、纯讨论或已明确判定为极小改动的场景外，不再手工拼装流程替代 `openspec-superpowers-orchestrator`。
 - `openspec/changes/` 用于活跃 change，`openspec/changes/archive/` 仅作历史保留。
 - proposal、design、specs、tasks 应与代码状态保持同步，避免长期漂移。
 - `doc/superpowers/specs/` 用于沉淀 brainstorming 产出的设计稿，`doc/superpowers/plans/` 用于沉淀 writing-plans 产出的实施计划。
@@ -21,6 +23,8 @@
 - 并行开发时，子 agent 只提交代码和完成报告，不直接修改 `openspec/changes/<change>/tasks.md`，由主线统一勾选任务状态，避免冲突。
 
 ## 1.1 七阶段工作流
+
+- 以下七阶段默认由 `openspec-superpowers-orchestrator` 统一编排；除非用户明确要求只做探索或只做讨论，不单独跳过前置阶段。
 
 - Phase 1 `brainstorming`：用于澄清目标、约束、候选方案和推荐方案，逐个问题确认，不带着未决假设进入建档。
 - Phase 2 `explore`：用于调查现有代码、上下游影响、复用入口、兼容约束和 change 命名。
@@ -32,8 +36,8 @@
 
 ## 2. 确认闸门
 
-- 第一确认闸门：完成 brainstorming、代码调查、上下游影响分析、方案比较后，先向用户汇总理解、范围、候选方案、推荐方案和 change 名称；用户确认后再创建或更新 proposal/design/specs/tasks。
-- 第二确认闸门：OpenSpec 文档与实施计划准备完成后，先向用户汇总关键假设、核心方案、任务拆分、并行策略、风险和验证方式；用户确认后再进入 apply。
+- 第一确认闸门：由 `openspec-superpowers-orchestrator` 在完成 brainstorming、代码调查、上下游影响分析、方案比较后触发；先向用户汇总理解、范围、候选方案、推荐方案和 change 名称；用户确认后再创建或更新 proposal/design/specs/tasks。
+- 第二确认闸门：由 `openspec-superpowers-orchestrator` 在 OpenSpec 文档与实施计划准备完成后触发；先向用户汇总关键假设、核心方案、任务拆分、并行策略、风险和验证方式；用户确认后再进入 apply。
 - 任一闸门之前都不应留下 `⏳` 状态的关键待确认问题；用户已拍板事项应明确标记为 `✅ [已确认]`。
 
 ## 3. 代码改动原则
@@ -53,13 +57,14 @@
 - `shopflow-all`：聚合启动模块与整体装配入口。
 - `shopflow-admin`：Vue 2 + Element UI 管理端前端。
 - `shopflow-h5`：Vue 2 + Vant H5 前台，承载移动端网页前台页面、路由、请求封装和用户侧登录态兼容。
+- `shopflow-h5-next`：uni-app + Vue 3 + TypeScript H5 前台新实现，承载商城新风格页面、交易链路页面、H5 兼容层与用户侧页面重构。
 - `shopflow-wx`：微信小程序前端。
 - `doc`：项目文档、FAQ、部署和说明材料。
 - `docker`：容器化部署相关文件。
 
 ## 4.1 包级 `AGENTS.md` 要求
 
-- `shopflow-admin-api`、`shopflow-wx-api`、`shopflow-core`、`shopflow-db`、`shopflow-admin`、`shopflow-h5`、`shopflow-wx` 默认都应有自己的 `AGENTS.md`。
+- `shopflow-admin-api`、`shopflow-wx-api`、`shopflow-core`、`shopflow-db`、`shopflow-admin`、`shopflow-h5`、`shopflow-h5-next`、`shopflow-wx` 默认都应有自己的 `AGENTS.md`。
 - 根 `AGENTS.md` 只写全局约束，不代替包内规则。
 - 包级 `AGENTS.md` 应补目录职责、局部边界、复用入口、命名与测试要求。
 - 如果包级规则与根规则冲突，以更近一级且更严格的规则为准。

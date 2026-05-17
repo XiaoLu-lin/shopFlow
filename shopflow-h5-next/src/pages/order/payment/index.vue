@@ -1,49 +1,64 @@
 <template>
   <view class="page">
-    <view class="hero-card">
-      <text class="title">支付订单</text>
-      <text class="desc">当前先保持旧站“微信支付优先”的兼容路径。</text>
-    </view>
-
-    <view v-if="orderInfo" class="panel">
-      <view class="row">
-        <text class="label">订单编号</text>
-        <text class="value">{{ orderInfo.orderSn }}</text>
-      </view>
-      <view class="row row--strong">
-        <text class="label">实付金额</text>
-        <text class="price">¥ {{ orderInfo.actualPrice }}</text>
+    <view class="page-head">
+      <view>
+        <text class="eyebrow">ShopFlow Pay</text>
+        <text class="title">支付订单</text>
+        <text class="desc">确认支付金额与方式后继续完成本次订单。</text>
       </view>
     </view>
 
-    <view class="panel">
-      <text class="panel-title">选择支付方式</text>
+    <view v-if="orderInfo" class="summary-card">
+      <view class="summary-row">
+        <text class="summary-label">订单编号</text>
+        <text class="summary-value">{{ orderInfo.orderSn }}</text>
+      </view>
+      <view class="summary-row summary-row--strong">
+        <text class="summary-label">实付金额</text>
+        <text class="summary-price">¥ {{ orderInfo.actualPrice }}</text>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <text class="section-title">选择支付方式</text>
       <view class="pay-list">
-        <view class="pay-item" :class="{ 'pay-item--active': payWay === 'wx' }" @click="payWay = 'wx'">
-          <view>
-            <text class="pay-title">微信支付</text>
-            <text class="pay-copy">{{ inWechat ? '当前在微信内，可优先走 JSAPI' : '当前环境会优先尝试 H5 支付地址' }}</text>
+        <view
+          v-for="option in paymentOptions"
+          :key="option.key"
+          class="pay-item"
+          :class="{
+            'pay-item--active': payWay === option.key,
+            'pay-item--disabled': !option.enabled,
+          }"
+          @click="selectPayWay(option.key, option.enabled)"
+        >
+          <view class="pay-copy">
+            <text class="pay-title">{{ option.title }}</text>
+            <text class="pay-desc">{{ option.description }}</text>
           </view>
-          <text class="pay-state">已选</text>
-        </view>
-        <view class="pay-item" :class="{ 'pay-item--active': payWay === 'ali' }" @click="payWay = 'ali'">
-          <view>
-            <text class="pay-title">支付宝</text>
-            <text class="pay-copy">保留入口，链路待后续补齐</text>
+          <view class="pay-meta">
+            <text class="pay-state">{{ option.stateLabel }}</text>
+            <text v-if="payWay === option.key" class="pay-check">✓</text>
           </view>
-          <text class="pay-state">可选</text>
         </view>
       </view>
     </view>
 
-    <view class="submit-btn" @click="pay">去支付</view>
+    <view
+      class="submit-btn"
+      :class="{ 'submit-btn--disabled': payWay !== 'wx' }"
+      @click="pay"
+    >
+      去支付
+    </view>
   </view>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { fetchOrderDetail, submitOrderH5Pay, submitOrderPrepay } from '@/entities/order/api'
 import { buildPaymentStatusRouteQuery, persistPrepayData } from '@/features/order/payment-utils'
+import { resolvePaymentMethodOptions } from '@/features/order/order-display-utils'
 
 type UniPageWithOptions = {
   options?: Record<string, unknown>
@@ -57,6 +72,7 @@ const orderIds = orderIdsText.split(',').map((item) => item.trim()).filter(Boole
 const payWay = ref<'wx' | 'ali'>('wx')
 const orderInfo = ref<Awaited<ReturnType<typeof fetchOrderDetail>>['orderInfo'] | null>(null)
 const inWechat = isWechatBrowser()
+const paymentOptions = computed(() => resolvePaymentMethodOptions(inWechat))
 
 declare global {
   interface Window {
@@ -82,7 +98,23 @@ async function bootstrap() {
     orderInfo.value = result.orderInfo
   } catch (error) {
     console.error(error)
+    uni.showToast({
+      title: '支付信息加载失败',
+      icon: 'none',
+    })
   }
+}
+
+function selectPayWay(nextWay: 'wx' | 'ali', enabled: boolean) {
+  if (!enabled) {
+    uni.showToast({
+      title: '该支付方式暂未开放',
+      icon: 'none',
+    })
+    return
+  }
+
+  payWay.value = nextWay
 }
 
 function goStatus(status: 'success' | 'cancel' | 'failed') {
@@ -101,9 +133,9 @@ async function pay() {
     return
   }
 
-  if (payWay.value === 'ali') {
+  if (payWay.value !== 'wx') {
     uni.showToast({
-      title: '支付宝待补齐',
+      title: '该支付方式暂未开放',
       icon: 'none',
     })
     return
@@ -217,75 +249,101 @@ function resolveMpSignType(signType?: string): 'MD5' | 'RSA' | 'HMAC-SHA256' {
 <style scoped lang="scss">
 .page {
   min-height: 100vh;
-  padding: 20rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  padding: 24rpx 20rpx 40rpx;
+  background: rgb(var(--sf-color-page));
 }
 
-.hero-card,
-.panel {
-  padding: 22rpx;
-  border-radius: 12rpx;
-  background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+.page-head,
+.summary-card,
+.section-card {
+  border: 2rpx solid rgb(var(--sf-color-line));
+  border-radius: 16rpx;
+  background: rgb(var(--sf-color-shell));
+  box-shadow: var(--sf-shadow-card);
 }
 
-.panel {
-  margin-top: 16rpx;
+.page-head,
+.summary-card,
+.section-card {
+  padding: 24rpx;
+}
+
+.page-head {
+  background: linear-gradient(135deg, rgb(var(--sf-color-brand-soft)) 0%, rgb(var(--sf-color-shell)) 72%);
+}
+
+.eyebrow {
+  display: block;
+  font-size: 18rpx;
+  line-height: 1.2;
+  letter-spacing: 2rpx;
+  text-transform: uppercase;
+  color: rgb(var(--sf-color-brand-deep));
 }
 
 .title {
   display: block;
-  font-size: 28rpx;
-  line-height: 1.3;
-  color: #172033;
+  margin-top: 10rpx;
+  font-size: 34rpx;
+  line-height: 1.24;
+  font-weight: 600;
+  color: rgb(var(--sf-color-ink));
 }
 
 .desc,
-.label,
-.pay-copy {
+.summary-label,
+.summary-value,
+.pay-desc {
   display: block;
   margin-top: 8rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
+  font-size: 21rpx;
+  line-height: 1.45;
+  color: rgb(var(--sf-color-text-secondary));
 }
 
-.row {
+.desc {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+}
+
+.summary-card,
+.section-card,
+.submit-btn {
+  margin-top: 18rpx;
+}
+
+.summary-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16rpx;
 }
 
-.row--strong {
-  margin-top: 14rpx;
+.summary-row--strong {
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 2rpx solid rgb(var(--sf-color-divider));
 }
 
-.value,
-.pay-title {
-  font-size: 24rpx;
-  line-height: 1.3;
-  color: #172033;
-}
-
-.price {
-  font-size: 32rpx;
+.summary-price {
+  font-size: 34rpx;
   line-height: 1.2;
   font-weight: 600;
-  color: #172033;
+  color: rgb(var(--sf-color-price));
 }
 
-.panel-title {
+.section-title,
+.pay-title {
   display: block;
-  font-size: 25rpx;
-  line-height: 1.3;
-  color: #172033;
+  font-size: 26rpx;
+  line-height: 1.35;
+  color: rgb(var(--sf-color-ink));
 }
 
 .pay-list {
   display: grid;
-  gap: 12rpx;
-  margin-top: 14rpx;
+  gap: 14rpx;
+  margin-top: 18rpx;
 }
 
 .pay-item {
@@ -293,31 +351,62 @@ function resolveMpSignType(signType?: string): 'MD5' | 'RSA' | 'HMAC-SHA256' {
   align-items: center;
   justify-content: space-between;
   gap: 16rpx;
-  padding: 18rpx;
-  border: 2rpx solid #e7edf5;
-  border-radius: 12rpx;
-  background: #ffffff;
+  padding: 20rpx 18rpx;
+  border: 2rpx solid rgb(var(--sf-color-line));
+  border-radius: 16rpx;
+  background: rgb(var(--sf-color-shell));
 }
 
 .pay-item--active {
-  border-color: #1677ff;
-  background: #edf5ff;
+  border-color: rgb(var(--sf-color-brand));
+  background: rgb(var(--sf-color-brand-soft));
+}
+
+.pay-item--disabled {
+  opacity: 0.72;
+}
+
+.pay-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.pay-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10rpx;
 }
 
 .pay-state {
-  font-size: 21rpx;
-  color: #1677ff;
+  padding: 8rpx 14rpx;
+  border-radius: 999px;
+  background: rgba(var(--sf-color-shell), 0.9);
+  font-size: 19rpx;
+  line-height: 1.2;
+  color: rgb(var(--sf-color-brand-deep));
+}
+
+.pay-check {
+  font-size: 22rpx;
+  line-height: 1;
+  color: rgb(var(--sf-color-brand));
 }
 
 .submit-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 84rpx;
-  margin-top: 20rpx;
-  border-radius: 12rpx;
-  background: #1677ff;
+  height: 88rpx;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
   font-size: 24rpx;
-  color: #ffffff;
+  font-weight: 600;
+  color: rgb(var(--sf-color-shell));
+}
+
+.submit-btn--disabled {
+  background: rgb(var(--sf-color-line));
+  color: rgb(var(--sf-color-text-secondary));
 }
 </style>

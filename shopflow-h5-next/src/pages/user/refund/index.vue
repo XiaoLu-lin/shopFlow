@@ -1,8 +1,14 @@
 <template>
   <view class="page">
     <view class="hero-card">
-      <text class="title">退款 / 售后</text>
-      <text class="desc">已接回真实售后列表接口，当前支持按状态查看与撤销申请中的售后单。</text>
+      <view class="hero-row">
+        <view class="hero-avatar">售</view>
+        <view class="hero-copy">
+          <text class="eyebrow">{{ hero.eyebrow }}</text>
+          <text class="title">{{ hero.title }}</text>
+        </view>
+      </view>
+      <text class="desc">{{ hero.description }}</text>
     </view>
 
     <scroll-view scroll-x class="tab-scroll">
@@ -20,11 +26,9 @@
     </scroll-view>
 
     <view v-if="loading" class="record-list">
-      <view v-for="index in 2" :key="index" class="record-card">
-        <view class="skeleton-row">
-          <view class="skeleton-line skeleton-line--title"></view>
-          <view class="skeleton-line skeleton-line--tag"></view>
-        </view>
+      <view v-for="index in 2" :key="index" class="record-card record-card--skeleton">
+        <view class="skeleton-line skeleton-line--title"></view>
+        <view class="skeleton-line skeleton-line--short"></view>
         <view class="skeleton-box"></view>
       </view>
     </view>
@@ -36,7 +40,7 @@
             <text class="record-sn">售后单 {{ record.aftersaleSn }}</text>
             <text class="record-order">订单号 {{ record.orderId }}</text>
           </view>
-          <text class="record-status" :class="resolveAftersaleStatusClass(record.statusText)">{{ record.statusText }}</text>
+          <text class="status-tag" :class="resolveAftersaleStatusClass(record.statusText)">{{ record.statusText }}</text>
         </view>
 
         <view class="goods-card" @click="goAftersaleDetail(record.orderId)">
@@ -51,24 +55,24 @@
           </view>
         </view>
 
-        <view class="info-grid">
-          <text>退款原因：{{ record.reason }}</text>
-          <text class="text-right">退款金额：¥ {{ record.amount }}</text>
-          <text class="info-wide">申请时间：{{ record.addTime || '暂无记录' }}</text>
-          <text v-if="record.comment" class="info-wide">补充说明：{{ record.comment }}</text>
+        <view class="record-info">
+          <text class="record-copy">退款原因：{{ record.reason }}</text>
+          <text class="record-copy">退款金额：¥ {{ record.amount }}</text>
+          <text class="record-copy">申请时间：{{ record.addTime || '暂无记录' }}</text>
+          <text v-if="record.comment" class="record-copy">补充说明：{{ record.comment }}</text>
         </view>
 
         <view class="action-row">
           <view class="ghost-btn" @click="goAftersaleDetail(record.orderId)">查看售后</view>
           <view class="ghost-btn" @click="goOrderDetail(record.orderId)">查看订单</view>
-          <view v-if="canCancelAftersale(record.status)" class="dark-btn" @click="handleCancel(record.id)">撤销售后</view>
+          <view v-if="canCancelAftersale(record.status)" class="primary-inline-btn" @click="handleCancel(record.id)">撤销售后</view>
         </view>
       </view>
     </view>
 
     <view v-else class="empty-card">
       <text class="empty-title">当前状态下还没有售后记录</text>
-      <text class="empty-desc">等你提交退款或售后申请后，这里会出现真实记录。</text>
+      <text class="empty-desc">等你提交新的售后申请后，这里会同步出现真实记录。</text>
     </view>
   </view>
 </template>
@@ -77,8 +81,8 @@
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { cancelAftersale, fetchAftersaleList, type AftersaleListCard } from '@/entities/user/api'
-import { AFTERSALE_TABS, canCancelAftersale } from '../aftersale-utils'
-import { resolveAftersaleStatusClass } from '../aftersale-utils'
+import { AFTERSALE_TABS, canCancelAftersale, resolveAftersaleStatusClass } from '../aftersale-utils'
+import { resolveUserPageHero } from '../page-display-utils'
 import { normalizeListTab } from '../user-list-utils'
 
 type UniPageWithOptions = {
@@ -89,6 +93,7 @@ const pageOptions = (getCurrentPages()[getCurrentPages().length - 1] as UniPageW
 const activeTab = ref(normalizeListTab(typeof pageOptions.active === 'string' ? pageOptions.active : undefined, AFTERSALE_TABS.length))
 const loading = ref(true)
 const records = ref<AftersaleListCard[]>([])
+const hero = resolveUserPageHero('refund')
 
 bootstrap()
 onShow(() => {
@@ -154,82 +159,127 @@ async function handleCancel(id: string) {
 <style scoped lang="scss">
 .page {
   min-height: 100vh;
-  padding: 20rpx 20rpx 40rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  padding: 14rpx 14rpx 32rpx;
+  background: linear-gradient(180deg, rgb(var(--sf-color-brand-soft)) 0%, rgb(var(--sf-color-page)) 26%, #ffffff 100%);
 }
 
 .hero-card,
 .record-card,
 .empty-card {
-  border-radius: 12rpx;
+  border-radius: var(--sf-radius-card);
   background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  border: 1px solid rgb(var(--sf-color-line));
+  box-shadow: var(--sf-shadow-soft);
 }
 
-.hero-card,
-.empty-card {
-  padding: 22rpx;
+.hero-card {
+  padding: 14rpx 16rpx 16rpx;
+  color: #ffffff;
+  background: linear-gradient(145deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
+  box-shadow: var(--sf-shadow-brand);
+}
+
+.hero-row,
+.record-head,
+.goods-foot,
+.action-row {
+  display: flex;
+  align-items: center;
+}
+
+.hero-row {
+  gap: 10rpx;
+}
+
+.hero-avatar {
+  display: flex;
+  width: 56rpx;
+  height: 56rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sf-radius-card);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(229, 237, 246, 0.92));
+  font-size: 20rpx;
+  font-weight: 700;
+  color: rgb(var(--sf-color-brand));
+}
+
+.hero-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 16rpx;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .title,
 .empty-title {
   display: block;
-  font-size: 28rpx;
-  line-height: 1.3;
-  color: #172033;
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  line-height: 1.28;
+  color: inherit;
 }
 
 .desc,
-.empty-desc {
+.empty-desc,
+.record-copy {
   display: block;
   margin-top: 8rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
+  font-size: 18rpx;
+  line-height: 1.42;
+}
+
+.desc {
+  color: rgba(255, 255, 255, 0.88);
 }
 
 .tab-scroll {
-  margin-top: 16rpx;
+  margin-top: 10rpx;
   white-space: nowrap;
 }
 
 .tab-row {
   display: inline-flex;
-  gap: 12rpx;
+  gap: 6rpx;
 }
 
 .tab-chip {
-  padding: 12rpx 20rpx;
+  padding: 8rpx 14rpx;
   border-radius: 999px;
-  background: #ffffff;
-  font-size: 22rpx;
-  color: #5f6b7c;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgb(var(--sf-color-line));
+  font-size: 18rpx;
+  color: rgb(var(--sf-color-text-secondary));
+  box-shadow: var(--sf-shadow-card);
 }
 
 .tab-chip--active {
-  background: #1677ff;
+  background: rgb(var(--sf-color-brand));
+  border-color: rgb(var(--sf-color-brand));
   color: #ffffff;
 }
 
 .record-list {
   display: grid;
-  gap: 14rpx;
-  margin-top: 16rpx;
+  gap: 8rpx;
+  margin-top: 10rpx;
 }
 
-.record-card {
-  padding: 20rpx;
+.record-card,
+.empty-card {
+  padding: 12rpx 14rpx;
 }
 
-.record-head,
-.goods-foot,
-.action-row,
-.skeleton-row {
-  display: flex;
-  align-items: center;
+.record-head {
   justify-content: space-between;
-  gap: 16rpx;
+  gap: 10rpx;
 }
 
 .record-meta {
@@ -238,37 +288,73 @@ async function handleCancel(id: string) {
 }
 
 .record-sn,
-.record-order {
+.goods-title,
+.empty-title {
   display: block;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
-}
-
-.record-order {
-  margin-top: 6rpx;
   font-size: 20rpx;
-  color: #a0aaba;
+  line-height: 1.32;
+  color: rgb(var(--sf-color-ink));
 }
 
-.record-status {
-  font-size: 22rpx;
+.record-sn,
+.goods-title {
+  font-weight: 600;
+}
+
+.record-order,
+.goods-spec,
+.goods-count,
+.empty-desc,
+.record-copy {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 17rpx;
+  line-height: 1.4;
+  color: rgb(var(--sf-color-text-secondary));
+}
+
+.status-tag {
+  flex-shrink: 0;
+  padding: 4rpx 10rpx;
+  border-radius: 999px;
+  font-size: 16rpx;
+  line-height: 1.2;
+}
+
+.status-tag--brand {
+  background: rgb(var(--sf-color-brand-soft));
+  color: rgb(var(--sf-color-brand));
+}
+
+.status-tag--success {
+  background: rgba(var(--sf-color-success), 0.12);
+  color: rgb(var(--sf-color-success));
+}
+
+.status-tag--muted {
+  background: rgb(var(--sf-color-divider));
+  color: rgba(var(--sf-color-ink), 0.55);
+}
+
+.status-tag--plain {
+  background: rgb(var(--sf-color-page));
+  color: rgba(var(--sf-color-ink), 0.72);
 }
 
 .goods-card {
   display: flex;
-  gap: 14rpx;
-  margin-top: 16rpx;
-  border-radius: 10rpx;
-  background: #f6f8fb;
-  padding: 16rpx;
+  gap: 10rpx;
+  margin-top: 10rpx;
+  padding: 10rpx;
+  border-radius: var(--sf-radius-card);
+  background: rgb(var(--sf-color-page));
 }
 
 .goods-image {
-  width: 112rpx;
-  height: 112rpx;
+  width: 104rpx;
+  height: 104rpx;
   flex-shrink: 0;
-  border-radius: 10rpx;
+  border-radius: var(--sf-radius-card);
   background: #ffffff;
 }
 
@@ -277,91 +363,74 @@ async function handleCancel(id: string) {
   flex: 1;
 }
 
-.goods-title {
-  display: block;
-  font-size: 24rpx;
-  line-height: 1.4;
-  color: #172033;
-}
-
-.goods-spec,
-.goods-count {
-  display: block;
+.goods-foot {
+  justify-content: space-between;
+  gap: 8rpx;
   margin-top: 8rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
 }
 
 .goods-price {
-  font-size: 26rpx;
-  color: #172033;
+  font-size: 22rpx;
+  color: rgb(var(--sf-color-ink));
 }
 
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10rpx 14rpx;
-  margin-top: 14rpx;
-  font-size: 20rpx;
-  line-height: 1.45;
-  color: #5f6b7c;
+.record-info {
+  margin-top: 8rpx;
 }
 
-.text-right {
-  text-align: right;
-}
-
-.info-wide {
-  grid-column: span 2;
+.record-copy {
+  margin-top: 4rpx;
 }
 
 .action-row {
   justify-content: flex-end;
-  margin-top: 16rpx;
+  gap: 8rpx;
+  margin-top: 10rpx;
 }
 
 .ghost-btn,
-.dark-btn {
-  padding: 12rpx 16rpx;
-  border-radius: 10rpx;
-  font-size: 22rpx;
+.primary-inline-btn {
+  padding: 8rpx 14rpx;
+  border-radius: var(--sf-radius-card);
+  font-size: 18rpx;
+  line-height: 1.2;
 }
 
 .ghost-btn {
   background: #ffffff;
-  color: #5f6b7c;
-  box-shadow: inset 0 0 0 1px #dbe3ef;
+  border: 1px solid rgb(var(--sf-color-line));
+  color: rgb(var(--sf-color-text-secondary));
 }
 
-.dark-btn {
-  background: #253044;
+.primary-inline-btn {
+  background: rgb(var(--sf-color-brand));
   color: #ffffff;
 }
 
+.record-card--skeleton {
+  padding: 12rpx 14rpx;
+}
+
 .skeleton-line {
-  height: 20rpx;
+  height: 16rpx;
+  margin-top: 10rpx;
   border-radius: 999px;
-  background: #edf1f6;
+  background: rgb(var(--sf-color-divider));
 }
 
 .skeleton-line--title {
-  width: 220rpx;
+  width: 180rpx;
+  margin-top: 0;
 }
 
-.skeleton-line--tag {
-  width: 96rpx;
+.skeleton-line--short {
+  width: 240rpx;
 }
 
 .skeleton-box {
-  height: 132rpx;
-  margin-top: 16rpx;
-  border-radius: 10rpx;
-  background: #edf1f6;
-}
-
-.empty-card {
-  margin-top: 16rpx;
-  text-align: center;
+  height: 110rpx;
+  margin-top: 10rpx;
+  border-radius: var(--sf-radius-card);
+  background: rgb(var(--sf-color-divider));
 }
 </style>

@@ -1,63 +1,66 @@
 <template>
   <view class="page">
-    <view class="hero-card">
-      <view class="hero-head">
-        <view>
-          <text class="title">购物车</text>
-          <text class="desc">已接回旧站勾选、编辑、删除和数量修改语义。</text>
-        </view>
-        <view v-if="cartItems.length" class="edit-btn" @click="editing = !editing">
-          {{ editing ? '完成' : '编辑' }}
-        </view>
-      </view>
-    </view>
-
-    <view v-if="cartItems.length" class="cart-list">
-      <view v-for="item in cartItems" :key="item.id" class="cart-card">
-        <view class="cart-row">
-          <view
-            class="check-dot"
-            :class="{ 'check-dot--active': checkedIds.includes(item.id) }"
-            @click="toggleChecked(item.id)"
-          >
-            <text v-if="checkedIds.includes(item.id)" class="check-mark">✓</text>
+    <scroll-view scroll-y class="page-scroll">
+      <view class="page-scroll-inner">
+        <view v-if="cartItems.length" class="cart-toolbar">
+          <view class="toolbar-copy">
+            <text class="toolbar-title">{{ toolbarTitle }}</text>
+            <text class="toolbar-desc">{{ toolbarDesc }}</text>
           </view>
-          <image class="goods-image" :src="item.picUrl" mode="aspectFill" />
-          <view class="goods-body">
-            <view class="goods-head">
-              <text class="goods-name">{{ item.goodsName }}</text>
-              <text class="goods-badge">{{ checkedIds.includes(item.id) ? '已选中' : '未选中' }}</text>
+          <view class="toolbar-action" @click="editing = !editing">
+            {{ editing ? '完成' : '编辑' }}
+          </view>
+        </view>
+
+        <view v-if="cartItems.length" class="cart-list">
+          <view v-for="item in cartItems" :key="item.id" class="cart-card">
+            <view
+              class="check-dot"
+              :class="{ 'check-dot--active': checkedIds.includes(item.id) }"
+              @click="toggleChecked(item.id)"
+            >
+              <text v-if="checkedIds.includes(item.id)" class="check-mark">✓</text>
             </view>
-            <text class="goods-spec">{{ item.specifications.join(' / ') }}</text>
-            <view class="goods-foot">
-              <text class="goods-price">¥ {{ item.price }}</text>
-              <view v-if="editing" class="count-row">
-                <view class="count-btn" @click="updateQuantity(item.id, -1)">-</view>
-                <text class="count-value">{{ item.number }}</text>
-                <view class="count-btn" @click="updateQuantity(item.id, 1)">+</view>
+            <image class="goods-image" :src="item.picUrl" mode="aspectFill" />
+            <view class="goods-body">
+              <view class="goods-top">
+                <text class="goods-name">{{ item.goodsName }}</text>
+                <text class="goods-state">{{ checkedIds.includes(item.id) ? '已选' : '可选' }}</text>
               </view>
-              <text v-else class="goods-count">x {{ item.number }}</text>
+              <text class="goods-spec">{{ item.specifications.join(' / ') || '默认规格' }}</text>
+              <text class="goods-copy">{{ editing ? '调整数量或移除商品' : '确认后可一起进入结算页' }}</text>
+              <view class="goods-bottom">
+                <view class="price-block">
+                  <text class="goods-price">¥ {{ item.price }}</text>
+                  <text v-if="!editing" class="goods-count">x {{ item.number }}</text>
+                </view>
+                <view v-if="editing" class="count-row">
+                  <view class="count-btn" @click="updateQuantity(item.id, -1)">-</view>
+                  <text class="count-value">{{ item.number }}</text>
+                  <view class="count-btn" @click="updateQuantity(item.id, 1)">+</view>
+                </view>
+              </view>
+              <text v-if="editing" class="delete-link" @click="removeItems([item.productId])">删除商品</text>
             </view>
-            <text v-if="editing" class="delete-btn" @click="removeItems([item.productId])">删除</text>
           </view>
         </view>
-      </view>
-    </view>
 
-    <view v-else class="empty-card">
-      <text class="empty-title">你的购物车还空着</text>
-      <text class="empty-desc">先去商品详情里加购一些商品吧。</text>
-    </view>
+        <view v-else class="empty-card">
+          <text class="empty-title">购物车还没有商品</text>
+          <text class="empty-desc">去商品详情挑几件喜欢的商品，再回来一起结算。</text>
+        </view>
+      </view>
+    </scroll-view>
 
     <view class="footer-bar">
-      <view class="footer-meta">
+      <view class="footer-main">
         <view class="footer-check" @click="toggleAll">
           <view class="check-dot" :class="{ 'check-dot--active': allChecked }">
             <text v-if="allChecked" class="check-mark">✓</text>
           </view>
-          <view class="footer-copy">
+          <view>
             <text class="footer-label">全选</text>
-            <text class="footer-count">{{ checkedIds.length }} 件</text>
+            <text class="footer-copy">{{ selectionCopy }}</text>
           </view>
         </view>
         <view class="footer-total">
@@ -65,33 +68,63 @@
           <text class="footer-price">¥ {{ totalPrice }}</text>
         </view>
       </view>
-      <view class="submit-btn" :class="{ 'submit-btn--disabled': !checkedIds.length }" @click="submitAction">
-        {{ editing ? '删除所选商品' : '去结算' }}
+      <view
+        class="submit-btn"
+        :class="{ 'submit-btn--disabled': submitMeta.disabled }"
+        @click="submitAction"
+      >
+        {{ submitMeta.label }}
       </view>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
+import { onShow } from '@dcloudio/uni-app'
 import { computed, ref, watch } from 'vue'
+import type { CartItem } from '@/entities/cart/api'
 import { fetchCartList, removeCartItems, toggleCartItems, updateCartItem } from '@/entities/cart/api'
+import { resolveCartSelectionCopy, resolveCartSubmitMeta } from '@/features/cart/cart-display-utils'
 import { calculateCartTotal, collectAllIds, collectCheckedIds, collectCheckedProductIds, isAllChecked } from '@/features/cart/cart-utils'
 import { writeFlowContext } from '@/shared/compat/session-adapter'
 
 const editing = ref(false)
 const checkedIds = ref<number[]>([])
-const cartItems = ref<Awaited<ReturnType<typeof fetchCartList>>['cartList']>([])
+const cartItems = ref<CartItem[]>([])
 
 const allIds = computed(() => collectAllIds(cartItems.value))
+const checkedCount = computed(() => checkedIds.value.length)
 const totalPrice = computed(() => calculateCartTotal(cartItems.value, checkedIds.value))
 const checkedProductIds = computed(() => collectCheckedProductIds(cartItems.value, checkedIds.value))
 const allChecked = computed(() => isAllChecked(cartItems.value, checkedIds.value))
+const selectionCopy = computed(() => resolveCartSelectionCopy(checkedCount.value))
+const toolbarTitle = computed(() => `共 ${cartItems.value.length} 件商品`)
+const toolbarDesc = computed(() => {
+  if (editing.value) {
+    return '勾选后可批量删除，数量也可以直接调整。'
+  }
+
+  if (checkedCount.value > 0) {
+    return `已选 ${checkedCount.value} 件，合计 ¥ ${totalPrice.value}`
+  }
+
+  return '先勾选商品，再一起进入结算页。'
+})
+const submitMeta = computed(() =>
+  resolveCartSubmitMeta({
+    editing: editing.value,
+    checkedCount: checkedCount.value,
+  }),
+)
 
 watch(cartItems, (items) => {
   checkedIds.value = collectCheckedIds(items)
 }, { immediate: true })
 
 bootstrap()
+onShow(() => {
+  void bootstrap()
+})
 
 async function bootstrap() {
   try {
@@ -99,6 +132,10 @@ async function bootstrap() {
     cartItems.value = result.cartList || []
   } catch (error) {
     console.error(error)
+    uni.showToast({
+      title: '购物车加载失败',
+      icon: 'none',
+    })
   }
 }
 
@@ -119,6 +156,10 @@ async function toggleChecked(itemId: number) {
     await bootstrap()
   } catch (error) {
     console.error(error)
+    uni.showToast({
+      title: '更新勾选状态失败',
+      icon: 'none',
+    })
   }
 }
 
@@ -131,6 +172,10 @@ async function toggleAll() {
     await bootstrap()
   } catch (error) {
     console.error(error)
+    uni.showToast({
+      title: '更新勾选状态失败',
+      icon: 'none',
+    })
   }
 }
 
@@ -155,6 +200,10 @@ async function updateQuantity(itemId: number, step: 1 | -1) {
     await bootstrap()
   } catch (error) {
     console.error(error)
+    uni.showToast({
+      title: '更新数量失败',
+      icon: 'none',
+    })
   }
 }
 
@@ -168,6 +217,10 @@ async function removeItems(productIds: number[]) {
     await bootstrap()
   } catch (error) {
     console.error(error)
+    uni.showToast({
+      title: '删除商品失败',
+      icon: 'none',
+    })
   }
 }
 
@@ -184,7 +237,7 @@ function goCheckout() {
 }
 
 async function submitAction() {
-  if (!checkedIds.value.length) {
+  if (submitMeta.value.disabled) {
     uni.showToast({
       title: '请先选择商品',
       icon: 'none',
@@ -203,101 +256,115 @@ async function submitAction() {
 
 <style scoped lang="scss">
 .page {
-  min-height: 100vh;
-  padding: 20rpx 20rpx 180rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: calc(100vh - var(--window-top, 0px) - var(--window-bottom, 0px));
+  background: rgb(var(--sf-color-page));
+  overflow: hidden;
 }
 
-.hero-card,
-.cart-card,
-.empty-card {
-  border-radius: 12rpx;
-  background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+.page-scroll {
+  flex: 1;
+  min-height: 0;
 }
 
-.hero-card {
-  padding: 22rpx;
+.page-scroll-inner {
+  padding: 18rpx 20rpx 24rpx;
 }
 
-.hero-head,
-.goods-head,
-.goods-foot,
-.footer-meta {
+.cart-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16rpx;
+  margin-bottom: 16rpx;
+  padding: 8rpx 4rpx 2rpx;
 }
 
-.title {
+.toolbar-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.toolbar-title,
+.toolbar-desc {
   display: block;
-  font-size: 28rpx;
+}
+
+.toolbar-title {
+  font-size: 24rpx;
   line-height: 1.3;
-  color: #172033;
+  font-weight: 600;
+  color: rgb(var(--sf-color-ink));
 }
 
-.desc {
-  display: block;
-  margin-top: 8rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
-}
-
-.edit-btn,
-.goods-badge {
-  padding: 10rpx 16rpx;
-  border-radius: 999px;
-  background: #edf5ff;
+.toolbar-desc {
+  margin-top: 6rpx;
   font-size: 20rpx;
+  line-height: 1.38;
+  color: rgb(var(--sf-color-text-secondary));
+}
+
+.toolbar-action {
+  flex-shrink: 0;
+  padding: 10rpx 18rpx;
+  border: 2rpx solid rgb(var(--sf-color-line));
+  border-radius: 999px;
+  background: rgb(var(--sf-color-shell));
+  font-size: 22rpx;
   line-height: 1.2;
-  color: #1677ff;
+  color: rgb(var(--sf-color-brand));
+  box-shadow: var(--sf-shadow-card);
 }
 
 .cart-list {
   display: grid;
-  gap: 14rpx;
-  margin-top: 16rpx;
+  gap: 16rpx;
 }
 
-.cart-card {
-  padding: 16rpx;
-}
-
-.cart-row {
+.cart-card,
+.empty-card {
   display: flex;
   gap: 16rpx;
+  padding: 20rpx;
+  border: 2rpx solid rgb(var(--sf-color-line));
+  border-radius: 16rpx;
+  background: rgb(var(--sf-color-shell));
+  box-shadow: var(--sf-shadow-card);
 }
 
 .check-dot {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 32rpx;
-  height: 32rpx;
-  margin-top: 8rpx;
-  border: 2rpx solid #d5ddea;
+  width: 40rpx;
+  height: 40rpx;
+  margin-top: 16rpx;
+  border: 2rpx solid rgb(var(--sf-color-line));
   border-radius: 999px;
-  background: #ffffff;
+  background: rgb(var(--sf-color-shell));
+  transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease;
 }
 
 .check-dot--active {
-  border-color: #1677ff;
-  background: #1677ff;
+  border-color: rgb(var(--sf-color-brand));
+  background: rgb(var(--sf-color-brand));
 }
 
 .check-mark {
-  font-size: 20rpx;
+  font-size: 22rpx;
   line-height: 1;
-  color: #ffffff;
+  color: rgb(var(--sf-color-shell));
 }
 
 .goods-image {
-  width: 176rpx;
-  height: 176rpx;
-  border-radius: 10rpx;
-  background: #f3f6fb;
+  width: 152rpx;
+  height: 152rpx;
+  flex-shrink: 0;
+  border-radius: var(--sf-radius-image);
+  background: rgb(var(--sf-color-mist));
 }
 
 .goods-body {
@@ -305,128 +372,156 @@ async function submitAction() {
   flex: 1;
 }
 
-.goods-name {
-  min-width: 0;
-  flex: 1;
-  font-size: 24rpx;
-  line-height: 1.35;
-  color: #172033;
-}
-
-.goods-spec,
-.goods-count {
-  display: block;
-  margin-top: 8rpx;
-  font-size: 21rpx;
-  line-height: 1.35;
-  color: #748194;
-}
-
-.goods-price {
-  font-size: 27rpx;
-  line-height: 1.2;
-  font-weight: 600;
-  color: #172033;
-}
-
-.count-row {
-  display: flex;
-  align-items: center;
-  gap: 10rpx;
-}
-
-.count-btn,
-.count-value {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 56rpx;
-  height: 56rpx;
-  border-radius: 10rpx;
-  background: #f3f6fb;
-  font-size: 24rpx;
-  color: #172033;
-}
-
-.delete-btn {
-  display: inline-block;
-  margin-top: 10rpx;
-  font-size: 20rpx;
-  line-height: 1.2;
-  color: #ef4444;
-}
-
-.empty-card {
-  margin-top: 16rpx;
-  padding: 32rpx 24rpx;
-  text-align: center;
-}
-
-.empty-title {
-  display: block;
-  font-size: 25rpx;
-  line-height: 1.3;
-  color: #172033;
-}
-
-.empty-desc {
-  display: block;
-  margin-top: 8rpx;
-  font-size: 22rpx;
-  line-height: 1.35;
-  color: #748194;
-}
-
-.footer-bar {
-  position: fixed;
-  left: 20rpx;
-  right: 20rpx;
-  bottom: 20rpx;
-  padding: 18rpx;
-  border-radius: 12rpx;
-  background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
-}
-
+.goods-top,
+.goods-bottom,
+.price-block,
+.footer-main,
 .footer-check {
   display: flex;
   align-items: center;
-  gap: 12rpx;
+  justify-content: space-between;
+  gap: 14rpx;
 }
 
-.footer-copy,
-.footer-total {
-  display: flex;
-  flex-direction: column;
-  gap: 4rpx;
-}
-
-.footer-label {
-  font-size: 20rpx;
-  line-height: 1.2;
-  color: #748194;
-}
-
-.footer-count,
-.footer-price {
+.goods-name {
+  min-width: 0;
+  flex: 1;
   font-size: 26rpx;
+  line-height: 1.38;
+  color: rgb(var(--sf-color-ink));
+}
+
+.goods-state {
+  flex-shrink: 0;
+  padding: 8rpx 14rpx;
+  border-radius: 999px;
+  background: rgb(var(--sf-color-brand-soft));
+  font-size: 19rpx;
   line-height: 1.2;
-  color: #172033;
+  color: rgb(var(--sf-color-brand-deep));
+}
+
+.goods-spec,
+.goods-copy,
+.goods-count,
+.footer-label,
+.footer-copy,
+.empty-desc {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 21rpx;
+  line-height: 1.42;
+  color: rgb(var(--sf-color-text-secondary));
+}
+
+.goods-copy {
+  color: rgb(var(--sf-color-text-hint));
+}
+
+.goods-bottom {
+  margin-top: 18rpx;
+}
+
+.goods-price,
+.footer-price,
+.empty-title {
+  font-size: 30rpx;
+  line-height: 1.2;
+  font-weight: 600;
+  color: rgb(var(--sf-color-price));
+}
+
+.goods-count {
+  margin-top: 0;
+}
+
+.count-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 8rpx 10rpx;
+  border-radius: 999px;
+  background: rgb(var(--sf-color-mist));
+}
+
+.count-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42rpx;
+  height: 42rpx;
+  border-radius: 999px;
+  background: rgb(var(--sf-color-shell));
+  font-size: 24rpx;
+  line-height: 1;
+  color: rgb(var(--sf-color-ink));
+}
+
+.count-value {
+  min-width: 32rpx;
+  font-size: 22rpx;
+  line-height: 1.2;
+  text-align: center;
+  color: rgb(var(--sf-color-ink));
+}
+
+.delete-link {
+  display: inline-flex;
+  margin-top: 16rpx;
+  font-size: 21rpx;
+  line-height: 1.3;
+  color: rgb(var(--sf-color-price));
+}
+
+.empty-card {
+  display: block;
+  padding: 48rpx 28rpx;
+  text-align: center;
+}
+
+.footer-bar {
+  flex-shrink: 0;
+  margin: 0 20rpx 20rpx;
+  padding: 18rpx;
+  border: 2rpx solid rgb(var(--sf-color-line));
+  border-radius: 20rpx;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--sf-shadow-soft);
+  backdrop-filter: blur(12px);
+}
+
+.footer-main {
+  align-items: flex-end;
+}
+
+.footer-copy {
+  margin-top: 6rpx;
+}
+
+.footer-total {
+  text-align: right;
+}
+
+.footer-price {
+  display: block;
+  margin-top: 6rpx;
 }
 
 .submit-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 84rpx;
-  margin-top: 16rpx;
-  border-radius: 12rpx;
-  background: #1677ff;
+  height: 88rpx;
+  margin-top: 18rpx;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
   font-size: 24rpx;
-  color: #ffffff;
+  font-weight: 600;
+  color: rgb(var(--sf-color-shell));
 }
 
 .submit-btn--disabled {
-  opacity: 0.45;
+  background: rgb(var(--sf-color-line));
+  color: rgb(var(--sf-color-text-secondary));
 }
 </style>

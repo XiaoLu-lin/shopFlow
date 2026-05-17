@@ -1,40 +1,48 @@
 <template>
   <view class="page">
     <view class="hero-card">
-      <text class="title">服务中心</text>
-      <text class="desc">保留旧站服务入口结构，先聚合客服、反馈和常见问题三个高频入口。</text>
+      <view class="hero-row">
+        <view class="hero-avatar">服</view>
+        <view class="hero-copy">
+          <text class="eyebrow">{{ hero.eyebrow }}</text>
+          <text class="title">{{ hero.title }}</text>
+        </view>
+      </view>
+      <text class="desc">{{ hero.description }}</text>
     </view>
 
-    <view class="service-list">
-      <view class="service-card" @click="showContact = true">
-        <view>
-          <text class="service-title">联系客服</text>
-          <text class="service-desc">查看当前项目与联系信息</text>
+    <view class="service-panel">
+      <view class="service-list">
+        <view class="service-row" @click="showContact = true">
+          <view class="service-copy">
+            <text class="service-title">在线支持</text>
+            <text class="service-desc">问题咨询与售后协助</text>
+          </view>
+          <text class="service-arrow">›</text>
         </view>
-        <text class="service-arrow">></text>
-      </view>
 
-      <view class="service-card" @click="goFeedback">
-        <view>
-          <text class="service-title">意见反馈</text>
-          <text class="service-desc">提交页面、商品或服务建议</text>
+        <view class="service-row" @click="goHelp">
+          <view class="service-copy">
+            <text class="service-title">帮助说明</text>
+            <text class="service-desc">下单、发货、退款规则</text>
+          </view>
+          <text class="service-arrow">›</text>
         </view>
-        <text class="service-arrow">></text>
-      </view>
 
-      <view class="service-card" @click="goHelp">
-        <view>
-          <text class="service-title">常见问题</text>
-          <text class="service-desc">快速查看帮助中心 FAQ</text>
+        <view class="service-row" @click="goFeedback">
+          <view class="service-copy">
+            <text class="service-title">意见反馈</text>
+            <text class="service-desc">告诉我们哪里还可以更好</text>
+          </view>
+          <text class="service-arrow">›</text>
         </view>
-        <text class="service-arrow">></text>
       </view>
     </view>
 
     <view v-if="showContact" class="mask" @click="showContact = false">
       <view class="sheet" @click.stop>
-        <text class="sheet-title">联系客服</text>
-        <text class="sheet-desc">当前先保留项目级联系信息，后续可切到真实客服渠道。</text>
+        <text class="sheet-title">在线支持</text>
+        <text class="sheet-desc">目前先保留项目联系信息，后续可以继续接到真实客服渠道。</text>
         <view class="contact-card">项目名称：ShopFlow H5</view>
         <view class="contact-card">联系电话：021-xxxx-xxxx</view>
         <view class="contact-card">联系 QQ：738696120</view>
@@ -47,8 +55,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { resolveUserPageHero } from '../page-display-utils'
 
 const showContact = ref(false)
+const hero = resolveUserPageHero('service')
 
 function goFeedback() {
   uni.navigateTo({
@@ -66,72 +76,124 @@ function goHelp() {
 <style scoped lang="scss">
 .page {
   min-height: 100vh;
-  padding: 20rpx 20rpx 40rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  padding: 14rpx 14rpx 32rpx;
+  background: linear-gradient(180deg, rgb(var(--sf-color-brand-soft)) 0%, rgb(var(--sf-color-page)) 26%, #ffffff 100%);
 }
 
 .hero-card,
-.service-card,
+.service-panel,
 .sheet {
-  border-radius: 12rpx;
+  border-radius: var(--sf-radius-card);
   background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  border: 1px solid rgb(var(--sf-color-line));
+  box-shadow: var(--sf-shadow-soft);
 }
 
-.hero-card,
-.sheet {
-  padding: 22rpx;
+.hero-card {
+  padding: 14rpx 16rpx 16rpx;
+  color: #ffffff;
+  background: linear-gradient(145deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
+  box-shadow: var(--sf-shadow-brand);
+}
+
+.hero-row,
+.service-row {
+  display: flex;
+  align-items: center;
+}
+
+.hero-row {
+  gap: 10rpx;
+}
+
+.hero-avatar {
+  display: flex;
+  width: 56rpx;
+  height: 56rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sf-radius-card);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(229, 237, 246, 0.92));
+  font-size: 20rpx;
+  font-weight: 700;
+  color: rgb(var(--sf-color-brand));
+}
+
+.hero-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 16rpx;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .title,
 .sheet-title {
   display: block;
-  font-size: 28rpx;
-  line-height: 1.3;
-  color: #172033;
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  line-height: 1.28;
+  color: inherit;
 }
 
 .desc,
-.sheet-desc {
+.sheet-desc,
+.service-desc {
   display: block;
   margin-top: 8rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
+  font-size: 18rpx;
+  line-height: 1.45;
 }
 
-.service-list {
-  display: grid;
-  gap: 14rpx;
-  margin-top: 16rpx;
+.desc {
+  color: rgba(255, 255, 255, 0.88);
 }
 
-.service-card {
-  display: flex;
-  align-items: center;
+.service-panel,
+.sheet {
+  margin-top: 10rpx;
+  padding: 12rpx 14rpx;
+}
+
+.service-row {
   justify-content: space-between;
-  gap: 16rpx;
-  padding: 20rpx;
+  gap: 10rpx;
+}
+
+.service-row + .service-row {
+  margin-top: 12rpx;
+  padding-top: 12rpx;
+  border-top: 1px solid rgb(var(--sf-color-divider));
+}
+
+.service-copy {
+  min-width: 0;
+  flex: 1;
 }
 
 .service-title {
   display: block;
-  font-size: 24rpx;
-  line-height: 1.35;
-  color: #172033;
+  font-size: 20rpx;
+  font-weight: 600;
+  line-height: 1.32;
+  color: rgb(var(--sf-color-ink));
 }
 
-.service-desc {
-  display: block;
-  margin-top: 8rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
+.service-desc,
+.sheet-desc {
+  color: rgb(var(--sf-color-text-secondary));
 }
 
 .service-arrow {
   font-size: 24rpx;
-  color: #a0aaba;
+  line-height: 1;
+  color: rgb(var(--sf-color-text-hint));
 }
 
 .mask {
@@ -140,33 +202,29 @@ function goHelp() {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  background: rgba(15, 23, 42, 0.3);
-  padding: 20rpx;
-}
-
-.sheet {
-  width: 100%;
+  background: rgba(15, 23, 42, 0.26);
+  padding: 14rpx;
 }
 
 .contact-card {
-  margin-top: 12rpx;
-  border-radius: 10rpx;
-  background: #f6f8fb;
-  padding: 18rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #4f5d72;
+  margin-top: 10rpx;
+  padding: 12rpx 14rpx;
+  border-radius: var(--sf-radius-card);
+  background: rgb(var(--sf-color-page));
+  font-size: 18rpx;
+  line-height: 1.42;
+  color: rgb(var(--sf-color-text-secondary));
 }
 
 .sheet-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 84rpx;
-  margin-top: 16rpx;
-  border-radius: 12rpx;
-  background: #1677ff;
-  font-size: 24rpx;
+  height: 76rpx;
+  margin-top: 12rpx;
+  border-radius: var(--sf-radius-card);
+  background: linear-gradient(145deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
+  font-size: 20rpx;
   color: #ffffff;
 }
 </style>

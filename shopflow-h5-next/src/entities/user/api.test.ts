@@ -97,7 +97,7 @@ describe('user api', () => {
       limit: 10,
     })
 
-    expect(client.get).toHaveBeenLastCalledWith('/coupon/mylist', {
+    expect(client.get).toHaveBeenLastCalledWith('/coupon/user', {
       params: {
         status: 0,
         page: 1,

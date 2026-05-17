@@ -328,7 +328,7 @@ test.beforeEach(async ({ page }) => {
 test('renders real home modules with mocked payload', async ({ page }) => {
   await page.goto('/#/')
 
-  await expect(page.getByText('优惠券')).toBeVisible()
+  await expect(page.getByText('ShopFlow')).toBeVisible()
   await expect(page.getByText('新人券')).toBeVisible()
   await expect(page.getByText('运动鞋')).toBeVisible()
 })
@@ -336,53 +336,164 @@ test('renders real home modules with mocked payload', async ({ page }) => {
 test('navigates from order detail to aftersale apply and submits request', async ({ page }) => {
   await page.goto('/#/order/order-detail?orderId=701')
 
-  await expect(page.getByRole('main').getByRole('heading', { name: '订单详情' })).toBeVisible()
-  await page.getByRole('button', { name: '申请售后' }).click()
+  await expect(page.locator('.summary-card .title')).toHaveText('待售后')
+  await expect(page.getByText('订单编号 SO20260510001')).toBeVisible()
+  await page.getByText('申请售后').click()
 
-  await expect(page.getByRole('main').getByRole('heading', { name: '申请售后' })).toBeVisible()
-  await page.getByPlaceholder('请填写退款原因').fill('尺码不合适')
-  await page.getByPlaceholder('最多 ¥ 88').fill('88')
-  await page.getByPlaceholder('可补充描述问题，便于售后处理').fill('鞋码偏小')
-  await page.setInputFiles('input[type="file"]', {
-    name: 'proof.png',
-    mimeType: 'image/png',
-    buffer: Buffer.from('proof'),
-  })
+  await expect(page.getByText('申请售后')).toBeVisible()
+  await page.getByRole('textbox').first().fill('尺码不合适')
+  await page.getByRole('spinbutton').fill('88')
+  await page.getByRole('textbox').nth(1).fill('鞋码偏小')
+  await page.getByText('提交售后申请').click()
 
-  await expect(page.getByText('已上传凭证')).toBeVisible()
-  await page.getByRole('button', { name: '提交售后申请' }).click()
-
-  await expect(page.getByRole('main').getByRole('heading', { name: '退款 / 售后' })).toBeVisible()
+  await expect(page.getByText('退款 / 售后')).toBeVisible()
 })
 
 test('opens aftersale detail and cancels request inline', async ({ page }) => {
   await page.goto('/#/user/refund/list')
 
   await expect(page.getByText('售后单 AS20260510001')).toBeVisible()
-  await page.getByRole('button', { name: '查看售后' }).click()
+  await page.getByText('查看售后').click()
 
-  await expect(page.getByRole('main').getByRole('heading', { name: '售后详情' })).toBeVisible()
+  await expect(page.getByText('售后详情')).toBeVisible()
   await expect(page.getByText('凭证图片')).toBeVisible()
-  await page.getByRole('button', { name: '撤销售后' }).click()
-  await page.getByRole('button', { name: '确认' }).click()
+  await page.getByText('撤销售后').click()
 
-  await expect(page.getByRole('main').getByRole('heading', { name: '退款 / 售后' })).toBeVisible()
+  await expect(page.getByText('退款 / 售后')).toBeVisible()
 })
 
 test('navigates cart to checkout and reaches payment result via direct success callback', async ({ page }) => {
   await page.goto('/#/order')
 
-  await expect(page.getByRole('main').getByRole('heading', { name: '购物车' })).toBeVisible()
+  await expect(page.locator('.toolbar-title')).toHaveText('共 1 件商品')
   await expect(page.getByText('轻软跑鞋')).toBeVisible()
-  await page.getByRole('button', { name: '去结算' }).click()
+  await page.locator('.footer-bar .submit-btn').dispatchEvent('click')
 
-  await expect(page.getByRole('main').getByRole('heading', { name: '确认订单' })).toBeVisible()
-  await page.getByRole('button', { name: '提交订单' }).click()
+  await expect(page.getByText('ShopFlow Checkout')).toBeVisible()
+  await page.locator('.footer-bar .submit-btn').dispatchEvent('click')
 
-  await expect(page).toHaveURL(/#\/order\/payment\?orderId=801&orderIds=801/)
-  await expect(page.getByRole('main').getByRole('heading', { name: '支付订单' })).toBeVisible()
+  await expect(page).toHaveURL(/#\/pages\/order\/payment\/index\?orderId=801&orderIds=801/)
+  await expect(page.getByText('ShopFlow Pay')).toBeVisible()
 
-  await page.goto('/#/order/payment/success?orderId=801&orderIds=801')
-  await expect(page.getByRole('main').getByRole('heading', { name: '支付成功' })).toBeVisible()
+  await page.goto('/#/pages/order/payment-status/index?status=success&orderId=801&orderIds=801')
+  await expect(page.getByText('支付成功')).toBeVisible()
   await expect(page.getByText('订单编号：SO20260510002')).toBeVisible()
+})
+
+test('renders user dashboard and navigates to order list through order status entry', async ({ page }) => {
+  await page.route('**/wx/user/index**', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        errno: 0,
+        data: {
+          order: {
+            unpaid: 2,
+            unship: 1,
+            unrecv: 0,
+            uncomment: 5,
+          },
+        },
+      }),
+    })
+  })
+
+  await page.route('**/wx/order/list**', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        errno: 0,
+        data: {
+          list: [
+            {
+              id: 701,
+              orderSn: 'SO20260510001',
+              actualPrice: 88,
+              freightPrice: 0,
+              orderStatusText: '待发货',
+              goodsList: [
+                {
+                  goodsName: '轻软跑鞋',
+                  number: 1,
+                  picUrl: 'shoe.png',
+                  specifications: ['白色', '42'],
+                },
+              ],
+              handleOption: {
+                cancel: false,
+                pay: true,
+                refund: false,
+                confirm: false,
+                delete: false,
+                comment: false,
+              },
+            },
+          ],
+          page: 1,
+          pages: 1,
+        },
+      }),
+    })
+  })
+
+  await page.goto('/#/user')
+
+  await expect(page.getByText('E2E 用户')).toBeVisible()
+  await expect(page.getByText('待付款')).toBeVisible()
+  await expect(page.getByText('常用服务', { exact: true })).toBeVisible()
+  await page.getByText('全部订单', { exact: true }).click()
+
+  await expect(page).toHaveURL(/#\/pages\/user\/order-list\/index\?active=0/)
+  await expect(page.getByText('ShopFlow Orders')).toBeVisible()
+  await expect(page.getByText('SO20260510001')).toBeVisible()
+})
+
+test('keeps user dashboard scrolling isolated from header and tabbar', async ({ page }) => {
+  await page.route('**/wx/user/index**', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        errno: 0,
+        data: {
+          order: {
+            unpaid: 2,
+            unship: 1,
+            unrecv: 0,
+            uncomment: 5,
+          },
+        },
+      }),
+    })
+  })
+
+  await page.goto('/#/user')
+
+  const metrics = await page.locator('.page').evaluate((node) => {
+    const pageRect = node.getBoundingClientRect()
+    const scroll = node.querySelector('.page-scroll')
+
+    if (!scroll) {
+      return null
+    }
+
+    const scrollRect = scroll.getBoundingClientRect()
+
+    return {
+      pageHeight: pageRect.height,
+      pageBottom: pageRect.bottom,
+      scrollTop: scrollRect.top,
+      scrollBottom: scrollRect.bottom,
+      bodyScrollable: document.documentElement.scrollHeight > document.documentElement.clientHeight + 2,
+      scrollMatchesPage: Math.abs(scrollRect.height - pageRect.height) < 2,
+    }
+  })
+
+  expect(metrics).not.toBeNull()
+  expect(metrics?.bodyScrollable).toBe(false)
+  expect(metrics?.scrollTop).toBeGreaterThanOrEqual(0)
+  expect(metrics?.scrollBottom).toBeLessThanOrEqual((metrics?.pageBottom ?? 0) + 1)
+  expect(metrics?.scrollMatchesPage).toBe(true)
 })

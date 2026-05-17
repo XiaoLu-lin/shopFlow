@@ -57,7 +57,7 @@ describe('user entry utils', () => {
   test('keeps placeholder links as toast actions', () => {
     expect(resolveQuickLinkAction(makeLink('帮助中心', 'placeholder'))).toEqual({
       action: 'toast',
-      title: '帮助中心下一批补齐',
+      title: '帮助中心正在整理中',
     })
   })
 })

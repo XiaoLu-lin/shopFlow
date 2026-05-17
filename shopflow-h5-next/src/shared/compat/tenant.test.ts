@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { createMemoryStorage } from '@/shared/platform/storage'
-import { extractTenantToken, handleTenantPayload, shouldBootstrapTenant, withAppIdParam } from './tenant'
+import { extractTenantToken, handleTenantPayload, isLikelyTenantToken, shouldBootstrapTenant, withAppIdParam } from './tenant'
 
 describe('tenant compat', () => {
   test('adds appid when request params are missing it', () => {
@@ -27,5 +27,14 @@ describe('tenant compat', () => {
 
     expect(handleTenantPayload({ data: 'tenant-3' }, storage)).toBe('tenant-3')
     expect(storage.getItem('ShopFlowTenantToken')).toBe('tenant-3')
+  })
+
+  test('does not persist html content as a tenant token', () => {
+    const storage = createMemoryStorage()
+    const html = '<!doctype html><html lang="zh-CN"><body>vite</body></html>'
+
+    expect(isLikelyTenantToken(html)).toBe(false)
+    expect(handleTenantPayload({ data: html }, storage)).toBe('')
+    expect(storage.getItem('ShopFlowTenantToken')).toBeNull()
   })
 })

@@ -1,8 +1,14 @@
 <template>
   <view class="page">
     <view class="hero-card">
-      <text class="title">帮助中心</text>
-      <text class="desc">常见问题直接复用旧站 `/issue/list`，先提供一版简洁 FAQ 列表。</text>
+      <view class="hero-row">
+        <view class="hero-avatar">帮</view>
+        <view class="hero-copy">
+          <text class="eyebrow">{{ hero.eyebrow }}</text>
+          <text class="title">{{ hero.title }}</text>
+        </view>
+      </view>
+      <text class="desc">{{ hero.description }}</text>
     </view>
 
     <view v-if="loading" class="faq-list">
@@ -13,15 +19,10 @@
     </view>
 
     <view v-else-if="issues.length" class="faq-list">
-      <view
-        v-for="item in issues"
-        :key="item.id"
-        class="faq-card"
-        @click="toggle(item.id)"
-      >
+      <view v-for="item in issues" :key="item.id" class="faq-card" @click="toggle(item.id)">
         <view class="faq-head">
           <text class="question">{{ item.question }}</text>
-          <text class="arrow">{{ expandedId === item.id ? '−' : '+' }}</text>
+          <text class="faq-tag">{{ expandedId === item.id ? '收起' : '展开' }}</text>
         </view>
         <text v-if="expandedId === item.id" class="answer">{{ item.answer }}</text>
       </view>
@@ -29,7 +30,7 @@
 
     <view v-else class="empty-card">
       <text class="empty-title">暂无帮助内容</text>
-      <text class="empty-desc">后端返回为空时，这里会保持轻量空态。</text>
+      <text class="empty-desc">常见问题更新后，会继续收在这里方便你查看。</text>
     </view>
   </view>
 </template>
@@ -38,10 +39,12 @@
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { fetchIssueList, type IssueItem } from '@/entities/user/api'
+import { resolveUserPageHero } from '../page-display-utils'
 
 const loading = ref(true)
 const issues = ref<IssueItem[]>([])
 const expandedId = ref<number | null>(null)
+const hero = resolveUserPageHero('help')
 
 bootstrap()
 onShow(() => {
@@ -71,96 +74,137 @@ function toggle(id: number) {
 <style scoped lang="scss">
 .page {
   min-height: 100vh;
-  padding: 20rpx 20rpx 40rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  padding: 14rpx 14rpx 32rpx;
+  background: linear-gradient(180deg, rgb(var(--sf-color-brand-soft)) 0%, rgb(var(--sf-color-page)) 26%, #ffffff 100%);
 }
 
 .hero-card,
 .faq-card,
 .empty-card {
-  border-radius: 12rpx;
+  border-radius: var(--sf-radius-card);
   background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
+  border: 1px solid rgb(var(--sf-color-line));
+  box-shadow: var(--sf-shadow-soft);
 }
 
-.hero-card,
-.empty-card {
-  padding: 22rpx;
+.hero-card {
+  padding: 14rpx 16rpx 16rpx;
+  color: #ffffff;
+  background: linear-gradient(145deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
+  box-shadow: var(--sf-shadow-brand);
+}
+
+.hero-row,
+.faq-head {
+  display: flex;
+  align-items: center;
+}
+
+.hero-row {
+  gap: 10rpx;
+}
+
+.hero-avatar {
+  display: flex;
+  width: 56rpx;
+  height: 56rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sf-radius-card);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(229, 237, 246, 0.92));
+  font-size: 20rpx;
+  font-weight: 700;
+  color: rgb(var(--sf-color-brand));
+}
+
+.hero-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 16rpx;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .title,
 .empty-title {
   display: block;
-  font-size: 28rpx;
-  line-height: 1.3;
-  color: #172033;
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  line-height: 1.28;
+  color: inherit;
 }
 
 .desc,
-.empty-desc {
+.empty-desc,
+.answer {
   display: block;
   margin-top: 8rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
+  font-size: 18rpx;
+  line-height: 1.45;
+}
+
+.desc {
+  color: rgba(255, 255, 255, 0.88);
 }
 
 .faq-list {
   display: grid;
-  gap: 14rpx;
-  margin-top: 16rpx;
+  gap: 8rpx;
+  margin-top: 10rpx;
 }
 
-.faq-card {
-  padding: 20rpx;
+.faq-card,
+.empty-card {
+  padding: 12rpx 14rpx;
 }
 
 .faq-head {
-  display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  gap: 16rpx;
+  gap: 10rpx;
 }
 
-.question {
+.question,
+.empty-title {
   flex: 1;
-  font-size: 24rpx;
-  line-height: 1.45;
-  color: #172033;
+  font-size: 20rpx;
+  line-height: 1.38;
+  color: rgb(var(--sf-color-ink));
 }
 
-.arrow {
-  font-size: 28rpx;
-  line-height: 1.1;
-  color: #1677ff;
+.faq-tag {
+  flex-shrink: 0;
+  padding: 4rpx 10rpx;
+  border-radius: var(--sf-radius-card);
+  background: rgb(var(--sf-color-brand-soft));
+  font-size: 16rpx;
+  line-height: 1.2;
+  color: rgb(var(--sf-color-brand));
 }
 
-.answer {
-  display: block;
-  margin-top: 14rpx;
-  font-size: 22rpx;
-  line-height: 1.6;
-  color: #5f6b7c;
+.answer,
+.empty-desc {
+  color: rgb(var(--sf-color-text-secondary));
 }
 
 .faq-card--skeleton {
-  min-height: 92rpx;
+  padding: 12rpx 14rpx;
 }
 
 .skeleton-line {
-  height: 20rpx;
-  margin-top: 12rpx;
+  height: 16rpx;
+  margin-top: 10rpx;
   border-radius: 999px;
-  background: #edf1f6;
+  background: rgb(var(--sf-color-divider));
 }
 
 .skeleton-line--title {
-  width: 280rpx;
+  width: 240rpx;
   margin-top: 0;
-}
-
-.empty-card {
-  margin-top: 16rpx;
-  text-align: center;
 }
 </style>

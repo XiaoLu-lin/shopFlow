@@ -13,9 +13,9 @@ describe('user list utils', () => {
   })
 
   test('maps order status text into compact accent styles', () => {
-    expect(resolveOrderStatusClass('待付款')).toBe('text-brand-deep')
-    expect(resolveOrderStatusClass('已完成')).toBe('text-ink/45')
-    expect(resolveOrderStatusClass('关闭')).toBe('text-ink/60')
+    expect(resolveOrderStatusClass('待付款')).toBe('order-status--pending')
+    expect(resolveOrderStatusClass('已完成')).toBe('order-status--done')
+    expect(resolveOrderStatusClass('关闭')).toBe('order-status--muted')
   })
 
   test('normalizes route tab params into safe indexes', () => {
