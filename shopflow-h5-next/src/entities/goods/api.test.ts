@@ -140,7 +140,10 @@ describe('goods api', () => {
           errno: 0,
           data: {
             defaultKeyword: { keyword: '咖啡' },
-            historyKeywordList: [],
+            historyKeywordList: [
+              { keyword: '床品' },
+              { keyword: '拖鞋' },
+            ],
             hotKeywordList: [],
           },
         },
@@ -164,7 +167,11 @@ describe('goods api', () => {
       })
 
     const { fetchSearchHelper, fetchSearchIndex, fetchSearchResult } = await import('./api')
-    await fetchSearchIndex()
+    await expect(fetchSearchIndex()).resolves.toEqual({
+      defaultKeyword: { keyword: '咖啡' },
+      historyKeywordList: ['床品', '拖鞋'],
+      hotKeywordList: [],
+    })
     await fetchSearchHelper('电')
     await fetchSearchResult({
       keyword: '电',

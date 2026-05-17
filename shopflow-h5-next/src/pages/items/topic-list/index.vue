@@ -1,16 +1,44 @@
 <template>
   <view class="page">
-    <view class="hero-card">
-      <text class="hero-title">专题内容</text>
-      <text class="hero-desc">先把专题列表迁到新工程，支持继续进入专题详情。</text>
-    </view>
+    <view class="browse-shell">
+      <view
+        class="browse-hero"
+        :class="hero.tone === 'brand' ? 'browse-hero--brand' : 'browse-hero--soft'"
+      >
+        <view class="browse-hero-head">
+          <view class="browse-hero-copy">
+            <text class="browse-hero-eyebrow">{{ hero.eyebrow }}</text>
+            <text class="browse-hero-title">{{ hero.title }}</text>
+            <text v-if="showHeroDescription" class="browse-hero-desc">{{ hero.description }}</text>
+          </view>
+        </view>
+      </view>
 
-    <view class="topic-list">
-      <view v-for="item in topicList" :key="item.id" class="topic-card" @click="goTopic(item.id)">
-        <image v-if="item.picUrl" class="topic-image" :src="item.picUrl" mode="aspectFill" />
-        <view v-else class="topic-image topic-image--empty" />
-        <text class="topic-title">{{ item.title }}</text>
-        <text class="topic-desc">{{ item.subtitle || '专题内容整理中。' }}</text>
+      <view v-if="topicList.length" class="browse-topic-list">
+        <view
+          v-for="item in topicList"
+          :key="item.id"
+          class="browse-topic-card"
+          @click="goTopic(item.id)"
+        >
+          <image v-if="item.picUrl" class="browse-topic-image" :src="item.picUrl" mode="aspectFill" />
+          <view v-else class="browse-topic-image" />
+          <view class="browse-topic-body">
+            <text class="browse-topic-title">{{ item.title }}</text>
+            <text class="browse-topic-desc">
+              {{ resolveGoodsBrief(item.subtitle, '专题内容会以更轻的阅读节奏收在这里。') }}
+            </text>
+          </view>
+        </view>
+      </view>
+
+      <view v-else-if="!loading" class="browse-empty">
+        <text class="browse-empty-title">{{ emptyState.title }}</text>
+        <text class="browse-empty-desc">{{ emptyState.description }}</text>
+      </view>
+
+      <view v-if="topicList.length" class="browse-load-state">
+        {{ loadingMore ? '正在继续加载...' : hasMore ? '上拉继续浏览更多专题' : '已经到底了' }}
       </view>
     </view>
   </view>
@@ -18,18 +46,47 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { onReachBottom } from '@dcloudio/uni-app'
 import { fetchTopicList, type TopicInfo } from '@/entities/goods/api'
+import { resolveBrowsePageState } from '@/features/goods/browse-pagination'
+import {
+  resolveGoodsBrief,
+  resolveGoodsBrowseEmptyState,
+  resolveGoodsBrowseHero,
+  shouldRenderBrowseHeroDescription,
+} from '@/features/goods/browse-display-utils'
 
+const loading = ref(false)
+const loadingMore = ref(false)
 const topicList = ref<TopicInfo[]>([])
+const page = ref(1)
+const hasMore = ref(false)
+
+const hero = resolveGoodsBrowseHero('topic-list')
+const emptyState = resolveGoodsBrowseEmptyState('topic-list')
+const showHeroDescription = shouldRenderBrowseHeroDescription('topic-list')
 
 bootstrap()
+onReachBottom(() => {
+  void loadMore()
+})
 
 async function bootstrap() {
+  loading.value = true
+  page.value = 1
+  hasMore.value = false
   try {
-    const result = await fetchTopicList({ page: 1, limit: 20 })
-    topicList.value = result.list || []
+    const result = await fetchTopicList({ page: page.value, limit: 20 })
+    const nextState = resolveBrowsePageState([], result)
+    topicList.value = nextState.list
+    page.value = nextState.nextPage
+    hasMore.value = nextState.hasMore
   } catch (error) {
     console.error(error)
+    topicList.value = []
+    hasMore.value = false
+  } finally {
+    loading.value = false
   }
 }
 
@@ -38,73 +95,25 @@ function goTopic(id: number) {
     url: `/pages/items/topic/index?topicId=${id}`,
   })
 }
+
+async function loadMore() {
+  if (!hasMore.value || loading.value || loadingMore.value) {
+    return
+  }
+
+  loadingMore.value = true
+  try {
+    const result = await fetchTopicList({ page: page.value, limit: 20 })
+    const nextState = resolveBrowsePageState(topicList.value, result)
+    topicList.value = nextState.list
+    page.value = nextState.nextPage
+    hasMore.value = nextState.hasMore
+  } catch (error) {
+    console.error(error)
+  } finally {
+    loadingMore.value = false
+  }
+}
 </script>
 
-<style scoped lang="scss">
-.page {
-  min-height: 100vh;
-  padding: 20rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
-}
-
-.hero-card {
-  padding: 22rpx;
-  border-radius: 12rpx;
-  background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
-}
-
-.hero-title {
-  display: block;
-  font-size: 28rpx;
-  line-height: 1.3;
-  color: #172033;
-}
-
-.hero-desc {
-  display: block;
-  margin-top: 8rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
-}
-
-.topic-list {
-  display: grid;
-  gap: 14rpx;
-  margin-top: 16rpx;
-}
-
-.topic-card {
-  overflow: hidden;
-  border-radius: 12rpx;
-  background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
-}
-
-.topic-image {
-  width: 100%;
-  height: 260rpx;
-  background: #f3f6fb;
-}
-
-.topic-image--empty {
-  background: #edf4ff;
-}
-
-.topic-title {
-  display: block;
-  padding: 18rpx 18rpx 0;
-  font-size: 26rpx;
-  line-height: 1.3;
-  color: #172033;
-}
-
-.topic-desc {
-  display: block;
-  padding: 8rpx 18rpx 18rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
-}
-</style>
+<style scoped lang="scss" src="../browse-page.scss"></style>

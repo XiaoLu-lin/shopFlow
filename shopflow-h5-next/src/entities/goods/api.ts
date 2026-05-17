@@ -130,6 +130,28 @@ export interface SearchHelperItem {
   keyword: string
 }
 
+interface SearchHistoryRecord {
+  keyword?: string | null
+}
+
+interface SearchIndexResponsePayload {
+  defaultKeyword?: SearchIndexPayload['defaultKeyword']
+  historyKeywordList?: Array<string | SearchHistoryRecord | null> | null
+  hotKeywordList?: SearchIndexPayload['hotKeywordList']
+}
+
+function normalizeSearchHistoryKeywordList(historyKeywordList?: SearchIndexResponsePayload['historyKeywordList']) {
+  return (historyKeywordList || [])
+    .map((item) => {
+      if (typeof item === 'string') {
+        return item.trim()
+      }
+
+      return item?.keyword?.trim() || ''
+    })
+    .filter(Boolean)
+}
+
 
 export async function fetchGoodsCategory(id: number | string) {
   const response = await getApiClient().get<ApiEnvelope<GoodsCategoryPayload>>('/goods/category', {
@@ -219,8 +241,14 @@ export async function fetchGrouponList(params: { page: number; limit: number }) 
 }
 
 export async function fetchSearchIndex() {
-  const response = await getApiClient().get<ApiEnvelope<SearchIndexPayload>>('/search/index')
-  return response.data.data
+  const response = await getApiClient().get<ApiEnvelope<SearchIndexResponsePayload>>('/search/index')
+  const payload = response.data.data || {}
+
+  return {
+    defaultKeyword: payload.defaultKeyword || null,
+    historyKeywordList: normalizeSearchHistoryKeywordList(payload.historyKeywordList),
+    hotKeywordList: payload.hotKeywordList || [],
+  } satisfies SearchIndexPayload
 }
 
 export async function fetchSearchHelper(keyword: string) {

@@ -1,33 +1,63 @@
 <template>
   <view class="page">
-    <view class="hero-card">
-      <text class="hero-title">{{ topic?.title || '专题详情' }}</text>
-      <text class="hero-desc">{{ topic?.subtitle || '正在加载专题介绍。' }}</text>
-    </view>
-
-    <view class="content-card">
-      <rich-text :nodes="topic?.content || '<p>暂无专题内容</p>'" />
-    </view>
-
-    <view class="goods-list">
-      <view v-for="item in goodsList" :key="item.id" class="goods-card" @click="goDetail(item.id)">
-        <image class="goods-image" :src="item.picUrl" mode="aspectFill" />
-        <view class="goods-body">
-          <text class="goods-name">{{ item.name }}</text>
-          <text class="goods-brief">{{ item.brief }}</text>
-          <view class="goods-price-row">
-            <text class="goods-price">¥ {{ item.retailPrice }}</text>
-            <text class="goods-origin">¥ {{ item.counterPrice }}</text>
+    <view class="browse-shell">
+      <view
+        class="browse-hero"
+        :class="hero.tone === 'brand' ? 'browse-hero--brand' : 'browse-hero--soft'"
+      >
+        <view class="browse-hero-head">
+          <view class="browse-hero-copy">
+            <text class="browse-hero-eyebrow">{{ hero.eyebrow }}</text>
+            <text class="browse-hero-title">{{ hero.title }}</text>
+            <text v-if="showHeroDescription" class="browse-hero-desc">{{ hero.description }}</text>
           </view>
         </view>
+      </view>
+
+      <view class="browse-rich-card">
+        <text class="browse-card-title">专题正文</text>
+        <rich-text class="browse-rich-copy browse-rich-content" :nodes="topicContent" />
+      </view>
+
+      <view v-if="goodsList.length" class="browse-goods-list">
+        <view
+          v-for="item in goodsList"
+          :key="item.id"
+          class="browse-goods-card"
+          @click="goDetail(item.id)"
+        >
+          <image class="browse-goods-image" :src="item.picUrl" mode="aspectFill" />
+          <view class="browse-goods-body">
+            <text class="browse-goods-name">{{ item.name }}</text>
+            <text class="browse-goods-brief">
+              {{ resolveGoodsBrief(item.brief, '专题相关商品已经整理在下方，方便你顺着继续浏览。') }}
+            </text>
+            <view class="browse-price-row">
+              <text class="browse-price">¥ {{ item.retailPrice }}</text>
+              <text class="browse-origin">¥ {{ item.counterPrice }}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view v-else-if="!loading" class="browse-empty">
+        <text class="browse-empty-title">{{ emptyState.title }}</text>
+        <text class="browse-empty-desc">{{ emptyState.description }}</text>
       </view>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { fetchTopicDetail, type GoodsListItem, type TopicInfo } from '@/entities/goods/api'
+import {
+  resolveGoodsBrief,
+  resolveGoodsBrowseEmptyState,
+  resolveGoodsBrowseHero,
+  resolveTopicContent,
+  shouldRenderBrowseHeroDescription,
+} from '@/features/goods/browse-display-utils'
 
 type UniPageWithOptions = {
   options?: Record<string, unknown>
@@ -36,8 +66,19 @@ type UniPageWithOptions = {
 const pageOptions = (getCurrentPages()[getCurrentPages().length - 1] as UniPageWithOptions | undefined)?.options || {}
 const topicId = typeof pageOptions.topicId === 'string' ? pageOptions.topicId : ''
 
+const loading = ref(false)
 const topic = ref<TopicInfo | null>(null)
 const goodsList = ref<GoodsListItem[]>([])
+
+const hero = computed(() =>
+  resolveGoodsBrowseHero('topic', {
+    title: topic.value?.title || '专题详情',
+    description: topic.value?.subtitle || '先看专题内容，再顺着下面的商品继续往下浏览。',
+  }),
+)
+const emptyState = computed(() => resolveGoodsBrowseEmptyState('topic'))
+const topicContent = computed(() => resolveTopicContent(topic.value?.content))
+const showHeroDescription = shouldRenderBrowseHeroDescription('topic')
 
 bootstrap()
 
@@ -46,12 +87,16 @@ async function bootstrap() {
     return
   }
 
+  loading.value = true
   try {
     const result = await fetchTopicDetail(topicId)
     topic.value = result.topic
     goodsList.value = result.goods || []
   } catch (error) {
     console.error(error)
+    goodsList.value = []
+  } finally {
+    loading.value = false
   }
 }
 
@@ -62,103 +107,4 @@ function goDetail(id: number) {
 }
 </script>
 
-<style scoped lang="scss">
-.page {
-  min-height: 100vh;
-  padding: 20rpx;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
-}
-
-.hero-card,
-.content-card {
-  padding: 22rpx;
-  border-radius: 12rpx;
-  background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
-}
-
-.hero-title {
-  display: block;
-  font-size: 28rpx;
-  line-height: 1.3;
-  color: #172033;
-}
-
-.hero-desc {
-  display: block;
-  margin-top: 8rpx;
-  font-size: 22rpx;
-  line-height: 1.4;
-  color: #748194;
-}
-
-.content-card {
-  margin-top: 16rpx;
-  font-size: 23rpx;
-  line-height: 1.55;
-  color: #445164;
-}
-
-.goods-list {
-  display: grid;
-  gap: 14rpx;
-  margin-top: 16rpx;
-}
-
-.goods-card {
-  display: flex;
-  gap: 16rpx;
-  padding: 16rpx;
-  border-radius: 12rpx;
-  background: #ffffff;
-  box-shadow: 0 10rpx 24rpx rgba(23, 32, 51, 0.06);
-}
-
-.goods-image {
-  width: 176rpx;
-  height: 176rpx;
-  border-radius: 10rpx;
-  background: #f3f6fb;
-}
-
-.goods-body {
-  min-width: 0;
-  flex: 1;
-}
-
-.goods-name {
-  display: block;
-  font-size: 25rpx;
-  line-height: 1.35;
-  color: #172033;
-}
-
-.goods-brief {
-  display: block;
-  margin-top: 8rpx;
-  font-size: 21rpx;
-  line-height: 1.4;
-  color: #748194;
-}
-
-.goods-price-row {
-  display: flex;
-  align-items: flex-end;
-  gap: 10rpx;
-  margin-top: 14rpx;
-}
-
-.goods-price {
-  font-size: 28rpx;
-  font-weight: 600;
-  line-height: 1.2;
-  color: #172033;
-}
-
-.goods-origin {
-  font-size: 21rpx;
-  line-height: 1.2;
-  color: #9aa5b5;
-  text-decoration: line-through;
-}
-</style>
+<style scoped lang="scss" src="../browse-page.scss"></style>
