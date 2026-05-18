@@ -1,4 +1,32 @@
 const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
+const vm = require('vm');
+
+const compatSource = fs.readFileSync(
+  path.join(__dirname, '../src/utils/shopflow-compat.js'),
+  'utf8'
+);
+
+function loadCompatForNode(source) {
+  const module = { exports: {} };
+  const transformedSource = source
+    .replace(/export\s*\{[\s\S]*?\};\s*/m, '')
+    .replace(
+      /export\s+default\s+shopflowCompat\s*;?\s*$/,
+      'module.exports = shopflowCompat;'
+    );
+  vm.runInNewContext(transformedSource, {
+    module,
+    exports: module.exports,
+    process
+  });
+  return module.exports;
+}
+
+function plain(value) {
+  return JSON.parse(JSON.stringify(value));
+}
 
 const {
   DEFAULT_SHOPFLOW_APPID,
@@ -16,7 +44,7 @@ const {
   shouldBootstrapTenant,
   withAppIdParam,
   writeTenantToken
-} = require('../src/utils/shopflow-compat');
+} = loadCompatForNode(compatSource);
 
 function createStorage(initialValue) {
   const state = {};
@@ -37,6 +65,34 @@ function createStorage(initialValue) {
 }
 
 function run() {
+  const apiSource = fs.readFileSync(
+    path.join(__dirname, '../src/api/api.js'),
+    'utf8'
+  );
+  assert.match(
+    compatSource,
+    /export\s+default\s+shopflowCompat/,
+    'should expose the compatibility helper as an ES module default export'
+  );
+
+  assert.doesNotMatch(
+    compatSource,
+    /module\.exports/,
+    'should not mix CommonJS exports with Vue ES module imports'
+  );
+
+  assert.match(
+    apiSource,
+    /CartFastAdd\s*=\s*['"]\/cart\/fast\/add['"]/,
+    'should call the current ShopFlow fast cart endpoint'
+  );
+
+  assert.match(
+    apiSource,
+    /CartGoodsCount\s*=\s*['"]\/cart\/count['"]/,
+    'should call the current ShopFlow cart count endpoint'
+  );
+
   assert.strictEqual(
     resolveShopFlowAppId({ VUE_APP_SHOPFLOW_APPID: ' demo-app ' }),
     'demo-app',
@@ -80,13 +136,13 @@ function run() {
   );
 
   assert.deepStrictEqual(
-    withAppIdParam(undefined, '1649067'),
+    plain(withAppIdParam(undefined, '1649067')),
     { appid: '1649067' },
     'should inject appid when homepage params are absent'
   );
 
   assert.deepStrictEqual(
-    withAppIdParam({ page: 1, appid: 'custom-appid' }, '1649067'),
+    plain(withAppIdParam({ page: 1, appid: 'custom-appid' }, '1649067')),
     { page: 1, appid: 'custom-appid' },
     'should preserve a caller provided appid'
   );
@@ -122,14 +178,14 @@ function run() {
   );
 
   assert.deepStrictEqual(
-    extractUserInfo({
+    plain(extractUserInfo({
       data: {
         userInfo: {
           nickName: '测试昵称',
           avatarUrl: 'https://example.com/avatar.png'
         }
       }
-    }),
+    })),
     {
       nickName: '测试昵称',
       avatarUrl: 'https://example.com/avatar.png'
@@ -139,7 +195,7 @@ function run() {
 
   const headers = applyShopFlowHeaders({}, 'user-token', 'tenant-token');
   assert.deepStrictEqual(
-    headers,
+    plain(headers),
     {
       'X-ShopFlow-User-Token': 'user-token',
       'X-ShopFlow-TenantId': 'tenant-token'

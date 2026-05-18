@@ -1,0 +1,21 @@
+{
+  "name": "ShopFlow",
+  "appid": "__UNI__SHOPFLOW_H5_NEXT__",
+  "description": "ShopFlow multi-platform frontend",
+  "versionName": "0.1.0",
+  "versionCode": "100",
+  "transformPx": false,
+  "app-plus": {
+    "usingComponents": true,
+    "nvueStyleCompiler": "uni-app",
+    "compilerVersion": 3
+  },
+  "mp-weixin": {
+    "appid": "wx2df2006fff791ec7",
+    "setting": {
+      "urlCheck": false
+    },
+    "usingComponents": true
+  },
+  "vueVersion": "3"
+}

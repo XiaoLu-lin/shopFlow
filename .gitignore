@@ -49,6 +49,7 @@ target/
 *.java~
 *.properties~
 *.xml~
+/.superpowers/
 
 ### system ignore ###
 .DS_Store

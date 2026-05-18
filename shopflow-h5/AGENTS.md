@@ -33,5 +33,6 @@
 
 ## 5. OpenSpec 衔接
 
-- 涉及 H5 主流程、鉴权、请求协议、接口字段或后端联动时，默认先走 OpenSpec。
+- 涉及 H5 主流程、鉴权、请求协议、接口字段或后端联动时，默认先使用根规则中的 `openspec-superpowers-orchestrator` 作为统一入口，由它判断 `brainstorming` / `openspec-explore` 与后续阶段。
+- 除已明确可按 `lightweight` 处理的极小改动外，不要绕过 `openspec-superpowers-orchestrator` 直接进入实现。
 - 仅目录命名、文档路径、CI 工作目录等不改变运行行为的轻量整理，可按根规则说明理由后直接实施。

@@ -174,7 +174,7 @@ function getShopFlowHomeAuthPath() {
   return SHOPFLOW_HOME_AUTH_PATH;
 }
 
-module.exports = {
+export {
   DEFAULT_SHOPFLOW_APPID,
   SHOPFLOW_TENANT_TOKEN_KEY,
   applyShopFlowHeaders,
@@ -194,3 +194,26 @@ module.exports = {
   withAppIdParam,
   writeTenantToken
 };
+
+const shopflowCompat = {
+  DEFAULT_SHOPFLOW_APPID,
+  SHOPFLOW_TENANT_TOKEN_KEY,
+  applyShopFlowHeaders,
+  extractTenantToken,
+  extractUserInfo,
+  extractUserToken,
+  getShopFlowHomeAuthPath,
+  getShopFlowHomeIndexPath,
+  getShopFlowUserToken,
+  isShopFlowSuccess,
+  isTenantBootstrapWhitelisted,
+  normalizeWxRequestUrl,
+  persistLegacyLoginSession,
+  readTenantToken,
+  resolveShopFlowAppId,
+  shouldBootstrapTenant,
+  withAppIdParam,
+  writeTenantToken
+};
+
+export default shopflowCompat;
