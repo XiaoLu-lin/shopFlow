@@ -151,3 +151,28 @@ export function resolvePaymentResultCopy(input: {
     autoRedirect: true,
   }
 }
+
+export function createTimeoutController() {
+  let timer: ReturnType<typeof setTimeout> | null = null
+
+  return {
+    schedule(callback: () => void, delay: number) {
+      if (timer) {
+        clearTimeout(timer)
+      }
+
+      timer = setTimeout(() => {
+        timer = null
+        callback()
+      }, delay)
+    },
+    clear() {
+      if (!timer) {
+        return
+      }
+
+      clearTimeout(timer)
+      timer = null
+    },
+  }
+}

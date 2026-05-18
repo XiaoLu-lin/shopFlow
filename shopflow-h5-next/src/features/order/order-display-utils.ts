@@ -51,3 +51,10 @@ export function resolvePaymentMethodOptions(inWechat: boolean) {
     },
   ] as const
 }
+
+export function resolveOrderOverviewStats(items: Array<{ label: string; count: number }>) {
+  return items.map((item) => ({
+    ...item,
+    value: item.count > 0 ? `${item.count} 笔` : '暂无',
+  }))
+}

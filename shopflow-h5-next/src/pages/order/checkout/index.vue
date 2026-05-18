@@ -1,109 +1,104 @@
 <template>
   <view class="page">
-    <view class="page-head">
-      <view>
-        <text class="eyebrow">ShopFlow Checkout</text>
-        <text class="title">确认订单</text>
-        <text class="desc">核对收货信息、优惠方案和商品明细后提交订单。</text>
-      </view>
-    </view>
+    <scroll-view scroll-y class="page-scroll">
+      <view class="page-scroll-inner">
+        <view class="hero-card">
+          <text class="hero-eyebrow">ShopFlow</text>
+          <text class="hero-title">确认订单</text>
+        </view>
 
-    <view class="section-card address-card">
-      <view class="section-head">
-        <text class="section-title">配送地址</text>
-        <text class="section-action" @click="goSelectAddress">选择地址</text>
-      </view>
-      <view class="address-body">
-        <text class="address-name">{{ checkedAddress?.name || '未选择收货地址' }}</text>
-        <text class="address-tel">{{ checkedAddress?.tel || '先去地址页补充收货信息' }}</text>
-        <text class="address-copy">{{ checkedAddress?.addressDetail || '提交订单前请确认收货地址。' }}</text>
-      </view>
-    </view>
+        <view class="field-card address-card">
+          <view class="section-head">
+            <text class="section-title">配送地址</text>
+            <text class="section-action" @click="goSelectAddress">选择地址</text>
+          </view>
+          <text class="section-copy section-copy--strong">{{ checkedAddress?.name || '未选择收货地址' }}</text>
+          <text class="section-copy">{{ checkedAddress?.tel || '先去地址页补充收货信息' }}</text>
+          <text class="section-copy">{{ checkedAddress?.addressDetail || '提交订单前请确认收货地址。' }}</text>
+        </view>
 
-    <view v-if="checkedGoodsList.length" class="goods-section">
-      <view v-for="item in checkedGoodsList" :key="item.id" class="goods-card">
-        <image class="goods-image" :src="item.picUrl" mode="aspectFill" />
-        <view class="goods-body">
-          <text class="goods-name">{{ item.goodsName }}</text>
-          <text class="goods-spec">{{ item.specifications.join(' / ') || '默认规格' }}</text>
-          <view class="goods-bottom">
-            <text class="goods-price">¥ {{ item.price }}</text>
-            <text class="goods-count">x {{ item.number }}</text>
+        <view v-if="checkedGoodsList.length" class="goods-list">
+          <view v-for="item in checkedGoodsList" :key="item.id" class="goods-card">
+            <image class="goods-image" :src="item.picUrl" mode="aspectFill" />
+            <view class="goods-body">
+              <text class="goods-name">{{ item.goodsName }}</text>
+              <text class="goods-spec">{{ item.specifications.join(' / ') || '默认规格' }}</text>
+              <view class="goods-bottom">
+                <text class="goods-price">¥ {{ item.price }}</text>
+                <text class="goods-count">x {{ item.number }}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view class="field-card">
+          <view class="section-head">
+            <text class="section-title">优惠券</text>
+            <text class="section-copy">{{ availableCoupons.length }} 张可用</text>
+          </view>
+          <scroll-view scroll-x class="coupon-scroll">
+            <view class="coupon-row">
+              <view
+                class="coupon-chip"
+                :class="{ 'coupon-chip--active': selectedCouponIndex === -1 }"
+                @click="selectCoupon(-1)"
+              >
+                不使用
+              </view>
+              <view
+                v-for="(coupon, index) in availableCoupons"
+                :key="coupon.id"
+                class="coupon-chip"
+                :class="{ 'coupon-chip--active': selectedCouponIndex === index }"
+                @click="selectCoupon(index)"
+              >
+                <text class="coupon-name">{{ coupon.name }}</text>
+                <text class="coupon-value">-¥{{ coupon.discount }}</text>
+              </view>
+            </view>
+          </scroll-view>
+        </view>
+
+        <view class="field-card">
+          <view class="section-head">
+            <text class="section-title">订单备注</text>
+            <text class="section-copy">{{ message.length }}/50</text>
+          </view>
+          <textarea
+            v-model="message"
+            maxlength="50"
+            class="remark-input"
+            placeholder="如有特殊需求，可以在这里补充说明"
+          />
+        </view>
+
+        <view class="field-card">
+          <view class="info-row">
+            <text class="info-label">商品金额</text>
+            <text class="info-value">¥ {{ checkoutData?.goodsTotalPrice || 0 }}</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">运费</text>
+            <text class="info-value">¥ {{ checkoutData?.freightPrice || 0 }}</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">优惠券</text>
+            <text class="info-value">- ¥ {{ checkoutData?.couponPrice || 0 }}</text>
+          </view>
+          <view class="info-row info-row--strong">
+            <text class="info-label">实付金额</text>
+            <text class="pay-price">¥ {{ checkoutData?.actualPrice || 0 }}</text>
           </view>
         </view>
       </view>
-    </view>
-
-    <view class="section-card">
-      <view class="section-head">
-        <text class="section-title">优惠券</text>
-        <text class="section-copy">{{ availableCoupons.length }} 张可用</text>
-      </view>
-      <scroll-view scroll-x class="coupon-scroll">
-        <view class="coupon-row">
-          <view
-            class="coupon-chip"
-            :class="{ 'coupon-chip--active': selectedCouponIndex === -1 }"
-            @click="selectCoupon(-1)"
-          >
-            不使用
-          </view>
-          <view
-            v-for="(coupon, index) in availableCoupons"
-            :key="coupon.id"
-            class="coupon-chip"
-            :class="{ 'coupon-chip--active': selectedCouponIndex === index }"
-            @click="selectCoupon(index)"
-          >
-            <text class="coupon-name">{{ coupon.name }}</text>
-            <text class="coupon-discount">-¥{{ coupon.discount }}</text>
-          </view>
-        </view>
-      </scroll-view>
-    </view>
-
-    <view class="section-card">
-      <view class="section-head">
-        <text class="section-title">订单备注</text>
-        <text class="section-copy">{{ message.length }}/50</text>
-      </view>
-      <textarea
-        v-model="message"
-        maxlength="50"
-        class="remark-input"
-        placeholder="如有特殊需求，可以在这里补充说明"
-      />
-    </view>
-
-    <view class="section-card amount-card">
-      <view class="price-row">
-        <text class="price-label">商品金额</text>
-        <text class="price-value">¥ {{ checkoutData?.goodsTotalPrice || 0 }}</text>
-      </view>
-      <view class="price-row">
-        <text class="price-label">运费</text>
-        <text class="price-value">¥ {{ checkoutData?.freightPrice || 0 }}</text>
-      </view>
-      <view class="price-row">
-        <text class="price-label">优惠券</text>
-        <text class="price-value price-value--discount">- ¥ {{ checkoutData?.couponPrice || 0 }}</text>
-      </view>
-      <view class="price-row price-row--total">
-        <text class="price-label">实付金额</text>
-        <text class="pay-price">¥ {{ checkoutData?.actualPrice || 0 }}</text>
-      </view>
-    </view>
+    </scroll-view>
 
     <view class="footer-bar">
-      <view>
+      <view class="footer-main">
         <text class="footer-label">应付合计</text>
         <text class="footer-price">¥ {{ checkoutData?.actualPrice || 0 }}</text>
       </view>
-      <view
-        class="submit-btn"
-        :class="{ 'submit-btn--disabled': !canSubmit }"
-        @click="submit"
-      >
+      <view class="submit-btn" :class="{ 'submit-btn--disabled': !canSubmit }" @click="submit">
         提交订单
       </view>
     </view>
@@ -261,76 +256,78 @@ async function submit() {
 
 <style scoped lang="scss">
 .page {
-  min-height: 100vh;
-  padding: 24rpx 20rpx calc(188rpx + env(safe-area-inset-bottom));
-  background: rgb(var(--sf-color-page));
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: calc(100vh - var(--window-top, 0px) - var(--window-bottom, 0px));
+  background:
+    radial-gradient(circle at top left, rgba(109, 140, 184, 0.14), rgba(109, 140, 184, 0) 24%),
+    linear-gradient(180deg, rgba(244, 247, 251, 0.96) 0%, rgb(var(--sf-color-page)) 100%);
+  overflow: hidden;
 }
 
-.page-head,
-.section-card,
-.goods-card {
+.page-scroll {
+  flex: 1;
+  min-height: 0;
+}
+
+.page-scroll-inner {
+  padding: 18rpx 20rpx calc(176rpx + env(safe-area-inset-bottom));
+}
+
+.hero-card,
+.field-card,
+.goods-card,
+.footer-bar,
+.coupon-chip {
   border: 2rpx solid rgb(var(--sf-color-line));
-  border-radius: 16rpx;
+  border-radius: var(--sf-radius-card);
   background: rgb(var(--sf-color-shell));
-  box-shadow: var(--sf-shadow-card);
+  box-shadow: var(--sf-shadow-soft);
 }
 
-.page-head,
-.section-card {
-  padding: 24rpx;
+.hero-card,
+.field-card {
+  padding: 18rpx;
 }
 
-.page-head {
-  background: linear-gradient(135deg, rgb(var(--sf-color-brand-soft)) 0%, rgb(var(--sf-color-shell)) 72%);
+.hero-card {
+  background:
+    radial-gradient(circle at top right, rgba(209, 223, 241, 0.72) 0%, rgba(209, 223, 241, 0) 38%),
+    linear-gradient(145deg, rgba(251, 252, 254, 0.98) 0%, rgba(238, 244, 251, 0.98) 100%);
 }
 
-.eyebrow {
+.hero-eyebrow {
   display: block;
   font-size: 18rpx;
   line-height: 1.2;
-  letter-spacing: 2rpx;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgb(var(--sf-color-brand-deep));
+  color: rgb(var(--sf-color-brand));
 }
 
-.title {
+.hero-title,
+.section-title,
+.goods-name {
   display: block;
-  margin-top: 10rpx;
-  font-size: 34rpx;
-  line-height: 1.24;
-  font-weight: 600;
   color: rgb(var(--sf-color-ink));
 }
 
-.desc,
-.section-copy,
-.address-tel,
-.address-copy,
-.goods-spec,
-.goods-count,
-.price-label,
-.price-value,
-.footer-label {
-  display: block;
-  margin-top: 8rpx;
-  font-size: 21rpx;
-  line-height: 1.45;
-  color: rgb(var(--sf-color-text-secondary));
+.hero-title {
+  margin-top: 6rpx;
+  font-size: 30rpx;
+  line-height: 1.3;
+  font-weight: 700;
 }
 
-.desc {
-  margin-top: 10rpx;
-  font-size: 22rpx;
-}
-
-.section-card,
-.goods-section {
-  margin-top: 18rpx;
+.field-card,
+.goods-list {
+  margin-top: 14rpx;
 }
 
 .section-head,
 .goods-bottom,
-.price-row,
+.info-row,
 .footer-bar {
   display: flex;
   align-items: center;
@@ -338,13 +335,31 @@ async function submit() {
   gap: 16rpx;
 }
 
-.section-title,
-.address-name,
-.goods-name {
-  display: block;
-  font-size: 26rpx;
+.section-title {
+  font-size: 24rpx;
   line-height: 1.35;
-  color: rgb(var(--sf-color-ink));
+  font-weight: 600;
+}
+
+.section-copy,
+.info-label,
+.info-value,
+.goods-spec,
+.goods-count,
+.footer-label,
+.coupon-name,
+.coupon-value {
+  display: block;
+  color: rgb(var(--sf-color-text-secondary));
+}
+
+.section-copy,
+.goods-spec,
+.info-label,
+.info-value {
+  margin-top: 6rpx;
+  font-size: 20rpx;
+  line-height: 1.45;
 }
 
 .section-action {
@@ -357,23 +372,20 @@ async function submit() {
   color: rgb(var(--sf-color-brand-deep));
 }
 
-.address-body {
-  margin-top: 18rpx;
-}
-
-.address-copy {
+.section-copy--strong {
   color: rgb(var(--sf-color-ink));
 }
 
-.goods-section {
+.goods-list {
   display: grid;
-  gap: 14rpx;
+  gap: 12rpx;
 }
 
 .goods-card {
   display: flex;
+  align-items: flex-start;
   gap: 16rpx;
-  padding: 18rpx;
+  padding: 14rpx;
 }
 
 .goods-image {
@@ -389,106 +401,115 @@ async function submit() {
   flex: 1;
 }
 
+.goods-name {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 23rpx;
+  line-height: 1.4;
+  font-weight: 600;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
 .goods-bottom {
-  margin-top: 16rpx;
+  margin-top: 12rpx;
 }
 
 .goods-price,
 .pay-price,
 .footer-price {
-  font-size: 30rpx;
+  font-size: 28rpx;
   line-height: 1.2;
-  font-weight: 600;
+  font-weight: 700;
   color: rgb(var(--sf-color-price));
 }
 
 .coupon-scroll {
-  margin-top: 16rpx;
+  margin-top: 14rpx;
   white-space: nowrap;
 }
 
 .coupon-row {
   display: inline-flex;
-  gap: 12rpx;
+  gap: 10rpx;
 }
 
 .coupon-chip {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
-  gap: 6rpx;
-  padding: 14rpx 18rpx;
-  border: 2rpx solid rgb(var(--sf-color-line));
-  border-radius: 999px;
-  background: rgb(var(--sf-color-shell));
-  color: rgb(var(--sf-color-ink));
+  justify-content: center;
+  min-width: 148rpx;
+  padding: 12rpx 16rpx;
 }
 
 .coupon-chip--active {
-  border-color: rgb(var(--sf-color-brand));
-  background: rgb(var(--sf-color-brand-soft));
+  background: linear-gradient(145deg, rgba(237, 243, 248, 0.98) 0%, rgba(223, 231, 241, 0.98) 100%);
+  border-color: rgba(var(--sf-color-brand), 0.18);
 }
 
-.coupon-name,
-.coupon-discount {
+.coupon-name {
   font-size: 20rpx;
-  line-height: 1.2;
+  line-height: 1.35;
+  color: rgb(var(--sf-color-ink));
 }
 
-.coupon-discount {
-  color: rgb(var(--sf-color-price));
+.coupon-value {
+  margin-top: 6rpx;
+  font-size: 19rpx;
+  line-height: 1.3;
 }
 
 .remark-input {
   width: 100%;
-  min-height: 168rpx;
-  margin-top: 16rpx;
-  padding: 18rpx;
-  border-radius: 16rpx;
-  background: rgb(var(--sf-color-mist));
-  font-size: 22rpx;
+  min-height: 104rpx;
+  margin-top: 14rpx;
+  padding: 14rpx;
+  border-radius: var(--sf-radius-card);
+  background: linear-gradient(180deg, rgba(247, 250, 253, 0.98) 0%, rgba(255, 255, 255, 0.98) 100%);
+  font-size: 21rpx;
   line-height: 1.5;
   color: rgb(var(--sf-color-ink));
 }
 
-.amount-card {
-  padding-bottom: 8rpx;
+.info-row {
+  align-items: flex-start;
 }
 
-.price-row {
-  margin-top: 12rpx;
+.info-row + .info-row {
+  margin-top: 14rpx;
 }
 
-.price-row:first-child {
+.info-label {
+  min-width: 120rpx;
   margin-top: 0;
 }
 
-.price-value {
+.info-value {
+  min-width: 0;
+  flex: 1;
   margin-top: 0;
-  color: rgb(var(--sf-color-ink));
+  text-align: right;
 }
 
-.price-value--discount {
-  color: rgb(var(--sf-color-price));
-}
-
-.price-row--total {
-  margin-top: 22rpx;
-  padding-top: 20rpx;
+.info-row--strong {
+  margin-top: 18rpx;
+  padding-top: 18rpx;
   border-top: 2rpx solid rgb(var(--sf-color-divider));
 }
 
 .footer-bar {
-  position: fixed;
-  right: 20rpx;
-  bottom: 20rpx;
-  left: 20rpx;
-  z-index: 40;
-  padding: 18rpx 18rpx calc(18rpx + env(safe-area-inset-bottom));
-  border: 2rpx solid rgb(var(--sf-color-line));
-  border-radius: 20rpx;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: var(--sf-shadow-soft);
-  backdrop-filter: blur(12px);
+  margin: 0 20rpx 20rpx;
+  padding: 16rpx 18rpx calc(16rpx + env(safe-area-inset-bottom));
+}
+
+.footer-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.footer-label {
+  font-size: 20rpx;
+  line-height: 1.35;
 }
 
 .footer-price {
@@ -498,21 +519,20 @@ async function submit() {
 
 .submit-btn {
   display: flex;
-  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  min-width: 220rpx;
-  height: 86rpx;
-  padding: 0 26rpx;
+  min-width: 148rpx;
+  height: 72rpx;
+  padding: 0 24rpx;
   border-radius: 999px;
   background: linear-gradient(135deg, rgb(var(--sf-color-brand)) 0%, rgb(var(--sf-color-brand-light)) 100%);
-  font-size: 24rpx;
+  font-size: 22rpx;
+  line-height: 1.2;
   font-weight: 600;
   color: rgb(var(--sf-color-shell));
 }
 
 .submit-btn--disabled {
-  background: rgb(var(--sf-color-line));
-  color: rgb(var(--sf-color-text-secondary));
+  opacity: 0.45;
 }
 </style>

@@ -1,10 +1,11 @@
-import { describe, expect, test } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 import { createMemoryStorage } from '@/shared/platform/storage'
 import {
   buildH5RedirectUrl,
   buildJsapiInvokePayload,
   buildPaymentStatusRouteQuery,
   clearPrepayData,
+  createTimeoutController,
   persistPrepayData,
   readPrepayData,
   resolvePaymentResultCopy,
@@ -12,6 +13,10 @@ import {
 } from './payment-utils'
 
 describe('payment utils', () => {
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
   test('builds jsapi invoke payload from prepay payload', () => {
     expect(buildJsapiInvokePayload({
       appId: 'wx-1',
@@ -100,5 +105,17 @@ describe('payment utils', () => {
       accent: 'warning',
       autoRedirect: false,
     })
+  })
+
+  test('clears delayed redirects before they fire', () => {
+    vi.useFakeTimers()
+    const callback = vi.fn()
+    const controller = createTimeoutController()
+
+    controller.schedule(callback, 3000)
+    controller.clear()
+    vi.advanceTimersByTime(3000)
+
+    expect(callback).not.toHaveBeenCalled()
   })
 })

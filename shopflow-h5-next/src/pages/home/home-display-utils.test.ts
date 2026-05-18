@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
+  createFirstTriggerSkipper,
+  resolveHomeChannelEntries,
+  resolveHomeHeroCopy,
   resolveHomeFeed,
   shouldShowCoupons,
   shouldShowFlashSale,
@@ -86,4 +89,32 @@ describe('home-display-utils', () => {
     expect(shouldShowFlashSale(makeHomePayload())).toBe(false)
   })
 
+  it('提供稳定的首页识别区文案', () => {
+    expect(resolveHomeHeroCopy()).toEqual({
+      eyebrow: 'ShopFlow',
+      title: '今日精选',
+    })
+  })
+
+  it('为首页频道入口补充稳定跳转目标', () => {
+    const payload = makeHomePayload({
+      channel: [
+        { id: 1, name: '分类', iconUrl: '/catalog.png' },
+        { id: 2, name: '热卖', iconUrl: '/hot.png' },
+      ],
+    })
+
+    expect(resolveHomeChannelEntries(payload.channel)).toEqual([
+      { id: 1, name: '分类', iconUrl: '/catalog.png', target: '/pages/items/catalog/index' },
+      { id: 2, name: '热卖', iconUrl: '/hot.png', target: '/pages/items/hot/index' },
+    ])
+  })
+
+  it('只跳过首次 onShow 刷新触发', () => {
+    const shouldSkip = createFirstTriggerSkipper()
+
+    expect(shouldSkip()).toBe(true)
+    expect(shouldSkip()).toBe(false)
+    expect(shouldSkip()).toBe(false)
+  })
 })

@@ -1,5 +1,9 @@
 import { describe, expect, test } from 'vitest'
-import { resolveOrderEmptyState, resolvePaymentMethodOptions } from './order-display-utils'
+import {
+  resolveOrderEmptyState,
+  resolveOrderOverviewStats,
+  resolvePaymentMethodOptions,
+} from './order-display-utils'
 
 describe('order display utils', () => {
   test('maps order tabs into neutral empty state copy', () => {
@@ -44,5 +48,17 @@ describe('order display utils', () => {
       stateLabel: '推荐',
       enabled: true,
     })
+  })
+
+  test('builds compact overview stats for order list header', () => {
+    expect(resolveOrderOverviewStats([
+      { label: '待付款', count: 0 },
+      { label: '待收货', count: 3 },
+      { label: '售后中', count: 1 },
+    ])).toEqual([
+      { label: '待付款', count: 0, value: '暂无' },
+      { label: '待收货', count: 3, value: '3 笔' },
+      { label: '售后中', count: 1, value: '1 笔' },
+    ])
   })
 })
