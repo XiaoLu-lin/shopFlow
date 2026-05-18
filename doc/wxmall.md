@@ -84,6 +84,16 @@
 
 4. shopflow-wx的api.js设置云服务器的域名。
    编译运行，尝试微信支付。
+
+当前线上若 `https://manager.enshipeixue.com/wx/` 已承载 H5 前台页面，
+则小程序与 H5 前台对外访问用户侧接口时，不应再直接复用 `/wx/` 作为 API 根路径。
+推荐新增独立的反向代理入口，例如：
+
+```text
+https://manager.enshipeixue.com/wx-api/
+```
+
+再由 nginx 将 `/wx-api/*` 转发到后端真实的 `/wx/*`，避免页面路由与接口路径冲突。
    
 ### 3.0.3 微信退款配置
 

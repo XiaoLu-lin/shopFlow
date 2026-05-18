@@ -1,6 +1,6 @@
 export const DEFAULT_SHOPFLOW_APP_ID = '1649067'
-export const DEFAULT_MP_WEIXIN_BASE_API = 'https://manager.enshipeixue.com/wx'
-export const DEFAULT_H5_BASE_API = '/wx'
+export const DEFAULT_MP_WEIXIN_BASE_API = 'https://manager.enshipeixue.com/wx-api'
+export const DEFAULT_H5_BASE_API = '/wx-api'
 export const DEFAULT_MP_WEIXIN_DEV_BASE_API = 'http://127.0.0.1:6914/wx'
 
 export function resolveBaseApi(): string {
