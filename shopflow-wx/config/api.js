@@ -13,6 +13,7 @@ const LOCAL_DEV_HOST = 'http://127.0.0.1:6914';
 const LOCAL_DEV_WS_HOST = 'ws://127.0.0.1:6914';
 const ONLINE_HOST = 'https://manager.enshipeixue.com';
 const ONLINE_WS_HOST = 'wss://manager.enshipeixue.com';
+const ONLINE_API_ROOT = ONLINE_HOST + '/wx-api/';
 
 const ENV_CONFIG = {
   develop: {
@@ -22,13 +23,13 @@ const ENV_CONFIG = {
     adminUrl: LOCAL_DEV_HOST + '/#/login',
   },
   trial: {
-    apiRoot: ONLINE_HOST + '/wx/',
+    apiRoot: ONLINE_API_ROOT,
     wsRoot: ONLINE_WS_HOST + '/websocket',
     useWxLoginForAccountLogin: true,
     adminUrl: ONLINE_HOST + '/#/login',
   },
   release: {
-    apiRoot: ONLINE_HOST + '/wx/',
+    apiRoot: ONLINE_API_ROOT,
     wsRoot: ONLINE_WS_HOST + '/websocket',
     useWxLoginForAccountLogin: true,
     adminUrl: ONLINE_HOST + '/#/login',
