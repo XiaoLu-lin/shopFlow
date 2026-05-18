@@ -4,7 +4,7 @@
 
 当前前台存在三条相关代码线：
 
-- `shopflow-h5`：旧版 Vue 2 + Vant H5 前台，保留历史路由、登录态、租户预热和 `/wx/*` 接口协议。
+- `shopflow-h5`：旧版 Vue 2 + Vant H5 前台，现已完成下线，仅保留历史归档记录。
 - `shopflow-h5-next`：正在重建的 Vue 3 + Vite 6 + Vant 4 + Tailwind H5 工程。
 - `shopflow-wx`：现有微信小程序工程，使用原生小程序结构，页面、请求、样式与 H5 独立维护。
 
@@ -17,7 +17,7 @@
 - 保留当前 ShopFlow `/wx/*` 后端协议。
 - 保留旧 H5 的关键兼容契约，包括登录态 key、租户 token、受保护路由 redirect 语义。
 - 尽量复用当前 `shopflow-h5-next` 已沉淀的业务模型、API 类型、兼容层思路和页面矩阵。
-- 后续逐步替代旧 `shopflow-h5` 与旧 `shopflow-wx`，但切流前允许三者并行存在。
+- 后续继续以 `shopflow-h5-next` 承接 H5 主前台，并逐步吸收旧 `shopflow-wx` 的剩余能力。
 
 ## 3. 非目标
 
@@ -26,7 +26,7 @@
 - 不继续以 `Vant` 作为多端主组件库。
 - 不把 Tailwind 作为小程序端主样式体系。
 - 不在首版追求所有页面 100% 视觉同构；优先保证业务同构和交互可用。
-- 不直接删除旧 `shopflow-h5` 和 `shopflow-wx`，切流完成后再评估清理。
+- 本方案不处理旧 `shopflow-wx` 的删除；旧 `shopflow-h5` 已在后续清理中下线。
 
 ## 4. 技术栈
 
@@ -342,7 +342,7 @@ npm run test
 - 创建新 change，建议名称：`rebuild-shopflow-h5-next-as-uniapp-multiplatform`
 - 写 proposal、design、tasks、spec delta。
 - 将本方案作为上游设计依据。
-- 暂停或重定向当前 `rebuild-shopflow-h5-modern-spa-with-tailwind` 的后续 UI 投入。
+- 已停止旧 `shopflow-h5` 重建线的后续 UI 投入。
 
 ### Phase 2：工程切换
 
@@ -371,7 +371,7 @@ npm run test
 - H5 与微信小程序分别构建。
 - 对主链路做双端冒烟。
 - 对微信内 H5 和微信小程序分别验证登录、支付回跳、分享打开。
-- 验收通过后再决定旧 `shopflow-h5` 与旧 `shopflow-wx` 的下线节奏。
+- 验收通过后继续评估旧 `shopflow-wx` 的下线节奏。
 
 ## 15. 风险
 
@@ -397,5 +397,4 @@ uni-app + Vue 3 + TypeScript + Vite + Pinia + uView Plus + SCSS + H5 Tailwind en
 - uni-app Vue 3 说明：<https://en.uniapp.dcloud.io/tutorial/vue3-basics.html>
 - uni-app CLI 创建工程：<https://uniapp.dcloud.net.cn/quickstart-cli.html>
 - uni-app TypeScript 支持：<https://en.uniapp.dcloud.io/tutorial/typescript-subject.html>
-- 当前 H5 重建设计稿：`doc/superpowers/specs/2026-05-10-shopflow-h5-modern-rebuild-design.md`
-- 当前 H5 页面矩阵：`doc/superpowers/plans/2026-05-10-shopflow-h5-page-matrix.md`
+- 旧 H5 重建相关设计稿与页面矩阵已随旧工程下线一并移除。
