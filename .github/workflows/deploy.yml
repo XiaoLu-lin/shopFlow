@@ -63,40 +63,6 @@ jobs:
           path: shopflow-admin/dist/
           retention-days: 1
 
-  build-h5:
-    name: Build H5 Frontend (shopflow-h5)
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node 16
-        uses: actions/setup-node@v4
-        with:
-          node-version: '16'
-
-      - name: Install dependencies
-        working-directory: shopflow-h5
-        run: npm install --legacy-peer-deps
-
-      - name: Run compatibility tests
-        working-directory: shopflow-h5
-        run: node scripts/shopflow-compat.test.js
-
-      - name: Build production
-        working-directory: shopflow-h5
-        env:
-          VUE_APP_SHOPFLOW_APPID: '1649067'
-        run: npm run build
-
-      - name: Upload H5 dist
-        uses: actions/upload-artifact@v4
-        with:
-          name: h5-dist
-          path: shopflow-h5/dist/
-          retention-days: 1
-
   build-h5-next:
     name: Build H5 Next Frontend (shopflow-h5-next)
     runs-on: ubuntu-latest
@@ -122,7 +88,7 @@ jobs:
         working-directory: shopflow-h5-next
         env:
           VITE_APP_SHOPFLOW_APPID: '1649067'
-        run: npm run build
+        run: npm run build:h5
 
       - name: Upload H5 next dist
         uses: actions/upload-artifact@v4
