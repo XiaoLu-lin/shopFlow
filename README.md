@@ -8,7 +8,7 @@ ShopFlow 是一个基于 Spring Boot、Vue、uni-app 和微信小程序生态改
 - 管理后台前端仍为 `shopflow-admin`，技术栈为 Vue 2 + Element UI。
 - 新用户前台主工程为 `shopflow-h5-next`，技术栈为 uni-app + Vue 3 + TypeScript + Pinia + uView Plus。
 - 原微信小程序 `shopflow-wx` 仍保留，作为业务行为对齐基线和切流前参照。
-- 旧 H5 `shopflow-h5` 已不再作为后续主实现目标，仅作为历史兼容代码和接口口径参考。
+- 旧 H5 `shopflow-h5` 已完成下线，当前用户前台统一以 `shopflow-h5-next` 为准。
 
 ## 目录说明
 
@@ -22,7 +22,6 @@ ShopFlow 是一个基于 Spring Boot、Vue、uni-app 和微信小程序生态改
 | `shopflow-admin` | 管理后台 Vue 2 前端 |
 | `shopflow-h5-next` | 当前主前台，uni-app 多端工程，可构建 H5 和微信小程序 |
 | `shopflow-wx` | 原生微信小程序前端，当前主要作为业务基线保留 |
-| `shopflow-h5` | 旧 Vue 2 H5 前台，后续不再作为主线开发目标 |
 | `openspec` | 功能变更规格、设计、任务和归档 |
 | `doc` | 项目文档、FAQ、设计稿和阶段计划 |
 
@@ -38,7 +37,6 @@ flowchart LR
     h5next["shopflow-h5-next<br/>uni-app H5 / mp-weixin"]
     wx["shopflow-wx<br/>原生微信小程序基线"]
     admin["shopflow-admin<br/>Vue 2 管理后台"]
-    oldh5["shopflow-h5<br/>旧 H5 兼容参考"]
   end
 
   subgraph backend[Spring Boot 后端]
@@ -63,7 +61,6 @@ flowchart LR
 
   h5next -->|/wx/*| wxapi
   wx -->|/wx/*| wxapi
-  oldh5 -.历史参考.-> wxapi
   admin -->|/admin/*| adminapi
 
   all --> wxapi
@@ -82,7 +79,6 @@ flowchart LR
 - `shopflow-all` 是本地和部署时的聚合后端入口。
 - `shopflow-h5-next` 是后续用户侧主前台，一套工程产出 H5 与微信小程序。
 - `shopflow-wx` 暂时保留，用来对齐业务行为和辅助验收。
-- `shopflow-h5` 不再承接新功能，避免继续扩大旧 Vue 2 前台的维护面。
 
 ## 技术栈
 
@@ -336,18 +332,6 @@ sequenceDiagram
 - 支付回跳小程序专项手工验证
 - 用户域空态、异常态、成功态文案统一
 - uView Plus / Sass 弃用告警治理
-
-## 旧 H5 说明
-
-`shopflow-h5` 是旧 Vue 2 + Vant H5 前台。当前不再作为主线开发目标。
-
-保留它的主要目的：
-
-- 查询历史页面结构
-- 对照旧接口参数
-- 作为迁移期间的兼容参考
-
-新功能优先落到 `shopflow-h5-next`。
 
 ## 常用文档
 

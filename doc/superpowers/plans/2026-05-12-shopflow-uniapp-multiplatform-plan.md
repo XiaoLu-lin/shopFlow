@@ -4,7 +4,7 @@
 
 **Goal:** 将 `shopflow-h5-next` 从当前 Vite 单端 H5 工程升级为同时支持 H5 与微信小程序的 `uni-app` 多端主工程，并保留现有 ShopFlow `/wx/*` 协议与关键兼容契约。
 
-**Architecture:** 我们先固定多端工程壳和平台适配层，再迁移共享业务层与组件体系，最后分域迁移页面并完成双端验证。旧 `shopflow-h5` 与旧 `shopflow-wx` 在新工程验收前继续并行保留，不在本计划中直接下线。
+**Architecture:** 我们先固定多端工程壳和平台适配层，再迁移共享业务层与组件体系，最后分域迁移页面并完成双端验证。`shopflow-h5-next` 已成为统一 H5 主前台，旧 `shopflow-wx` 仍作为切流与验收参照保留。
 
 **Tech Stack:** `uni-app`、`Vue 3`、`TypeScript`、`Pinia`、`uView Plus`、`SCSS`、`Tailwind CSS 3.4`（H5 only enhancement）、`Vitest`
 
@@ -24,7 +24,7 @@
 
 本计划不覆盖：
 
-- 旧 `shopflow-h5` 删除
+- 清理旧 `shopflow-h5` 遗留引用与目录
 - 旧 `shopflow-wx` 删除
 - 后端 `/wx/*` 接口结构调整
 
